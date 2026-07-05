@@ -13,14 +13,14 @@ function SuccessDetails() {
   return (
     <div className="bg-brand-white border border-brand-border p-8 md:p-12 max-w-2xl mx-auto rounded-none text-center">
       {/* Success Badge */}
-      <div className="w-16 h-16 bg-brand-green text-brand-white flex items-center justify-center mx-auto text-3xl font-bold mb-6">
+      <div className="w-16 h-16 bg-brand-blue text-brand-white flex items-center justify-center mx-auto text-3xl font-bold mb-6">
         ✓
       </div>
 
       <h1 className="text-3xl font-extrabold text-brand-dark tracking-tight mb-2 uppercase">
         PENDAFTARAN DIKIRIM
       </h1>
-      <p className="text-sm font-mono text-brand-green font-bold uppercase tracking-wider mb-6">
+      <p className="text-sm font-mono text-brand-blue font-bold uppercase tracking-wider mb-6">
         Status: Dalam Proses Verifikasi
       </p>
 
@@ -59,10 +59,12 @@ export default function RegisterSuccess() {
   return (
     <div className="flex flex-col min-h-screen bg-brand-light">
       {/* Header */}
-      <header className="bg-brand-dark text-brand-white border-b border-brand-dark py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <Link href="/" className="text-xl font-bold tracking-tight text-brand-white hover:text-slate-200">
-            MATIAS <span className="text-brand-green">FUN RUN &amp; WALK</span> 2026
+      <header className="bg-brand-dark text-brand-white border-b border-brand-dark py-4 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <Link href="/" className="flex items-center gap-3">
+            <img src="/logo-matias-run.png" alt="Matias Fun Run 2026" className="h-12 w-auto object-contain" />
+            <div className="h-6 w-[1px] bg-slate-700 hidden sm:block"></div>
+            <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-8 w-auto object-contain hidden sm:block" />
           </Link>
         </div>
       </header>

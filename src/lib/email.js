@@ -5,6 +5,33 @@ import path from 'path';
 const logFilePath = path.join(process.cwd(), 'emails.log');
 
 /**
+ * Helper to format date like 27-06-2026 - 14:08:03
+ */
+function formatDateTime(date = new Date()) {
+  const d = new Date(date);
+  const pad = (n) => String(n).padStart(2, '0');
+  
+  const day = pad(d.getDate());
+  const month = pad(d.getMonth() + 1);
+  const year = d.getFullYear();
+  
+  const hours = pad(d.getHours());
+  const minutes = pad(d.getMinutes());
+  const seconds = pad(d.getSeconds());
+  
+  return `${day}-${month}-${year} - ${hours}:${minutes}:${seconds}`;
+}
+
+/**
+ * Helper to determine price dynamically based on registration date
+ */
+function getPriceForDate(registeredAt) {
+  const CUTOFF_EARLY_BIRD = new Date('2026-11-10T23:59:59');
+  const date = registeredAt ? new Date(registeredAt) : new Date();
+  return date < CUTOFF_EARLY_BIRD ? '125.000' : '175.000';
+}
+
+/**
  * Sends an email using SMTP or logs it to file/console.
  * 
  * @param {Object} options - Email sending options
@@ -12,13 +39,14 @@ const logFilePath = path.join(process.cwd(), 'emails.log');
  * @param {string} options.subject - Email subject line
  * @param {string} options.html - HTML content
  * @param {string} [options.text] - Plain text content
+ * @param {Array} [options.attachments] - Array of attachments (e.g. for CID images)
  */
-export async function sendEmail({ to, subject, html, text }) {
+export async function sendEmail({ to, subject, html, text, attachments }) {
   const host = process.env.SMTP_HOST;
   const port = process.env.SMTP_PORT;
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
-  const from = process.env.SMTP_FROM || '"Petrus Aria" <petrusariacr25@gmail.com>';
+  const from = process.env.SMTP_FROM || '"Matias Fun Run" <info@matias-funrun.my.id>';
 
   // Fallback to console + file logging in development or if SMTP is missing
   if (!host) {
@@ -51,7 +79,7 @@ ${html}
   try {
     const transporter = nodemailer.createTransport({
       host,
-      port: parseInt(port || '2525', 10),
+      port: parseInt(port || '587', 10),
       auth: { user, pass },
       secure: port === '465',
     });
@@ -62,6 +90,7 @@ ${html}
       subject,
       text,
       html,
+      attachments: attachments || [],
     });
 
     console.log('SMTP email sent successfully:', info.messageId);
@@ -71,13 +100,13 @@ ${html}
     
     // Log failure log entry
     const errorLogEntry = `
-========================================
+=======================================
 [EMAIL SEND FAILURE]
 Timestamp: ${new Date().toISOString()}
 To: ${to}
 Subject: ${subject}
 Error: ${error.message}
-========================================
+=======================================
 \n`;
     try {
       fs.appendFileSync(logFilePath, errorLogEntry, 'utf8');
@@ -89,21 +118,98 @@ Error: ${error.message}
 /**
  * Sends verification pending email to the runner immediately after registration.
  */
-export async function sendVerificationPendingEmail(email, name) {
-  const subject = 'Registration Under Verification - Matias Fun Run 2026';
-  const text = `Hello ${name},\n\nThank you for registering for the Matias Fun Run 2026! We have received your registration details and payment screenshot.\n\nYour registration is currently on verification process. You can expect a confirmation email containing your registration code in the next 3 days.\n\nBest regards,\nMatias Fun Run Team`;
+export async function sendVerificationPendingEmail({
+  email,
+  name,
+  uuid,
+  competition_type,
+  whatsapp,
+  bib_name,
+  tshirt_size,
+  registered_at
+}) {
+  const subject = 'Pendaftaran Sedang Diverifikasi - Matias Fun Run & Walk 2026';
+  const formattedDate = formatDateTime(registered_at || new Date());
   
+  const text = `Halo ${name},\n\nTerima kasih telah mendaftar untuk Matias Fun Run & Walk 2026!\n\nBukti pembayaran Anda saat ini sedang dalam proses verifikasi oleh panitia (estimasi 1-3 hari kerja).\n\nRingkasan Pesanan:\n- ID Pesanan: ${uuid}\n- Tanggal: ${formattedDate}\n- Total Pembayaran: Rp ${getPriceForDate(registered_at)}\n- Status: PENDING (Dalam Verifikasi)\n\nDetail Pendaftaran:\n- Kategori: ${competition_type}\n- Nama di BIB: ${bib_name}\n- Ukuran Jersey: ${tshirt_size}\n\nSalam hangat,\nPanitia Matias Fun Run`;
+
   const html = `
-    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #1f2937; border-top: 5px solid #16a34a; background-color: #ffffff; color: #1f2937;">
-      <h2 style="color: #1f2937; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">Matias Fun Run 2026</h2>
-      <p>Hello <strong>${name}</strong>,</p>
-      <p>Thank you for registering for the Matias Fun Run 2026! We have successfully received your registration details and payment screenshot.</p>
-      <div style="background-color: #f3f4f6; border-left: 4px solid #16a34a; padding: 15px; margin: 20px 0; border-radius: 4px;">
-        <p style="margin: 0; font-weight: bold; color: #16a34a;">Status: Under Verification</p>
-        <p style="margin: 5px 0 0 0; font-size: 14px;">Our administrator is currently verifying your payment. You will receive a confirmation email with your unique registration code in the next 3 days.</p>
+    <div style="background-color: #d1eae5; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; max-width: 600px; margin: 0 auto; border-radius: 12px;">
+      <!-- Header -->
+      <div style="text-align: center; margin-bottom: 25px;">
+        <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px;">MATIAS FUN RUN 2026</h2>
+        <p style="color: #475569; margin: 5px 0 0 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">Pendaftaran Event</p>
       </div>
-      <p>If you have any questions, please contact our service desk (support@matiasfunrun.com / +62-812-3456-7890).</p>
-      <p style="margin-top: 30px; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 15px;">This is an automated email. Please do not reply directly to this message.</p>
+
+      <!-- Card 1: Status Transaksi -->
+      <div style="background-color: #111827; border-radius: 16px; padding: 25px; color: #ffffff; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; font-size: 13px; color: #9ca3af; margin-bottom: 5px;">
+          Tanggal: ${formattedDate}
+        </div>
+        <div style="text-align: center; font-size: 13px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px;">
+          Total Pembayaran
+        </div>
+        <div style="text-align: center; font-size: 32px; font-weight: 800; color: #ffffff; margin: 5px 0 15px 0;">
+          IDR ${getPriceForDate(registered_at)}
+        </div>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+          <span style="background-color: #0ea5e9; color: #ffffff; padding: 6px 16px; border-radius: 9999px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block;">
+            pending
+          </span>
+        </div>
+
+        <div style="border-top: 1px solid #374151; padding-top: 15px;">
+          <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse: collapse;">
+            <tr>
+              <td style="font-size: 13px; color: #9ca3af; padding-bottom: 8px;">ID Pesanan:</td>
+              <td align="right" style="font-size: 13px; color: #ffffff; font-family: monospace; font-weight: bold; padding-bottom: 8px;">${uuid.substring(0, 18)}...</td>
+            </tr>
+            <tr>
+              <td style="font-size: 13px; color: #9ca3af;">Metode Pembayaran:</td>
+              <td align="right" style="font-size: 13px; color: #ffffff; font-weight: bold;">Bank Transfer</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Card 2: Detail Informasi -->
+      <div style="background-color: #1f2937; border-radius: 16px; padding: 25px; color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <h3 style="margin-top: 0; color: #ffffff; font-size: 18px; font-weight: 700; border-bottom: 1px solid #374151; padding-bottom: 10px;">Dear ${name},</h3>
+        
+        <p style="font-size: 14px; line-height: 1.6; color: #d1d5db; margin-bottom: 20px;">
+          Mohon tunggu sebentar, saat ini bukti pembayaran/transfer pendaftaran Anda sedang dalam proses pengecekan dan verifikasi oleh panitia. Proses verifikasi biasanya membutuhkan waktu 1-3 hari kerja.
+        </p>
+
+        <h4 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #9ca3af; border-bottom: 1px solid #374151; padding-bottom: 5px;">Detail Pendaftaran</h4>
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse: collapse; font-size: 14px; color: #d1d5db; margin-bottom: 10px;">
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af; width: 40%;">Name</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Name On BIB</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${bib_name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Tel No</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${whatsapp}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Kategori</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${competition_type}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Jersey</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${tshirt_size}</td>
+          </tr>
+        </table>
+
+        <!-- Footer of Card -->
+        <div style="border-top: 1px solid #374151; padding-top: 15px; margin-top: 20px; font-size: 12px; color: #9ca3af; text-align: center;">
+          Jika Anda memiliki pertanyaan, silakan hubungi Layanan Informasi kami di <a href="mailto:info@matias-funrun.my.id" style="color: #10b981; text-decoration: none; font-weight: bold;">info@matias-funrun.my.id</a>.
+        </div>
+      </div>
     </div>
   `;
 
@@ -113,41 +219,149 @@ export async function sendVerificationPendingEmail(email, name) {
 /**
  * Sends verification confirmation email containing registration code and QR code.
  */
-export async function sendConfirmationEmail(email, name, registrationCode, qrCodeDataUrl) {
-  const subject = 'Registration Verified! Your Registration Code - Matias Fun Run 2026';
-  const text = `Hello ${name},\n\nGreat news! Your payment has been verified, and your registration is complete.\n\nYour unique Registration Code is: ${registrationCode}\n\nPlease save this code and show it at the location on the running bag distribution day to receive your running bag.\n\nBest regards,\nMatias Fun Run Team`;
+export async function sendConfirmationEmail({
+  email,
+  name,
+  uuid,
+  whatsapp,
+  gender,
+  identity_number,
+  competition_type,
+  tshirt_size,
+  registration_code,
+  registered_at,
+  bib_name,
+  qrCodeDataUrl
+}) {
+  const subject = 'Pendaftaran Terverifikasi! Kode Registrasi Anda - Matias Fun Run & Walk 2026';
+  const formattedDate = formatDateTime(registered_at || new Date());
+
+  const text = `Halo ${name},\n\nTerima kasih! Pembayaran Anda sudah diterima dan diverifikasi oleh panitia.\n\nDetail Transaksi:\n- ID Pesanan: ${uuid}\n- Status: SETTLEMENT (Berhasil)\n- Kode Registrasi: ${registration_code}\n\nDetail Pendaftaran:\n- Kategori: ${competition_type}\n- Nama di BIB: ${bib_name}\n- Ukuran Jersey: ${tshirt_size}\n\nHarap simpan email ini dan tunjukkan Kode Registrasi atau QR Code yang terlampir saat hari pengambilan running bag.\n\nSalam hangat,\nPanitia Matias Fun Run`;
 
   const html = `
-    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #1f2937; border-top: 5px solid #16a34a; background-color: #ffffff; color: #1f2937;">
-      <h2 style="color: #1f2937; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">Registration Verified!</h2>
-      <p>Hello <strong>${name}</strong>,</p>
-      <p>Great news! Your payment has been verified, and your registration is complete.</p>
-      
-      <div style="text-align: center; background-color: #f9fafb; border: 1px dashed #d1d5db; padding: 20px; margin: 25px 0; border-radius: 8px;">
-        <p style="margin: 0; font-size: 14px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.05em;">Your Registration Code</p>
-        <h1 style="margin: 10px 0; font-size: 36px; font-weight: 800; color: #1f2937; letter-spacing: 0.1em; font-family: monospace;">${registrationCode}</h1>
+    <div style="background-color: #d1eae5; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; max-width: 600px; margin: 0 auto; border-radius: 12px;">
+      <!-- Header -->
+      <div style="text-align: center; margin-bottom: 25px;">
+        <h2 style="color: #1e293b; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 1px;">MATIAS FUN RUN 2026</h2>
+        <p style="color: #475569; margin: 5px 0 0 0; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">Pendaftaran Event</p>
+      </div>
+
+      <!-- Card 1: Status Transaksi -->
+      <div style="background-color: #111827; border-radius: 16px; padding: 25px; color: #ffffff; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; font-size: 13px; color: #9ca3af; margin-bottom: 5px;">
+          Tanggal: ${formattedDate}
+        </div>
+        <div style="text-align: center; font-size: 13px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px;">
+          Total Pembayaran
+        </div>
+        <div style="text-align: center; font-size: 32px; font-weight: 800; color: #ffffff; margin: 5px 0 15px 0;">
+          IDR ${getPriceForDate(registered_at)}
+        </div>
         
-        ${qrCodeDataUrl ? `
-          <div style="margin: 20px auto 10px auto; width: 180px; height: 180px; background-color: #ffffff; border: 1px solid #e5e7eb; padding: 10px; display: inline-block;">
-            <img src="${qrCodeDataUrl}" alt="Check-in QR Code" style="width: 180px; height: 180px; display: block;" />
-          </div>
-          <p style="margin: 10px 0 0 0; font-size: 12px; color: #6b7280;">Show this QR code or code at the check-in desk to collect your running bag.</p>
-        ` : ''}
+        <div style="text-align: center; margin-bottom: 20px;">
+          <span style="background-color: #22c55e; color: #ffffff; padding: 6px 16px; border-radius: 9999px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block;">
+            settlement
+          </span>
+        </div>
+
+        <div style="border-top: 1px solid #374151; padding-top: 15px;">
+          <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse: collapse;">
+            <tr>
+              <td style="font-size: 13px; color: #9ca3af; padding-bottom: 8px;">ID Pesanan:</td>
+              <td align="right" style="font-size: 13px; color: #ffffff; font-family: monospace; font-weight: bold; padding-bottom: 8px;">${uuid.substring(0, 18)}...</td>
+            </tr>
+            <tr>
+              <td style="font-size: 13px; color: #9ca3af;">Metode Pembayaran:</td>
+              <td align="right" style="font-size: 13px; color: #ffffff; font-weight: bold;">Bank Transfer</td>
+            </tr>
+          </table>
+        </div>
       </div>
 
-      <div style="background-color: #f3f4f6; border-left: 4px solid #1f2937; padding: 15px; margin: 20px 0; border-radius: 4px;">
-        <h4 style="margin: 0 0 5px 0; color: #1f2937; font-size: 14px; font-weight: bold;">Running Bag Collection Info</h4>
-        <p style="margin: 0; font-size: 14px; line-height: 1.5;">
-          <strong>Date:</strong> Friday to Saturday (prior to race day)<br/>
-          <strong>Location:</strong> Main Stadium Gate B Service Desk<br/>
-          <strong>Requirements:</strong> Show this email (or QR code / registration code) to the registration counter staff.
+      <!-- Card 2: Detail Informasi -->
+      <div style="background-color: #1f2937; border-radius: 16px; padding: 25px; color: #ffffff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+        <h3 style="margin-top: 0; color: #ffffff; font-size: 18px; font-weight: 700; border-bottom: 1px solid #374151; padding-bottom: 10px;">Dear ${name},</h3>
+        
+        <p style="font-size: 14px; line-height: 1.6; color: #d1d5db; margin-bottom: 20px;">
+          Terima kasih! Pembayaran Anda sudah diterima. Silahkan lihat detail data Anda di bawah ini:
         </p>
-      </div>
 
-      <p>If you have any questions, please contact our service desk (support@matiasfunrun.com / +62-812-3456-7890).</p>
-      <p style="margin-top: 30px; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb; padding-top: 15px;">This is an automated email. Please do not reply directly to this message.</p>
+        <h4 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #9ca3af; border-bottom: 1px solid #374151; padding-bottom: 5px;">Detail Data</h4>
+        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse: collapse; font-size: 14px; color: #d1d5db; margin-bottom: 20px;">
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af; width: 40%;">Name</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Name On BIB</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${bib_name || ''}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">ID No</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${identity_number}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Gender</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${gender}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Tel No</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${whatsapp}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Kategori</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${competition_type}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Jersey</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #ffffff;">${tshirt_size}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #9ca3af;">Status Pendaftaran</td>
+            <td style="padding: 6px 0; font-weight: bold; color: #22c55e;">VERIFIED / SETTLEMENT</td>
+          </tr>
+        </table>
+
+        <!-- QR Code & Registration Code Section -->
+        <div style="text-align: center; background-color: #111827; border: 1px dashed #4b5563; padding: 25px; border-radius: 12px; margin-top: 25px;">
+          <p style="margin: 0; font-size: 13px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;">Kode Registrasi Anda</p>
+          <h1 style="margin: 10px 0; font-size: 36px; font-weight: 800; color: #10b981; letter-spacing: 4px; font-family: monospace;">${registration_code}</h1>
+          
+          ${qrCodeDataUrl ? `
+            <div style="margin: 20px auto 10px auto; background-color: #ffffff; padding: 12px; display: inline-block; border-radius: 8px;">
+              <img src="cid:qrcode" alt="Check-in QR Code" width="180" height="180" style="display: block; width: 180px; height: 180px;" />
+            </div>
+            <p style="margin: 10px 0 0 0; font-size: 11px; color: #9ca3af; line-height: 1.5;">
+              Tunjukkan QR Code ini kepada panitia saat pengambilan running bag.
+            </p>
+          ` : ''}
+        </div>
+
+        <!-- Running Bag Collection Box -->
+        <div style="background-color: #111827; border-left: 4px solid #10b981; padding: 15px; margin: 25px 0 0 0; border-radius: 4px;">
+          <h4 style="margin: 0 0 5px 0; color: #ffffff; font-size: 14px; font-weight: bold;">Informasi Pengambilan Running Bag:</h4>
+          <p style="margin: 0; font-size: 13px; color: #d1d5db; line-height: 1.5;">
+            <strong>Hari:</strong> Jumat & Sabtu sebelum hari H<br/>
+            <strong>Lokasi:</strong> Pintu B Stadion Utama, Loket Penukaran<br/>
+            <strong>Persyaratan:</strong> Tunjukkan email ini (QR Code / Kode Registrasi) kepada petugas.
+          </p>
+        </div>
+
+        <!-- Footer of Card -->
+        <div style="border-top: 1px solid #374151; padding-top: 15px; margin-top: 20px; font-size: 12px; color: #9ca3af; text-align: center;">
+          Jika Anda memiliki pertanyaan, silakan hubungi Layanan Informasi kami di <a href="mailto:info@matias-funrun.my.id" style="color: #10b981; text-decoration: none; font-weight: bold;">info@matias-funrun.my.id</a>.
+        </div>
+      </div>
     </div>
   `;
 
-  return sendEmail({ to: email, subject, text, html });
+  const attachments = qrCodeDataUrl ? [
+    {
+      filename: 'qrcode.png',
+      path: qrCodeDataUrl,
+      cid: 'qrcode'
+    }
+  ] : [];
+
+  return sendEmail({ to: email, subject, text, html, attachments });
 }

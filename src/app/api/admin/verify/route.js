@@ -91,7 +91,7 @@ export async function POST(request) {
     await query(updateSql, [registrationCode, id]);
 
     const selectSql = `
-      SELECT id, name, email, registration_code 
+      SELECT id, uuid, name, email, whatsapp, gender, identity_number, competition_type, tshirt_size, registration_code, registered_at, bib_name
       FROM runners 
       WHERE id = ?
     `;
@@ -100,7 +100,20 @@ export async function POST(request) {
 
     // 6. Send confirmation email (contains registration code and embedded QR Code image)
     try {
-      await sendConfirmationEmail(updatedRunner.email, updatedRunner.name, updatedRunner.registration_code, qrCodeDataUrl);
+      await sendConfirmationEmail({
+        email: updatedRunner.email,
+        name: updatedRunner.name,
+        uuid: updatedRunner.uuid,
+        whatsapp: updatedRunner.whatsapp,
+        gender: updatedRunner.gender,
+        identity_number: updatedRunner.identity_number,
+        competition_type: updatedRunner.competition_type,
+        tshirt_size: updatedRunner.tshirt_size,
+        registration_code: updatedRunner.registration_code,
+        registered_at: updatedRunner.registered_at,
+        bib_name: updatedRunner.bib_name,
+        qrCodeDataUrl
+      });
     } catch (emailErr) {
       console.error('Failed to send verification confirmation email:', emailErr);
     }

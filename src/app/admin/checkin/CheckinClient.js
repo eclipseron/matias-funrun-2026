@@ -106,14 +106,19 @@ export default function CheckinClient({ initialRunner, initialCodeQuery }) {
       
       {/* Navbar */}
       <header className="bg-brand-dark text-brand-white py-4 px-4 sm:px-6 lg:px-8 border-b border-brand-dark">
-        <div className="max-w-4xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-brand-white">
-              CHECK-IN <span className="text-brand-green">PENGAMBILAN BAG</span>
-            </h1>
-            <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider">
-              Meja Verifikasi Lapangan (On-Site Desk)
-            </p>
+        <div className="max-w-4xl mx-auto flex justify-between items-center gap-4">
+          <div className="flex items-center gap-3">
+            <img src="/logo-matias-run.png" alt="Matias Fun Run" className="h-10 w-auto object-contain" />
+            <div className="h-6 w-[1px] bg-slate-700"></div>
+            <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-8 w-auto object-contain hidden sm:block" />
+            <div className="pl-1">
+              <h1 className="text-sm font-bold text-brand-white leading-tight">
+                CHECK-IN <span className="text-brand-blue">RACE BAG</span>
+              </h1>
+              <p className="text-[9px] text-slate-400 font-mono uppercase tracking-wider leading-none">
+                Meja Verifikasi Lapangan
+              </p>
+            </div>
           </div>
           <Link href="/admin/dashboard" className="text-xs bg-transparent hover:bg-brand-dark-light text-brand-white border border-slate-600 font-semibold py-2 px-4 transition duration-150 rounded-none tracking-wider">
             &larr; KEMBALI KE DASHBOARD
@@ -132,7 +137,7 @@ export default function CheckinClient({ initialRunner, initialCodeQuery }) {
         )}
 
         {successMessage && (
-          <div className="bg-brand-green-light border-l-4 border-brand-green p-4 mb-6 text-sm text-brand-green-hover font-semibold">
+          <div className="bg-brand-blue-light border-l-4 border-brand-blue p-4 mb-6 text-sm text-brand-blue-hover font-semibold">
             {successMessage}
           </div>
         )}
@@ -158,7 +163,7 @@ export default function CheckinClient({ initialRunner, initialCodeQuery }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="flat-btn-green text-sm flex-grow sm:flex-none uppercase tracking-wide whitespace-nowrap font-mono"
+                className="flat-btn-blue text-sm flex-grow sm:flex-none uppercase tracking-wide whitespace-nowrap font-mono"
               >
                 {loading ? 'Mencari...' : 'CARI KODE'}
               </button>
@@ -194,7 +199,7 @@ export default function CheckinClient({ initialRunner, initialCodeQuery }) {
               </div>
               <div className="flex flex-col items-start sm:items-end gap-2">
                 <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">Kode Registrasi</span>
-                <span className="text-3xl font-mono font-bold text-brand-green-hover tracking-widest bg-brand-light border border-brand-green-border px-3 py-1">
+                <span className="text-3xl font-mono font-bold text-brand-blue-hover tracking-widest bg-brand-light border border-brand-blue-border px-3 py-1">
                   {runner.registration_code}
                 </span>
               </div>
@@ -213,7 +218,7 @@ export default function CheckinClient({ initialRunner, initialCodeQuery }) {
                   <div>
                     <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Jenis Kelamin &amp; Umur</h4>
                     <p className="text-sm font-bold text-brand-dark">
-                      {runner.gender} | <span className="text-brand-green font-mono">{calculateAge(runner.birth_date)} Tahun</span>
+                      {runner.gender} | <span className="text-brand-blue font-mono">{calculateAge(runner.birth_date)} Tahun</span>
                     </p>
                   </div>
                 </div>
@@ -243,14 +248,14 @@ export default function CheckinClient({ initialRunner, initialCodeQuery }) {
                 <div className="border-t border-brand-border pt-4">
                   <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Kontak Darurat</h4>
                   <p className="text-xs font-bold text-slate-800">{runner.emergency_contact_name}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">Hubungan: <span className="capitalize font-semibold text-brand-green">{runner.emergency_contact_relationship}</span></p>
+                  <p className="text-xs text-slate-500 mt-0.5">Hubungan: <span className="capitalize font-semibold text-brand-blue">{runner.emergency_contact_relationship}</span></p>
                 </div>
 
                 <div className="border-t border-brand-border pt-4">
                   <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider mb-2">Status Pengambilan Bag</h4>
                   
                   {runner.status === 'verified' && (
-                    <div className="inline-block bg-brand-green-light text-brand-green-hover text-xs font-semibold px-3 py-1.5 rounded-none border border-brand-green-border uppercase font-mono">
+                    <div className="inline-block bg-brand-blue-light text-brand-blue-hover text-xs font-semibold px-3 py-1.5 rounded-none border border-brand-blue-border uppercase font-mono">
                       Terverifikasi (Lunas - Siap Ambil Race Bag)
                     </div>
                   )}
@@ -281,7 +286,7 @@ export default function CheckinClient({ initialRunner, initialCodeQuery }) {
                     <button
                       onClick={handleCheckinComplete}
                       disabled={loading}
-                      className="w-full bg-brand-green hover:bg-brand-green-hover text-brand-white font-bold py-4 px-6 transition duration-150 rounded-none text-sm tracking-wider uppercase font-mono"
+                      className="w-full bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-bold py-4 px-6 transition duration-150 rounded-none text-sm tracking-wider uppercase font-mono"
                     >
                       {loading ? 'Memproses...' : 'SELESAI (MARK BAG AS DISTRIBUTED)'}
                     </button>

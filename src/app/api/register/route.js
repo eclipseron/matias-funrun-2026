@@ -97,7 +97,16 @@ export async function POST(request) {
 
     // Trigger verification pending email asynchronously
     try {
-      await sendVerificationPendingEmail(newRunner.email, newRunner.name);
+      await sendVerificationPendingEmail({
+        email: newRunner.email,
+        name: newRunner.name,
+        uuid: newRunner.uuid,
+        competition_type: competition_type.trim(),
+        whatsapp: whatsapp.trim(),
+        bib_name: bib_name.trim(),
+        tshirt_size: tshirt_size.trim(),
+        registered_at: new Date()
+      });
     } catch (emailErr) {
       console.error('Registration email sending failed (proceeding with registration):', emailErr);
     }

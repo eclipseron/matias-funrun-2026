@@ -147,16 +147,21 @@ export default function DashboardClient({ initialRunners }) {
       {/* Admin Navbar */}
       <header className="bg-brand-dark text-brand-white py-4 px-4 sm:px-6 lg:px-8 border-b border-brand-dark">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-brand-white">
-              MATIAS FUN RUN &amp; WALK <span className="text-brand-green">ADMIN</span>
-            </h1>
-            <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider">
-              Sistem Registrasi &amp; Verifikasi Peserta
-            </p>
+          <div className="flex items-center gap-3">
+            <img src="/logo-matias-run.png" alt="Matias Fun Run" className="h-10 w-auto object-contain" />
+            <div className="h-6 w-[1px] bg-slate-700"></div>
+            <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-8 w-auto object-contain hidden sm:block" />
+            <div className="pl-1">
+              <h1 className="text-sm font-bold text-brand-white leading-tight">
+                MATIAS FUN RUN <span className="text-brand-blue">ADMIN</span>
+              </h1>
+              <p className="text-[9px] text-slate-400 font-mono uppercase tracking-wider leading-none">
+                Registrasi &amp; Verifikasi
+              </p>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <Link href="/admin/checkin" className="inline-block bg-brand-green hover:bg-brand-green-hover text-brand-white font-semibold py-2 px-4 transition duration-150 rounded-none text-xs tracking-wider">
+            <Link href="/admin/checkin" className="inline-block bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-semibold py-2 px-4 transition duration-150 rounded-none text-xs tracking-wider">
               CHECK-IN RACE BAG
             </Link>
             <button
@@ -193,8 +198,8 @@ export default function DashboardClient({ initialRunners }) {
             <h3 className="text-3xl font-extrabold text-brand-dark mt-2">{pendingCount}</h3>
           </div>
 
-          <div className="bg-brand-white border border-brand-border p-5 rounded-none border-l-4 border-brand-green">
-            <p className="text-xs font-mono text-slate-400 uppercase tracking-wider text-brand-green">Terverifikasi (Lunas)</p>
+          <div className="bg-brand-white border border-brand-border p-5 rounded-none border-l-4 border-brand-blue">
+            <p className="text-xs font-mono text-slate-400 uppercase tracking-wider text-brand-blue">Terverifikasi (Lunas)</p>
             <h3 className="text-3xl font-extrabold text-brand-dark mt-2">{verifiedCount}</h3>
           </div>
 
@@ -228,7 +233,7 @@ export default function DashboardClient({ initialRunners }) {
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className="border border-brand-border bg-brand-white p-2 text-xs rounded-none text-brand-dark outline-none focus:border-brand-green"
+                className="border border-brand-border bg-brand-white p-2 text-xs rounded-none text-brand-dark outline-none focus:border-brand-blue"
               >
                 <option value="all">Semua Kategori</option>
                 <option value="Fun Run">Fun Run</option>
@@ -242,7 +247,7 @@ export default function DashboardClient({ initialRunners }) {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="border border-brand-border bg-brand-white p-2 text-xs rounded-none text-brand-dark outline-none focus:border-brand-green"
+                className="border border-brand-border bg-brand-white p-2 text-xs rounded-none text-brand-dark outline-none focus:border-brand-blue"
               >
                 <option value="all">Semua Status</option>
                 <option value="pending">Pending</option>
@@ -301,7 +306,7 @@ export default function DashboardClient({ initialRunners }) {
                     <td className="p-4">
                       <p className="font-bold text-brand-dark">{runner.name}</p>
                       <p className="text-xs text-slate-500 mt-0.5 uppercase tracking-wide font-mono">
-                        {runner.gender === 'Laki-laki' ? 'Laki-laki (L)' : 'Perempuan (P)'} | <strong className="text-brand-green">{calculateAge(runner.birth_date)} Tahun</strong>
+                        {runner.gender === 'Laki-laki' ? 'Laki-laki (L)' : 'Perempuan (P)'} | <strong className="text-brand-blue">{calculateAge(runner.birth_date)} Tahun</strong>
                       </p>
                       <p className="text-[10px] text-slate-400 mt-1 font-mono">Lahir: {runner.birth_place}, {new Date(runner.birth_date).toLocaleDateString('id-ID')}</p>
                     </td>
@@ -320,7 +325,7 @@ export default function DashboardClient({ initialRunners }) {
                         </span>
                       )}
                       {runner.status === 'verified' && (
-                        <span className="inline-block bg-brand-green-light text-brand-green-hover text-[10px] font-bold px-2 py-0.5 rounded-none border border-brand-green-border uppercase font-mono">
+                        <span className="inline-block bg-brand-blue-light text-brand-blue-hover text-[10px] font-bold px-2 py-0.5 rounded-none border border-brand-blue-border uppercase font-mono">
                           Verified
                         </span>
                       )}
@@ -352,7 +357,7 @@ export default function DashboardClient({ initialRunners }) {
                         <button
                           onClick={() => handleVerify(runner.id)}
                           disabled={verifyingId === runner.id}
-                          className="bg-brand-green hover:bg-brand-green-hover text-brand-white font-semibold py-1.5 px-3 transition duration-150 rounded-none text-xs tracking-wider disabled:opacity-50 disabled:cursor-not-allowed uppercase font-mono"
+                          className="bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-semibold py-1.5 px-3 transition duration-150 rounded-none text-xs tracking-wider disabled:opacity-50 disabled:cursor-not-allowed uppercase font-mono"
                         >
                           {verifyingId === runner.id ? 'PROSES...' : 'VERIFIKASI'}
                         </button>
@@ -406,7 +411,7 @@ export default function DashboardClient({ initialRunners }) {
                     <p className="text-xs font-semibold text-brand-dark">
                       {activeRunner.birth_place}, {new Date(activeRunner.birth_date).toLocaleDateString('id-ID')}
                     </p>
-                    <p className="text-brand-green font-bold font-mono mt-0.5">{calculateAge(activeRunner.birth_date)} Tahun</p>
+                    <p className="text-brand-blue font-bold font-mono mt-0.5">{calculateAge(activeRunner.birth_date)} Tahun</p>
                   </div>
                   <div>
                     <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Identitas ({activeRunner.identity_type})</h4>
@@ -430,16 +435,16 @@ export default function DashboardClient({ initialRunners }) {
                 <div className="border-t border-brand-border pt-3">
                   <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Kontak Darurat</h4>
                   <p className="text-xs font-bold text-slate-800">{activeRunner.emergency_contact_name}</p>
-                  <p className="text-xs text-slate-600 mt-0.5">Hubungan: <span className="capitalize font-semibold text-brand-green">{activeRunner.emergency_contact_relationship}</span></p>
+                  <p className="text-xs text-slate-600 mt-0.5">Hubungan: <span className="capitalize font-semibold text-brand-blue">{activeRunner.emergency_contact_relationship}</span></p>
                 </div>
+              </div>
 
-                <div className="border-t border-brand-border pt-3">
-                  <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Status Registrasi</h4>
-                  <p className="text-xs font-semibold mt-1">
-                    {activeRunner.status === 'pending' && <span className="text-yellow-600 font-bold uppercase font-mono">Pending Verifikasi</span>}
-                    {activeRunner.status === 'verified' && <span className="text-brand-green font-bold uppercase font-mono">Terverifikasi (Kode: {activeRunner.registration_code})</span>}
-                    {activeRunner.status === 'completed' && <span className="text-slate-500 font-bold uppercase font-mono">Selesai (Bag Diambil)</span>}
-                  </p>
+              <div className="border-t border-brand-border pt-4 mt-4 flex items-center justify-between">
+                <div>
+                  <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider">Status Pembayaran</p>
+                  {activeRunner.status === 'pending' && <span className="text-amber-500 font-bold uppercase font-mono">Menunggu Verifikasi</span>}
+                  {activeRunner.status === 'verified' && <span className="text-brand-blue font-bold uppercase font-mono">Terverifikasi (Kode: {activeRunner.registration_code})</span>}
+                  {activeRunner.status === 'completed' && <span className="text-slate-500 font-bold uppercase font-mono">Selesai (Bag Diambil)</span>}
                 </div>
               </div>
 
@@ -448,7 +453,7 @@ export default function DashboardClient({ initialRunners }) {
                 <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Bukti Pembayaran Transfer</h4>
                 {loadingScreenshot ? (
                   <div className="flex flex-col items-center justify-center py-12 border border-brand-border bg-brand-light">
-                    <div className="w-8 h-8 border-2 border-brand-green border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
                     <p className="text-[10px] text-slate-500 font-bold mt-2 uppercase tracking-wide">Memuat Gambar...</p>
                   </div>
                 ) : activeScreenshot ? (
@@ -477,7 +482,7 @@ export default function DashboardClient({ initialRunners }) {
                     closeDetailsModal();
                     handleVerify(id);
                   }}
-                  className="bg-brand-green hover:bg-brand-green-hover text-brand-white font-semibold py-2 px-4 transition duration-150 rounded-none text-xs tracking-wider uppercase font-mono"
+                  className="bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-semibold py-2 px-4 transition duration-150 rounded-none text-xs tracking-wider uppercase font-mono"
                 >
                   VERIFIKASI &amp; KIRIM EMAIL
                 </button>

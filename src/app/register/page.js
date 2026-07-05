@@ -8,6 +8,11 @@ import Link from 'next/link';
 export default function Register() {
   const router = useRouter();
   
+  const CUTOFF_EARLY_BIRD = new Date('2026-11-10T23:59:59');
+  const isEarlyBird = new Date() < CUTOFF_EARLY_BIRD;
+  const activePrice = isEarlyBird ? 'Rp 125.000' : 'Rp 175.000';
+  const priceType = isEarlyBird ? 'Early Bird' : 'Harga Normal';
+  
   // State for choosing competition type first
   const [competitionType, setCompetitionType] = useState('');
   
@@ -198,13 +203,15 @@ export default function Register() {
   return (
     <div className="flex flex-col min-h-screen bg-brand-light text-brand-dark">
       {/* Header */}
-      <header className="bg-brand-dark text-brand-white border-b border-brand-dark py-6 px-4 sm:px-6 lg:px-8">
+      <header className="bg-brand-dark text-brand-white border-b border-brand-dark py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <Link href="/" className="text-xl font-bold tracking-tight text-brand-white sm:text-2xl hover:text-slate-200">
-            MATIAS <span className="text-brand-green">FUN RUN &amp; WALK</span> 2026
+          <Link href="/" className="flex items-center gap-3">
+            <img src="/logo-matias-run.png" alt="Matias Fun Run 2026" className="h-12 w-auto object-contain" />
+            <div className="h-6 w-[1px] bg-slate-700 hidden sm:block"></div>
+            <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-8 w-auto object-contain hidden sm:block" />
           </Link>
-          <Link href="/" className="text-sm font-semibold hover:text-slate-300 text-brand-white">
-            &larr; Beranda
+          <Link href="/" className="text-sm font-semibold hover:text-slate-300 text-brand-white border border-slate-700 px-4 py-2 hover:bg-brand-dark-light transition">
+            &larr; Kembali ke Beranda
           </Link>
         </div>
       </header>
@@ -222,19 +229,22 @@ export default function Register() {
                 INFORMASI PEMBAYARAN
               </h2>
               <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                Silakan lakukan pembayaran sebesar <strong className="text-brand-dark">Rp 150.000</strong> ke rekening berikut sebelum mengisi formulir:
+                Silakan lakukan pembayaran sebesar <strong className="text-brand-dark">{activePrice}</strong> ({priceType}) ke rekening berikut sebelum mengisi formulir:
               </p>
               
               <div className="bg-brand-light border border-brand-border p-4 mb-4 text-xs">
                 <table className="w-full">
                   <tbody>
                     <tr>
-                      <td className="py-1 text-slate-500 font-medium">Bank:</td>
-                      <td className="py-1 font-bold text-brand-dark">Bank Mandiri</td>
+                      <td className="py-2 text-slate-500 font-medium">Bank:</td>
+                      <td className="py-2 font-bold text-brand-dark flex items-center gap-2">
+                        Bank BCA
+                        <img src="/bca-logo.svg" alt="BCA Logo" className="h-6 w-auto object-contain" />
+                      </td>
                     </tr>
                     <tr>
                       <td className="py-1 text-slate-500 font-medium">No. Rekening:</td>
-                      <td className="py-1 font-mono font-bold text-brand-green tracking-wide">123-00-0987654-3</td>
+                      <td className="py-1 font-mono font-bold text-brand-blue tracking-wide">877-009-8765</td>
                     </tr>
                     <tr>
                       <td className="py-1 text-slate-500 font-medium">Penerima:</td>
@@ -242,13 +252,13 @@ export default function Register() {
                     </tr>
                     <tr>
                       <td className="py-1 text-slate-500 font-medium">Nominal:</td>
-                      <td className="py-1 font-bold text-brand-dark">Rp 150.000</td>
+                      <td className="py-1 font-bold text-brand-dark">{activePrice} <span className="text-[10px] text-slate-500 font-normal">({priceType})</span></td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <div className="bg-brand-green-light border-l-4 border-brand-green p-4 text-[11px] text-brand-green-hover leading-relaxed">
+              <div className="bg-brand-blue-light border-l-4 border-brand-blue p-4 text-[11px] text-brand-blue-hover leading-relaxed">
                 <strong>PENTING:</strong> Simpan bukti transfer dalam format gambar (PNG/JPG) untuk diunggah sebagai prasyarat pendaftaran.
               </div>
             </div>
@@ -265,7 +275,7 @@ export default function Register() {
                 <div className="pt-2 space-y-2 text-xs">
                   <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-[70px]">Email:</span>
-                    <a href="mailto:support@matiasfunrun.com" className="text-brand-green hover:underline">support@matiasfunrun.com</a>
+                    <a href="mailto:info@matias-funrun.my.id" className="text-brand-blue hover:underline">info@matias-funrun.my.id</a>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-[70px]">Telepon:</span>
@@ -299,26 +309,26 @@ export default function Register() {
                   <button
                     type="button"
                     onClick={() => setCompetitionType('Fun Run')}
-                    className="border-2 border-brand-dark hover:border-brand-green bg-brand-dark hover:bg-brand-green text-brand-white p-8 rounded-none transition duration-150 group cursor-pointer"
+                    className="border-2 border-brand-dark hover:border-brand-blue bg-brand-dark hover:bg-brand-blue text-brand-white p-8 rounded-none transition duration-150 group cursor-pointer"
                   >
                     <h3 className="text-xl font-bold tracking-wider mb-2 font-mono group-hover:text-brand-white">
                       FUN RUN
                     </h3>
-                    <p className="text-xs text-slate-300 group-hover:text-emerald-100">
-                      Rute Lari Komunitas (10K / 5K). BIB personal, medali finisher, dan jersey pelari.
+                    <p className="text-xs text-slate-300 group-hover:text-blue-100">
+                      Rute Lari Komunitas (4K). BIB personal, medali finisher, dan jersey pelari.
                     </p>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setCompetitionType('Fun Walk')}
-                    className="border-2 border-brand-dark hover:border-brand-green bg-brand-white hover:bg-brand-green text-brand-dark hover:text-brand-white p-8 rounded-none transition duration-150 group cursor-pointer"
+                    className="border-2 border-brand-dark hover:border-brand-blue bg-brand-white hover:bg-brand-blue text-brand-dark hover:text-brand-white p-8 rounded-none transition duration-150 group cursor-pointer"
                   >
                     <h3 className="text-xl font-bold tracking-wider mb-2 font-mono text-brand-dark group-hover:text-brand-white">
                       FUN WALK
                     </h3>
-                    <p className="text-xs text-slate-500 group-hover:text-emerald-100">
-                      Rute Jalan Sehat Santai (3K). Nomor BIB, medali finisher, dan jersey peserta.
+                    <p className="text-xs text-slate-500 group-hover:text-blue-100">
+                      Rute Jalan Sehat Santai (2.5K). Nomor BIB, medali finisher, dan jersey peserta.
                     </p>
                   </button>
 
@@ -333,7 +343,7 @@ export default function Register() {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-brand-light border border-brand-border p-4 mb-6 gap-3">
                   <div>
                     <span className="text-[10px] text-slate-400 font-mono uppercase tracking-wider">Kategori Pendaftaran</span>
-                    <h3 className="text-lg font-black text-brand-green tracking-wide uppercase font-mono">{competitionType}</h3>
+                    <h3 className="text-lg font-black text-brand-blue tracking-wide uppercase font-mono">{competitionType}</h3>
                   </div>
                   <button
                     type="button"
@@ -345,7 +355,7 @@ export default function Register() {
                         setError('');
                       }
                     }}
-                    className="text-xs text-brand-dark hover:text-brand-green font-bold underline font-mono cursor-pointer"
+                    className="text-xs text-brand-dark hover:text-brand-blue font-bold underline font-mono cursor-pointer"
                   >
                     [ UBAH KATEGORI ]
                   </button>
@@ -365,7 +375,7 @@ export default function Register() {
                   
                   {/* Bagian 1: Data Diri Pelari */}
                   <div className="border-b border-brand-border pb-6 space-y-4">
-                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-green mb-4">
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
                       I. DATA DIRI PESERTA
                     </h3>
 
@@ -401,7 +411,7 @@ export default function Register() {
                             checked={formData.gender === 'Laki-laki'}
                             onChange={handleInputChange}
                             disabled={loading}
-                            className="accent-brand-green"
+                            className="accent-brand-blue"
                           />
                           Laki-laki
                         </label>
@@ -413,7 +423,7 @@ export default function Register() {
                             checked={formData.gender === 'Perempuan'}
                             onChange={handleInputChange}
                             disabled={loading}
-                            className="accent-brand-green"
+                            className="accent-brand-blue"
                           />
                           Perempuan
                         </label>
@@ -497,7 +507,7 @@ export default function Register() {
 
                   {/* Bagian 2: Kontak & Detail BIB/Jersey */}
                   <div className="border-b border-brand-border pb-6 space-y-4">
-                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-green mb-4">
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
                       II. KONTAK &amp; ATRIBUT PESERTA
                     </h3>
 
@@ -608,7 +618,7 @@ export default function Register() {
 
                   {/* Bagian 3: Kontak Darurat */}
                   <div className="border-b border-brand-border pb-6 space-y-4">
-                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-green mb-4">
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
                       III. KONTAK DARURAT (EMERGENCY CONTACT)
                     </h3>
 
@@ -681,7 +691,7 @@ export default function Register() {
 
                   {/* Bagian 4: Unggah Bukti Bayar */}
                   <div className="space-y-4">
-                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-green mb-4">
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
                       IV. UNGGAH BUKTI TRANSFER PEMBAYARAN
                     </h3>
 
@@ -702,7 +712,7 @@ export default function Register() {
                           />
                           <label
                             htmlFor="screenshot-upload"
-                            className="flex items-center justify-center border border-dashed border-slate-300 hover:border-brand-green py-6 px-4 cursor-pointer text-sm text-slate-500 hover:text-brand-green transition duration-150 w-full"
+                            className="flex items-center justify-center border border-dashed border-slate-300 hover:border-brand-blue py-6 px-4 cursor-pointer text-sm text-slate-500 hover:text-brand-blue transition duration-150 w-full"
                           >
                             {fileName ? (
                               <span className="font-semibold text-brand-dark truncate">{fileName} (Ubah File)</span>
@@ -731,7 +741,7 @@ export default function Register() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className={`w-full flat-btn-green tracking-wider text-xs uppercase ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                      className={`w-full flat-btn-blue tracking-wider text-xs uppercase ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                     >
                       {loading ? 'Mengirim Data Pendaftaran...' : 'Kirim Pendaftaran'}
                     </button>

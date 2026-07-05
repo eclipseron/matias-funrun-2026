@@ -116,7 +116,7 @@ function LoginForm() {
       </form>
 
       <div className="text-center mt-6 pt-6 border-t border-brand-border">
-        <Link href="/" className="text-xs text-brand-green hover:underline">
+        <Link href="/" className="text-xs text-brand-blue hover:underline">
           &larr; Return to Event Homepage
         </Link>
       </div>

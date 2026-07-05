@@ -1,29 +1,137 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Home() {
+  // Countdown Target: 29 November 2026 23:59:59
+  const targetDate = new Date('2026-11-29T23:59:59').getTime();
+  
+  const [timeLeft, setTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    isExpired: false
+  });
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true });
+        return;
+      }
+
+      const msInDay = 24 * 60 * 60 * 1000;
+      const msInHour = 60 * 60 * 1000;
+      const msInMinute = 60 * 1000;
+
+      const days = Math.floor(difference / msInDay);
+      const hours = Math.floor((difference % msInDay) / msInHour);
+      const minutes = Math.floor((difference % msInHour) / msInMinute);
+      const seconds = Math.floor((difference % msInMinute) / 1000);
+
+      setTimeLeft({ days, hours, minutes, seconds, isExpired: false });
+    };
+
+    calculateTimeLeft();
+    const interval = setInterval(calculateTimeLeft, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  // Pricing calculation based on date
+  const CUTOFF_EARLY_BIRD = new Date('2026-11-10T23:59:59');
+  const [isEarlyBird, setIsEarlyBird] = useState(true);
+
+  useEffect(() => {
+    setIsEarlyBird(new Date() < CUTOFF_EARLY_BIRD);
+  }, []);
+
+  const activePrice = isEarlyBird ? 'Rp 125.000' : 'Rp 175.000';
+  const priceType = isEarlyBird ? 'Early Bird' : 'Harga Normal';
+
   return (
     <div className="flex flex-col min-h-screen bg-brand-light">
       {/* Header */}
-      <header className="bg-brand-dark text-brand-white border-b border-brand-dark py-6 px-4 sm:px-6 lg:px-8">
+      <header className="bg-brand-dark text-brand-white border-b border-brand-dark py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-brand-white sm:text-3xl">
-              MATIAS <span className="text-brand-green">FUN RUN &amp; WALK</span> 2026
-            </h1>
-            <p className="text-xs text-slate-400 mt-1 uppercase tracking-widest font-mono">
-              Acara Tahunan Fun Run &amp; Fun Walk Komunitas
-            </p>
+          <div className="flex items-center gap-3">
+            <img src="/logo-matias-run.png" alt="Matias Fun Run 2026" className="h-14 w-auto object-contain" />
+            <div className="h-8 w-[1px] bg-slate-700 hidden sm:block"></div>
+            <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-10 w-auto object-contain hidden sm:block" />
+            <div className="hidden md:block pl-1 text-left">
+              <p className="text-[10px] font-bold text-brand-blue uppercase tracking-wider">Organized by</p>
+              <p className="text-[9px] text-slate-400 leading-tight">Gereja St. Matias Rasul<br/>Paroki Kosambi Baru</p>
+            </div>
           </div>
           <div className="flex gap-4">
-            <Link href="/register" className="inline-block bg-brand-green hover:bg-brand-green-hover text-brand-white font-semibold py-2.5 px-6 transition duration-150 rounded-none text-sm tracking-wide">
+            <Link href="/register" className="inline-block bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-semibold py-2.5 px-6 transition duration-150 rounded-none text-sm tracking-wide">
               DAFTAR SEKARANG
             </Link>
             <Link href="/admin/login" className="inline-block bg-transparent hover:bg-brand-dark-light text-brand-white border border-slate-600 font-semibold py-2.5 px-6 transition duration-150 rounded-none text-sm tracking-wide">
-              DASHBOARD ADMIN
+              LOGIN
             </Link>
           </div>
         </div>
       </header>
+
+      {/* Countdown Penutupan Pendaftaran */}
+      <div className="bg-brand-dark text-brand-white py-8 px-4 border-b border-slate-800">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-xs font-bold font-mono tracking-widest text-slate-400 uppercase mb-4">
+            PENDAFTARAN DITUTUP DALAM (29 NOVEMBER 2026)
+          </h2>
+          
+          {timeLeft.isExpired ? (
+            <div className="text-xl font-bold text-red-500 uppercase tracking-wider py-2">
+              Pendaftaran Telah Ditutup
+            </div>
+          ) : (
+            <div className="flex flex-row justify-center items-center gap-1.5 sm:gap-3 max-w-xl mx-auto w-full px-2">
+              {/* Box Hari */}
+              <div className="bg-brand-dark-light border border-slate-700 flex-1 min-w-0 p-2 sm:p-3 rounded-none text-center">
+                <div className="text-xl sm:text-3xl md:text-4xl font-extrabold font-mono text-brand-white tracking-tight leading-none">
+                  {String(timeLeft.days).padStart(2, '0')}
+                </div>
+                <div className="text-[8px] sm:text-[10px] text-sky-300 font-mono uppercase tracking-wider mt-1 sm:mt-2">Hari</div>
+              </div>
+
+              <div className="text-xs sm:text-xl font-bold text-slate-600 select-none">:</div>
+
+              {/* Box Jam */}
+              <div className="bg-brand-dark-light border border-slate-700 flex-1 min-w-0 p-2 sm:p-3 rounded-none text-center">
+                <div className="text-xl sm:text-3xl md:text-4xl font-extrabold font-mono text-brand-white tracking-tight leading-none">
+                  {String(timeLeft.hours).padStart(2, '0')}
+                </div>
+                <div className="text-[8px] sm:text-[10px] text-sky-300 font-mono uppercase tracking-wider mt-1 sm:mt-2">Jam</div>
+              </div>
+
+              <div className="text-xs sm:text-xl font-bold text-slate-600 select-none">:</div>
+
+              {/* Box Menit */}
+              <div className="bg-brand-dark-light border border-slate-700 flex-1 min-w-0 p-2 sm:p-3 rounded-none text-center">
+                <div className="text-xl sm:text-3xl md:text-4xl font-extrabold font-mono text-brand-white tracking-tight leading-none">
+                  {String(timeLeft.minutes).padStart(2, '0')}
+                </div>
+                <div className="text-[8px] sm:text-[10px] text-sky-300 font-mono uppercase tracking-wider mt-1 sm:mt-2">Menit</div>
+              </div>
+
+              <div className="text-xs sm:text-xl font-bold text-slate-600 select-none">:</div>
+
+              {/* Box Detik */}
+              <div className="bg-brand-dark-light border border-slate-700 flex-1 min-w-0 p-2 sm:p-3 rounded-none text-center">
+                <div className="text-xl sm:text-3xl md:text-4xl font-extrabold font-mono text-brand-white tracking-tight leading-none">
+                  {String(timeLeft.seconds).padStart(2, '0')}
+                </div>
+                <div className="text-[8px] sm:text-[10px] text-sky-300 font-mono uppercase tracking-wider mt-1 sm:mt-2">Detik</div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Main Section */}
       <main className="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -37,26 +145,26 @@ export default function Home() {
               </h2>
               <p className="text-lg text-slate-600 leading-relaxed mb-6">
                 Selamat datang di portal pendaftaran resmi untuk <strong className="text-brand-dark">Matias Fun Run &amp; Walk 2026</strong>. 
-                Tahun ini, kami mengundang para pelari, keluarga, dan seluruh pencinta olahraga untuk berpartisipasi dalam kategori pilihan Anda: **Fun Run** dan **Fun Walk**. 
+                Tahun ini, kami mengundang para pelari, keluarga, dan seluruh pencinta olahraga untuk berpartisipasi dalam kategori pilihan Anda: <strong className="text-brand-dark">Lari 4K (Fun Run)</strong> dan <strong className="text-brand-dark">Jalan 2.5K (Fun Walk)</strong>. 
                 Mari berlari dan berjalan bersama demi kesehatan, kebersamaan, dan kegembiraan!
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
-                <div className="border-l-4 border-brand-green pl-4">
+                <div className="border-l-4 border-brand-blue pl-4">
                   <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Tanggal Acara</h4>
-                  <p className="text-lg font-bold text-brand-dark">Minggu, 11 Oktober 2026</p>
+                  <p className="text-lg font-bold text-brand-dark">Minggu, 6 Desember 2026</p>
                 </div>
-                <div className="border-l-4 border-brand-green pl-4">
+                <div className="border-l-4 border-brand-blue pl-4">
                   <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Lokasi Mulai</h4>
                   <p className="text-lg font-bold text-brand-dark">Pintu B Stadion Utama, City Park</p>
                 </div>
-                <div className="border-l-4 border-brand-green pl-4">
+                <div className="border-l-4 border-brand-blue pl-4">
                   <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Waktu Mulai</h4>
                   <p className="text-lg font-bold text-brand-dark">06:00 WIB (Flag Off)</p>
                 </div>
-                <div className="border-l-4 border-brand-green pl-4">
+                <div className="border-l-4 border-brand-blue pl-4">
                   <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Kategori Pilihan</h4>
-                  <p className="text-lg font-bold text-brand-dark">Fun Run | Fun Walk</p>
+                  <p className="text-lg font-bold text-brand-dark">Lari 4K | Jalan 2.5K</p>
                 </div>
               </div>
             </section>
@@ -122,25 +230,38 @@ export default function Home() {
           <div className="space-y-8">
             
             {/* Call to Action Box */}
-            <div className="bg-brand-dark text-brand-white p-8 rounded-none border-t-4 border-brand-green">
+            <div className="bg-brand-dark text-brand-white p-8 rounded-none border-t-4 border-brand-blue">
               <h3 className="text-xl font-bold tracking-tight text-brand-white mb-2">
                 IKUTI KESERUANNYA
               </h3>
               <p className="text-slate-300 text-sm mb-6 leading-relaxed">
-                Biaya pendaftaran adalah sebesar Rp 150.000. Fasilitas peserta: Jersey Resmi, Medali Finisher, Running Bag, Konsumsi, dan Nomor BIB.
+                Fasilitas peserta: Jersey Resmi, Medali Finisher, Running Bag, Konsumsi, dan Nomor BIB.
               </p>
+              
               <div className="bg-brand-dark-light p-4 mb-6 border border-slate-700">
-                <p className="text-xs font-mono text-slate-400 uppercase">Rekening Pembayaran</p>
-                <p className="text-md font-bold mt-1">Bank Mandiri</p>
-                <p className="text-lg font-mono font-bold text-brand-green tracking-wide">123-00-0987654-3</p>
-                <p className="text-xs text-slate-300 mt-1">a.n. Asosiasi Matias Fun Run</p>
+                <p className="text-[10px] font-mono text-slate-400 uppercase">Rekening Pembayaran</p>
+                <div className="flex items-center gap-2 mt-1 mb-3 bg-white p-2 rounded-sm w-fit">
+                  <img src="/bca-logo.svg" alt="BCA Logo" className="h-6 w-auto object-contain" />
+                </div>
+                
+                <p className="text-xs font-mono text-slate-400 uppercase">No. Rekening BCA</p>
+                <p className="text-lg font-mono font-bold text-sky-300 tracking-wide mt-0.5">877-009-8765</p>
+                <p className="text-xs text-slate-300 mt-1 mb-4">a.n. Asosiasi Matias Fun Run</p>
+                
+                <p className="text-[10px] font-mono text-slate-400 uppercase">Biaya Pendaftaran</p>
+                <p className="text-md font-bold mt-1 text-sky-300">{activePrice} <span className="text-xs text-slate-300 font-normal">({priceType})</span></p>
+                <p className="text-[10px] text-slate-400 mt-1.5 font-mono leading-tight">
+                  Early Bird: Rp 125.000 (s.d. 10 Nov)<br/>
+                  Normal: Rp 175.000 (11 - 29 Nov)
+                </p>
               </div>
-              <Link href="/register" className="block w-full text-center bg-brand-green hover:bg-brand-green-hover text-brand-white font-bold py-3 px-4 transition duration-150 rounded-none tracking-wider text-sm">
+              
+              <Link href="/register" className="block w-full text-center bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-bold py-3 px-4 transition duration-150 rounded-none tracking-wider text-sm">
                 MENUJU FORMULIR PENDAFTARAN
               </Link>
             </div>
 
-            {/* Service Desk Information Placeholder */}
+            {/* Service Desk Information */}
             <div className="bg-brand-white border border-brand-border p-6 rounded-none">
               <h3 className="text-sm font-bold text-brand-dark uppercase tracking-wider mb-4 border-b border-brand-border pb-2 font-mono">
                 LAYANAN INFORMASI (SERVICE DESK)
@@ -152,11 +273,11 @@ export default function Home() {
                 <div className="pt-2 space-y-2">
                   <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-[50px]">Email:</span>
-                    <a href="mailto:support@matiasfunrun.com" className="text-brand-green hover:underline">support@matiasfunrun.com</a>
+                    <a href="mailto:info@matias-funrun.my.id" className="text-brand-blue hover:underline font-semibold">info@matias-funrun.my.id</a>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-[50px]">Telepon:</span>
-                    <span className="text-slate-800">+62 812-3456-7890</span>
+                    <span className="text-slate-800 font-semibold">+62 812-3456-7890</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-[50px]">Jam Kerja:</span>
@@ -175,7 +296,7 @@ export default function Home() {
       <footer className="bg-brand-dark text-slate-400 py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-center text-xs">
         <div className="max-w-6xl mx-auto">
           <p>&copy; 2026 Matias Fun Run &amp; Walk. Hak Cipta Dilindungi.</p>
-          <p className="mt-2 text-slate-600">Situs ini adalah portal resmi pendaftaran peserta. Harap pastikan status pembayaran Anda telah diverifikasi.</p>
+          <p className="mt-2 text-slate-500">Situs ini adalah portal resmi pendaftaran peserta. Harap pastikan status pembayaran Anda telah diverifikasi.</p>
         </div>
       </footer>
     </div>
