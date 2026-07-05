@@ -131,7 +131,7 @@ export async function sendVerificationPendingEmail({
   const subject = 'Pendaftaran Sedang Diverifikasi - Matias Fun Run & Walk 2026';
   const formattedDate = formatDateTime(registered_at || new Date());
   
-  const text = `Halo ${name},\n\nTerima kasih telah mendaftar untuk Matias Fun Run & Walk 2026!\n\nBukti pembayaran Anda saat ini sedang dalam proses verifikasi oleh panitia (estimasi 1-3 hari kerja).\n\nRingkasan Pesanan:\n- ID Pesanan: ${uuid}\n- Tanggal: ${formattedDate}\n- Total Pembayaran: Rp ${getPriceForDate(registered_at)}\n- Status: PENDING (Dalam Verifikasi)\n\nDetail Pendaftaran:\n- Kategori: ${competition_type}\n- Nama di BIB: ${bib_name}\n- Ukuran Jersey: ${tshirt_size}\n\nSalam hangat,\nPanitia Matias Fun Run`;
+  const text = `Halo ${name},\n\nTerima kasih telah mendaftar untuk Matias Fun Run & Walk 2026!\n\nBukti pembayaran Anda saat ini sedang dalam proses verifikasi oleh panitia (estimasi 1-3 hari kerja).\n\nRingkasan Pesanan:\n- ID Pesanan: ${uuid}\n- Tanggal: ${formattedDate}\n- Total Pembayaran: Rp ${getPriceForDate(registered_at)}\n- Status: Sedang dakam Verifikasi\n\nDetail Pendaftaran:\n- Kategori: ${competition_type}\n- Nama di BIB: ${bib_name}\n- Ukuran Jersey: ${tshirt_size}\n\nSalam hangat,\nPanitia Matias Fun Run`;
 
   const html = `
     <div style="background-color: #d1eae5; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; max-width: 600px; margin: 0 auto; border-radius: 12px;">
@@ -155,7 +155,7 @@ export async function sendVerificationPendingEmail({
         
         <div style="text-align: center; margin-bottom: 20px;">
           <span style="background-color: #0ea5e9; color: #ffffff; padding: 6px 16px; border-radius: 9999px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block;">
-            pending
+            Sedang dalam verifikasi
           </span>
         </div>
 
