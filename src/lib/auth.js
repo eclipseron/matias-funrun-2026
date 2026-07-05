@@ -30,7 +30,7 @@ export function verifyToken(token) {
 }
 
 /**
- * Authenticates an administrator by querying their record in the database.
+ * Authenticates an administrator by querying their record in the database (MySQL).
  * Matches passwords using bcrypt and records the last_login timestamp on success.
  * 
  * @param {string} username - Input username
@@ -39,7 +39,8 @@ export function verifyToken(token) {
  */
 export async function authenticateAdmin(username, password) {
   try {
-    const sql = 'SELECT id, name, username, password FROM admins WHERE username = $1';
+    // MySQL parameter placeholders use '?' instead of PostgreSQL '$1'
+    const sql = 'SELECT id, name, username, password FROM admins WHERE username = ?';
     const res = await query(sql, [username.trim()]);
 
     if (res.rowCount === 0) {
@@ -53,8 +54,8 @@ export async function authenticateAdmin(username, password) {
       return null;
     }
 
-    // Update last_login timestamp in database
-    await query('UPDATE admins SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [admin.id]);
+    // Update last_login timestamp in database (MySQL compatibility)
+    await query('UPDATE admins SET last_login = CURRENT_TIMESTAMP WHERE id = ?', [admin.id]);
 
     return {
       id: admin.id,

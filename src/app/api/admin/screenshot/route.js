@@ -19,8 +19,8 @@ export async function GET(request) {
       return NextResponse.json({ success: false, error: 'Runner ID is required' }, { status: 400 });
     }
 
-    // 2. Fetch only payment_screenshot text from db
-    const dbResult = await query('SELECT id, payment_screenshot FROM runners WHERE id = $1', [id]);
+    // 2. Fetch only payment_screenshot text from db (MySQL ? placeholder)
+    const dbResult = await query('SELECT id, payment_screenshot FROM runners WHERE id = ?', [id]);
     if (dbResult.rowCount === 0) {
       return NextResponse.json({ success: false, error: 'Runner not found' }, { status: 404 });
     }

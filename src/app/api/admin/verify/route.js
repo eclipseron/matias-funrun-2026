@@ -30,8 +30,8 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Runner ID is required' }, { status: 400 });
     }
 
-    // 2. Fetch current status and check if runner exists
-    const runnerRes = await query('SELECT id, status, email, name FROM runners WHERE id = $1', [id]);
+    // 2. Fetch current status and check if runner exists (MySQL ? placeholder)
+    const runnerRes = await query('SELECT id, status, email, name FROM runners WHERE id = ?', [id]);
     if (runnerRes.rowCount === 0) {
       return NextResponse.json({ success: false, error: 'Runner not found' }, { status: 404 });
     }
@@ -44,14 +44,14 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
-    // 3. Generate unique registration code (ensure it's unique in the DB)
+    // 3. Generate unique registration code (MySQL ? placeholder)
     let registrationCode = '';
     let isUnique = false;
     let attempts = 0;
 
     while (!isUnique && attempts < 10) {
       registrationCode = generateAlphanumericCode(8);
-      const codeCheck = await query('SELECT id FROM runners WHERE registration_code = $1', [registrationCode]);
+      const codeCheck = await query('SELECT id FROM runners WHERE registration_code = ?', [registrationCode]);
       if (codeCheck.rowCount === 0) {
         isUnique = true;
       }
@@ -66,7 +66,6 @@ export async function POST(request) {
     }
 
     // 4. Generate QR Code
-    // The scanned QR code redirects the admin to the checkin page for that code
     const url = new URL(request.url);
     const checkinUrl = `${url.protocol}//${url.host}/admin/checkin?code=${registrationCode}`;
     let qrCodeDataUrl = '';
@@ -83,15 +82,21 @@ export async function POST(request) {
       console.error('QR code generation failed:', qrErr);
     }
 
-    // 5. Update database status
+    // 5. Update database status in MySQL (split into UPDATE then SELECT due to lack of RETURNING clause)
     const updateSql = `
       UPDATE runners 
-      SET status = 'verified', registration_code = $1, verified_at = CURRENT_TIMESTAMP 
-      WHERE id = $2 
-      RETURNING id, name, email, registration_code
+      SET status = 'verified', registration_code = ?, verified_at = CURRENT_TIMESTAMP 
+      WHERE id = ?
     `;
-    const updateResult = await query(updateSql, [registrationCode, id]);
-    const updatedRunner = updateResult.rows[0];
+    await query(updateSql, [registrationCode, id]);
+
+    const selectSql = `
+      SELECT id, name, email, registration_code 
+      FROM runners 
+      WHERE id = ?
+    `;
+    const selectResult = await query(selectSql, [id]);
+    const updatedRunner = selectResult.rows[0];
 
     // 6. Send confirmation email (contains registration code and embedded QR Code image)
     try {

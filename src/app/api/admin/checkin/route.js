@@ -23,9 +23,12 @@ export async function GET(request) {
 
     // 2. Fetch runner by registration code (includes payment_screenshot to let admin review check-in details)
     const runnerRes = await query(
-      `SELECT id, uuid, name, email, whatsapp, status, registration_code, registered_at, verified_at, bag_distributed_at, payment_screenshot 
+      `SELECT id, uuid, competition_type, name, email, whatsapp, gender, birth_place, birth_date, 
+        identity_type, identity_number, bib_name, emergency_contact_name, 
+        emergency_contact_relationship, tshirt_size, status, registration_code, 
+        registered_at, verified_at, bag_distributed_at, payment_screenshot 
        FROM runners 
-       WHERE registration_code = $1`, 
+       WHERE registration_code = ?`, 
       [cleanCode]
     );
     
@@ -64,7 +67,7 @@ export async function POST(request) {
     const cleanCode = registration_code.trim().toUpperCase();
 
     // 2. Fetch runner by registration code
-    const runnerRes = await query('SELECT * FROM runners WHERE registration_code = $1', [cleanCode]);
+    const runnerRes = await query('SELECT * FROM runners WHERE registration_code = ?', [cleanCode]);
     if (runnerRes.rowCount === 0) {
       return NextResponse.json({ success: false, error: 'Runner with this registration code not found' }, { status: 404 });
     }
@@ -91,11 +94,13 @@ export async function POST(request) {
     const updateSql = `
       UPDATE runners 
       SET status = 'completed', bag_distributed_at = CURRENT_TIMESTAMP 
-      WHERE registration_code = $1 
-      RETURNING *
+      WHERE registration_code = ?
     `;
-    const updateResult = await query(updateSql, [cleanCode]);
-    const updatedRunner = updateResult.rows[0];
+    await query(updateSql, [cleanCode]);
+
+    // Fetch the updated runner data since MySQL doesn't support RETURNING
+    const selectRes = await query('SELECT * FROM runners WHERE registration_code = ?', [cleanCode]);
+    const updatedRunner = selectRes.rows[0];
 
     return NextResponse.json({
       success: true,

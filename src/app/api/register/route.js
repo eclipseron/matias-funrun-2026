@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { sendVerificationPendingEmail } from '@/lib/email';
+import crypto from 'crypto';
 
 export async function POST(request) {
   try {
@@ -51,25 +52,28 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Format email tidak valid' }, { status: 400 });
     }
 
-    // Insert runner details into database
+    // Generate UUID v4 in JavaScript for MySQL compatibility
+    const uuid = crypto.randomUUID();
+
+    // MySQL INSERT query with '?' parameter placeholders
     const sql = `
       INSERT INTO runners (
-        competition_type, name, email, whatsapp, gender, birth_place, birth_date,
+        uuid, competition_type, name, email, whatsapp, gender, birth_place, birth_date,
         identity_type, identity_number, bib_name, emergency_contact_name,
         emergency_contact_relationship, tshirt_size, payment_screenshot
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-      RETURNING id, uuid, name, email, status, registered_at
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
+      uuid,
       competition_type.trim(),
       name.trim(),
       email.trim().toLowerCase(),
       whatsapp.trim(),
       gender.trim(),
       birth_place.trim(),
-      birth_date, // Date string is automatically parsed by postgres
+      birth_date, // Date string is auto-parsed by MySQL
       identity_type.trim(),
       identity_number.trim(),
       bib_name.trim(),
@@ -80,7 +84,16 @@ export async function POST(request) {
     ];
 
     const dbResult = await query(sql, values);
-    const newRunner = dbResult.rows[0];
+    const newRunnerId = dbResult.insertId;
+
+    // Construct the runner info object directly
+    const newRunner = {
+      id: newRunnerId,
+      uuid,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      status: 'pending'
+    };
 
     // Trigger verification pending email asynchronously
     try {

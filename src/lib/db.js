@@ -1,45 +1,60 @@
-import pg from 'pg';
-
-const { Pool } = pg;
+import mysql from 'mysql2/promise';
 
 let pool;
 
 if (!pool) {
   const connectionString = process.env.DATABASE_URL;
 
+  // mysql2 supports passing connection string directly, or an options object
   const config = connectionString 
-    ? { connectionString } 
+    ? connectionString 
     : {
-        host: process.env.PGHOST || 'localhost',
-        user: process.env.PGUSER || 'postgres',
-        password: process.env.PGPASSWORD || 'postgres',
-        database: process.env.PGDATABASE || 'matias_funrun',
-        port: parseInt(process.env.PGPORT || '5432', 10),
+        host: process.env.MYSQLHOST || 'localhost',
+        user: process.env.MYSQLUSER || 'root',
+        password: process.env.MYSQLPASSWORD || 'root',
+        database: process.env.MYSQLDATABASE || 'matias_funrun',
+        port: parseInt(process.env.MYSQLPORT || '3306', 10),
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
       };
 
-  pool = new Pool(config);
+  pool = mysql.createPool(config);
 }
 
 /**
- * Executes a parameterized SQL query against the database pool.
- * Uses prepared statements / parameters to prevent SQL injection.
+ * Executes a parameterized SQL query against the MySQL pool.
+ * Uses prepared statements (execute) to prevent SQL injection.
  * 
- * @param {string} text - SQL query template (e.g. 'SELECT * FROM runners WHERE id = $1')
- * @param {Array} [params] - Parameters matching placeholders in query
- * @returns {Promise<pg.QueryResult>} Results of query execution
+ * Normalizes output to match PostgreSQL structure to minimize caller changes:
+ * - SELECT queries return { rows: [data], rowCount: count }
+ * - INSERT/UPDATE/DELETE queries return { rows: [], rowCount: affectedRows, insertId }
+ * 
+ * @param {string} text - SQL query (uses '?' for parameters)
+ * @param {Array} [params] - Values matching placeholders
+ * @returns {Promise<{rows: Array, rowCount: number, insertId?: number}>}
  */
 export async function query(text, params) {
   const start = Date.now();
   try {
-    const res = await pool.query(text, params);
+    const [result] = await pool.execute(text, params);
     const duration = Date.now() - start;
-    // Optional query logging in development
+    
     if (process.env.NODE_ENV !== 'production') {
-      console.log('Executed query', { text, duration, rows: res.rowCount });
+      console.log('Executed MySQL query', { duration });
     }
-    return res;
+
+    if (Array.isArray(result)) {
+      return { rows: result, rowCount: result.length };
+    } else {
+      return { 
+        rows: [], 
+        rowCount: result.affectedRows, 
+        insertId: result.insertId 
+      };
+    }
   } catch (error) {
-    console.error('Database query error:', error);
+    console.error('MySQL query error:', error);
     throw error;
   }
 }
