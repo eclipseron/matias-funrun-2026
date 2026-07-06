@@ -434,7 +434,7 @@ export default function DashboardClient({ initialRunners }) {
 
                 <div className="border-t border-brand-border pt-3">
                   <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Kontak Darurat</h4>
-                  <p className="text-xs font-bold text-slate-800">{activeRunner.emergency_contact_name}</p>
+                  <p className="text-xs font-bold text-slate-800">{activeRunner.emergency_contact_number} ({activeRunner.emergency_contact_name})</p>
                   <p className="text-xs text-slate-600 mt-0.5">Hubungan: <span className="capitalize font-semibold text-brand-blue">{activeRunner.emergency_contact_relationship}</span></p>
                 </div>
               </div>

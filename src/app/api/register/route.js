@@ -19,6 +19,7 @@ export async function POST(request) {
       bib_name,
       emergency_contact_name,
       emergency_contact_relationship,
+      emergency_contact_number,
       tshirt_size,
       payment_screenshot 
     } = body;
@@ -37,6 +38,7 @@ export async function POST(request) {
       bib_name: 'Nama BIB wajib diisi',
       emergency_contact_name: 'Nama kontak darurat wajib diisi',
       emergency_contact_relationship: 'Hubungan kontak darurat wajib diisi',
+      emergency_contact_number: 'Nomor kontak darurat wajib diisi',
       tshirt_size: 'Ukuran kaos wajib dipilih',
       payment_screenshot: 'Bukti pembayaran wajib diunggah'
     };
@@ -60,9 +62,9 @@ export async function POST(request) {
       INSERT INTO runners (
         uuid, competition_type, name, email, whatsapp, gender, birth_place, birth_date,
         identity_type, identity_number, bib_name, emergency_contact_name,
-        emergency_contact_relationship, tshirt_size, payment_screenshot
+        emergency_contact_relationship, emergency_contact_number, tshirt_size, payment_screenshot
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
@@ -79,6 +81,7 @@ export async function POST(request) {
       bib_name.trim(),
       emergency_contact_name.trim(),
       emergency_contact_relationship.trim(),
+      emergency_contact_number.trim(),
       tshirt_size.trim(),
       payment_screenshot
     ];

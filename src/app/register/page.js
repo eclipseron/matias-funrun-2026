@@ -29,6 +29,7 @@ export default function Register() {
     bibName: '',
     emergencyContactName: '',
     emergencyContactRelationship: '',
+    emergencyContactNumber: '',
     customRelationship: '',
     tshirtSize: '',
     customTshirtSize: '',
@@ -180,6 +181,7 @@ export default function Register() {
           bib_name: formData.bibName,
           emergency_contact_name: formData.emergencyContactName,
           emergency_contact_relationship: finalRelationship,
+          emergency_contact_number: formData.emergencyContactNumber,
           tshirt_size: finalTshirtSize,
           payment_screenshot: screenshotBase64,
         }),
@@ -575,6 +577,7 @@ export default function Register() {
                         <label htmlFor="tshirtSize" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Ukuran Kaos (Jersey) *
                         </label>
+                        <img src='/jersey-chart.jpeg' className='mb-4' />
                         <select
                           id="tshirtSize"
                           name="tshirtSize"
@@ -623,21 +626,39 @@ export default function Register() {
                     </h3>
 
                     {/* Nama Kontak Darurat */}
-                    <div>
-                      <label htmlFor="emergencyContactName" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                        Nama Kontak Darurat *
-                      </label>
-                      <input
-                        type="text"
-                        id="emergencyContactName"
-                        name="emergencyContactName"
-                        value={formData.emergencyContactName}
-                        onChange={handleInputChange}
-                        required
-                        placeholder="e.g. Siti Rahma"
-                        disabled={loading}
-                        className="flat-input text-sm"
-                      />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label htmlFor="emergencyContactName" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Nama Kontak Darurat *
+                        </label>
+                        <input
+                          type="text"
+                          id="emergencyContactName"
+                          name="emergencyContactName"
+                          value={formData.emergencyContactName}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="e.g. Siti Rahma"
+                          disabled={loading}
+                          className="flat-input text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="emergencyContactNumber" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Nomor Kontak Darurat *
+                        </label>
+                        <input
+                          type="text"
+                          id="emergencyContactNumber"
+                          name="emergencyContactNumber"
+                          value={formData.emergencyContactNumber}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="e.g. 081234567890"
+                          disabled={loading}
+                          className="flat-input text-sm"
+                        />
+                      </div>
                     </div>
 
                     {/* Hubungan Kontak Darurat */}

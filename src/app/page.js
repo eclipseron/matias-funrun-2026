@@ -43,15 +43,15 @@ export default function Home() {
   }, [targetDate]);
 
   // Pricing calculation based on date
-  const CUTOFF_EARLY_BIRD = new Date('2026-11-10T23:59:59');
-  const [isEarlyBird, setIsEarlyBird] = useState(true);
+  // const CUTOFF_EARLY_BIRD = new Date('2026-11-10T23:59:59');
+  // const [isEarlyBird, setIsEarlyBird] = useState(true);
 
-  useEffect(() => {
-    setIsEarlyBird(new Date() < CUTOFF_EARLY_BIRD);
-  }, []);
+  // useEffect(() => {
+  //   setIsEarlyBird(new Date() < CUTOFF_EARLY_BIRD);
+  // }, []);
 
-  const activePrice = isEarlyBird ? 'Rp 125.000' : 'Rp 175.000';
-  const priceType = isEarlyBird ? 'Early Bird' : 'Harga Normal';
+  // const activePrice = isEarlyBird ? 'Rp 125.000' : 'Rp 175.000';
+  // const priceType = isEarlyBird ? 'Early Bird' : 'Harga Normal';
 
   return (
     <div className="flex flex-col min-h-screen bg-brand-light">
@@ -60,7 +60,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-3">
             <img src="/logo-matias-run.png" alt="Matias Fun Run 2026" className="h-14 w-auto object-contain" />
-            <div className="h-8 w-[1px] bg-slate-700 hidden sm:block"></div>
+            <div className="h-8 w-px bg-slate-700 hidden sm:block"></div>
             <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-10 w-auto object-contain hidden sm:block" />
             <div className="hidden md:block pl-1 text-left">
               <p className="text-[10px] font-bold text-brand-blue uppercase tracking-wider">Organized by</p>
@@ -70,9 +70,6 @@ export default function Home() {
           <div className="flex gap-4">
             <Link href="/register" className="inline-block bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-semibold py-2.5 px-6 transition duration-150 rounded-none text-sm tracking-wide">
               DAFTAR SEKARANG
-            </Link>
-            <Link href="/admin/login" className="inline-block bg-transparent hover:bg-brand-dark-light text-brand-white border border-slate-600 font-semibold py-2.5 px-6 transition duration-150 rounded-none text-sm tracking-wide">
-              LOGIN
             </Link>
           </div>
         </div>
@@ -134,7 +131,7 @@ export default function Home() {
       </div>
 
       {/* Main Section */}
-      <main className="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Main Brief Info */}
@@ -172,11 +169,11 @@ export default function Home() {
             {/* Steps Guide */}
             <section className="bg-brand-white border border-brand-border p-8 rounded-none">
               <h2 className="text-xl font-bold text-brand-dark mb-6 tracking-wide">
-                CARA MENDAFTAR
+                ALUR REGISTRASI
               </h2>
               <div className="space-y-6">
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 flex items-center justify-center bg-brand-dark text-brand-white font-mono font-bold w-8 h-8">
+                  <div className="shrink-0 flex items-center justify-center bg-brand-dark text-brand-white font-mono font-bold w-8 h-8">
                     1
                   </div>
                   <div>
@@ -188,37 +185,37 @@ export default function Home() {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 flex items-center justify-center bg-brand-dark text-brand-white font-mono font-bold w-8 h-8">
+                  <div className="shrink-0 flex items-center justify-center bg-brand-dark text-brand-white font-mono font-bold w-8 h-8">
                     2
                   </div>
                   <div>
-                    <h4 className="font-bold text-brand-dark">Email Konfirmasi Proses Verifikasi</h4>
+                    <h4 className="font-bold text-brand-dark">Proses Verifikasi</h4>
                     <p className="text-slate-600 text-sm mt-1">
-                      Sistem akan mengirimkan email konfirmasi bahwa pendaftaran Anda sedang diverifikasi oleh admin. Proses ini memakan waktu maksimal 3 hari.
+                      Anda akan mendapatkan email konfirmasi bahwa pendaftaran Anda sedang diverifikasi oleh penyelenggara.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 flex items-center justify-center bg-brand-dark text-brand-white font-mono font-bold w-8 h-8">
+                  <div className="shrink-0 flex items-center justify-center bg-brand-dark text-brand-white font-mono font-bold w-8 h-8">
                     3
                   </div>
                   <div>
-                    <h4 className="font-bold text-brand-dark">Dapatkan Kode Registrasi &amp; QR Code</h4>
+                    <h4 className="font-bold text-brand-dark">Dapatkan Kode Registrasi</h4>
                     <p className="text-slate-600 text-sm mt-1">
-                      Setelah pembayaran terverifikasi, Anda akan menerima email berisi 8 digit kode registrasi unik dan QR Code sebagai tiket pengambilan race bag.
+                      Setelah pembayaran terverifikasi, Anda akan menerima email berisi 8 digit kode registrasi sebagai bukti untuk pengambilan race bag.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex-shrink-0 flex items-center justify-center bg-brand-dark text-brand-white font-mono font-bold w-8 h-8">
+                  <div className="shrink-0 flex items-center justify-center bg-brand-dark text-brand-white font-mono font-bold w-8 h-8">
                     4
                   </div>
                   <div>
-                    <h4 className="font-bold text-brand-dark">Pengambilan Race Bag (Running Bag)</h4>
+                    <h4 className="font-bold text-brand-dark">Pengambilan Race Bag</h4>
                     <p className="text-slate-600 text-sm mt-1">
-                      Tunjukkan kode registrasi atau tunjukkan QR Code pada email kepada petugas di lokasi pengambilan race bag pada hari yang ditentukan.
+                      Tunjukkan kode registrasi pada email kepada petugas di lokasi pengambilan race bag pada hari yang ditentukan.
                     </p>
                   </div>
                 </div>
@@ -235,27 +232,12 @@ export default function Home() {
                 IKUTI KESERUANNYA
               </h3>
               <p className="text-slate-300 text-sm mb-6 leading-relaxed">
-                Fasilitas peserta: Jersey Resmi, Medali Finisher, Running Bag, Konsumsi, dan Nomor BIB.
+                Benefit: Jersey Resmi, Medali Finisher, Running Bag, Konsumsi, dan Nomor BIB.
               </p>
-              
-              <div className="bg-brand-dark-light p-4 mb-6 border border-slate-700">
-                <p className="text-[10px] font-mono text-slate-400 uppercase">Rekening Pembayaran</p>
-                <div className="flex items-center gap-2 mt-1 mb-3 bg-white p-2 rounded-sm w-fit">
-                  <img src="/bca-logo.svg" alt="BCA Logo" className="h-6 w-auto object-contain" />
-                </div>
-                
-                <p className="text-xs font-mono text-slate-400 uppercase">No. Rekening BCA</p>
-                <p className="text-lg font-mono font-bold text-sky-300 tracking-wide mt-0.5">877-009-8765</p>
-                <p className="text-xs text-slate-300 mt-1 mb-4">a.n. Asosiasi Matias Fun Run</p>
-                
-                <p className="text-[10px] font-mono text-slate-400 uppercase">Biaya Pendaftaran</p>
-                <p className="text-md font-bold mt-1 text-sky-300">{activePrice} <span className="text-xs text-slate-300 font-normal">({priceType})</span></p>
-                <p className="text-[10px] text-slate-400 mt-1.5 font-mono leading-tight">
-                  Early Bird: Rp 125.000 (s.d. 10 Nov)<br/>
-                  Normal: Rp 175.000 (11 - 29 Nov)
-                </p>
-              </div>
-              
+              <p className="text-slate-300 text-sm mb-6 leading-relaxed">
+                <b>Early Bird</b>: Rp 125.000 (s.d. 10 Nov)<br />
+                <b>Normal</b>: Rp 175.000 (11 - 29 Nov)
+              </p>
               <Link href="/register" className="block w-full text-center bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-bold py-3 px-4 transition duration-150 rounded-none tracking-wider text-sm">
                 MENUJU FORMULIR PENDAFTARAN
               </Link>
@@ -264,7 +246,7 @@ export default function Home() {
             {/* Service Desk Information */}
             <div className="bg-brand-white border border-brand-border p-6 rounded-none">
               <h3 className="text-sm font-bold text-brand-dark uppercase tracking-wider mb-4 border-b border-brand-border pb-2 font-mono">
-                LAYANAN INFORMASI (SERVICE DESK)
+                LAYANAN INFORMASI
               </h3>
               <div className="space-y-3 text-sm text-slate-600">
                 <p>
@@ -272,16 +254,16 @@ export default function Home() {
                 </p>
                 <div className="pt-2 space-y-2">
                   <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-[50px]">Email:</span>
+                    <span className="font-semibold text-brand-dark min-w-12.5">Email:</span>
                     <a href="mailto:info@matias-funrun.my.id" className="text-brand-blue hover:underline font-semibold">info@matias-funrun.my.id</a>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-[50px]">Telepon:</span>
+                    <span className="font-semibold text-brand-dark min-w-12.5">Whatsapp:</span>
                     <span className="text-slate-800 font-semibold">+62 812-3456-7890</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-[50px]">Jam Kerja:</span>
-                    <span className="text-slate-800">Senin - Jumat, 09:00 - 17:00</span>
+                    <span className="font-semibold text-brand-dark min-w-12.5">Instagram:</span>
+                    <Link href="https://www.instagram.com/matiasfunrun" className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
                   </div>
                 </div>
               </div>
@@ -295,8 +277,8 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-brand-dark text-slate-400 py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-center text-xs">
         <div className="max-w-6xl mx-auto">
-          <p>&copy; 2026 Matias Fun Run &amp; Walk. Hak Cipta Dilindungi.</p>
-          <p className="mt-2 text-slate-500">Situs ini adalah portal resmi pendaftaran peserta. Harap pastikan status pembayaran Anda telah diverifikasi.</p>
+          <p>Powered by Zealution &copy; 2026 Matias Fun Run &amp; Walk.</p>
+          <p className="mt-2 text-slate-500">Situs resmi registrasi peserta Matias Fun Run. Penyelenggara tidak memungut biaya apapun di luar biaya pendaftaran.</p>
         </div>
       </footer>
     </div>

@@ -33,7 +33,7 @@ export async function GET(request) {
       SELECT 
         id, uuid, competition_type, name, email, whatsapp, gender, birth_place, birth_date, 
         identity_type, identity_number, bib_name, emergency_contact_name, 
-        emergency_contact_relationship, tshirt_size, status, registration_code, 
+        emergency_contact_relationship, emergency_contact_number, tshirt_size, status, registration_code,
         registered_at, verified_at, bag_distributed_at 
       FROM runners 
       ORDER BY id ASC
@@ -58,6 +58,7 @@ export async function GET(request) {
       'Ukuran Jersey': row.tshirt_size,
       'Nama Kontak Darurat': row.emergency_contact_name,
       'Hubungan Kontak Darurat': row.emergency_contact_relationship,
+      'Nomor Kontak Darurat': row.emergency_contact_number,
       'Status Pendaftaran': row.status.toUpperCase(),
       'Kode Registrasi': row.registration_code || 'N/A',
       'Tanggal Registrasi': row.registered_at ? new Date(row.registered_at).toLocaleString('id-ID') : '',
