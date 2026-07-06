@@ -30,7 +30,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /home/math4376/matias-funrun.my.id  # e.g., public_html/ or a subfolder
+          server-dir: /home/math4376/matias-funrun.my.id/  # e.g., public_html/ or a subfolder
           local-dir: ./  # Or ./out/ for static export
           exclude: |
             .git/
