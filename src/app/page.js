@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Home() {
-  // Countdown Target: 29 November 2026 23:59:59
-  const targetDate = new Date('2026-11-29T23:59:59').getTime();
+  // Countdown Target: 20 November 2026 23:59:59
+  const targetDate = new Date('2026-11-20T23:59:59').getTime();
   
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -79,7 +79,7 @@ export default function Home() {
       <div className="bg-brand-dark text-brand-white py-8 px-4 border-b border-slate-800">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-xs font-bold font-mono tracking-widest text-slate-400 uppercase mb-4">
-            PENDAFTARAN DITUTUP DALAM (29 NOVEMBER 2026)
+            PENDAFTARAN DITUTUP DALAM (20 NOVEMBER 2026)
           </h2>
           
           {timeLeft.isExpired ? (
@@ -277,7 +277,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-brand-dark text-slate-400 py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-center text-xs">
         <div className="max-w-6xl mx-auto">
-          <p>Powered by Zealution &copy; 2026 Matias Fun Run &amp; Walk.</p>
+          <p>Powered by Zellution &copy; 2026 Matias Fun Run &amp; Walk.</p>
           <p className="mt-2 text-slate-500">Situs resmi registrasi peserta Matias Fun Run. Penyelenggara tidak memungut biaya apapun di luar biaya pendaftaran.</p>
         </div>
       </footer>
