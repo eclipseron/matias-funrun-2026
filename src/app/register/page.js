@@ -1,17 +1,17 @@
-'use strict';
 'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { getRegistrationPeriod } from '@/lib/registrationPeriods';
 
 export default function Register() {
   const router = useRouter();
   
-  const CUTOFF_EARLY_BIRD = new Date('2026-11-10T23:59:59');
-  const isEarlyBird = new Date() < CUTOFF_EARLY_BIRD;
-  const activePrice = isEarlyBird ? 'Rp 125.000' : 'Rp 175.000';
-  const priceType = isEarlyBird ? 'Early Bird' : 'Harga Normal';
+  const [periodInfo, setPeriodInfo] = useState(() => getRegistrationPeriod());
+  
+  const activePrice = periodInfo.priceString;
+  const priceType = periodInfo.periodName;
   
   // State for choosing competition type first
   const [competitionType, setCompetitionType] = useState('');
@@ -297,8 +297,65 @@ export default function Register() {
           <div className="lg:col-span-8">
             
             {/* STEP 1: Choose Competition Type first */}
-            {!competitionType ? (
+            {!periodInfo.formActive ? (
               <div className="bg-brand-white border border-brand-border p-8 rounded-none text-center">
+                <div className="w-16 h-16 bg-amber-500 text-brand-white flex items-center justify-center mx-auto text-3xl font-bold mb-6">
+                  ⚠️
+                </div>
+                <h2 className="text-2xl font-black text-brand-dark tracking-tight mb-2 uppercase">
+                  PENDAFTARAN SEDANG DITUTUP
+                </h2>
+                <p className="text-sm font-mono text-amber-600 font-bold uppercase tracking-wider mb-6">
+                  Status: Jeda Periode / Ditutup
+                </p>
+                <div className="text-slate-600 space-y-4 mb-8 text-left max-w-md mx-auto text-sm">
+                  <p className="text-center font-bold text-brand-dark">
+                    Informasi Penting Peserta:
+                  </p>
+                  <p className="bg-amber-50 border-l-4 border-amber-500 p-3 text-xs text-amber-800 leading-relaxed font-mono">
+                    {periodInfo.message || 'Mohon maaf, saat ini pendaftaran tidak aktif.'}
+                  </p>
+                  <p className="leading-relaxed">
+                    Silakan perhatikan jadwal periode pendaftaran resmi berikut agar Anda tidak melewatkan kesempatan berpartisipasi:
+                  </p>
+                  <div className="border border-brand-border bg-brand-light p-4 text-xs font-mono">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-brand-border text-left">
+                          <th className="pb-2">Periode</th>
+                          <th className="pb-2">Tanggal</th>
+                          <th className="pb-2 text-right">Biaya</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td className="py-1.5 font-bold">Early Bird 1</td>
+                          <td className="py-1.5">15 - 30 Juli 2026</td>
+                          <td className="py-1.5 text-right font-bold text-brand-blue">Rp 125.000</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1.5 font-bold">Early Bird 2</td>
+                          <td className="py-1.5">10 Agt - 30 Sept 2026</td>
+                          <td className="py-1.5 text-right font-bold text-brand-blue">Rp 150.000</td>
+                        </tr>
+                        <tr>
+                          <td className="py-1.5 font-bold">Normal Price</td>
+                          <td className="py-1.5">4 Okt - 20 Nov 2026</td>
+                          <td className="py-1.5 text-right font-bold text-brand-blue">Rp 175.000</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div className="border-t border-brand-border pt-6 flex justify-center">
+                  <Link href="/" className="inline-block bg-brand-dark hover:bg-brand-dark-hover text-brand-white font-semibold py-2.5 px-6 transition duration-150 rounded-none text-xs tracking-wider uppercase">
+                    KEMBALI KE BERANDA
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              !competitionType ? (
+                <div className="bg-brand-white border border-brand-border p-8 rounded-none text-center">
                 <h2 className="text-2xl font-black text-brand-dark tracking-tight mb-2">
                   PILIH KATEGORI ACARA
                 </h2>
@@ -773,6 +830,7 @@ export default function Register() {
 
                 </form>
               </div>
+              )
             )}
 
           </div>

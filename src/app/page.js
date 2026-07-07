@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { getRegistrationPeriod } from '@/lib/registrationPeriods';
 
 export default function Home() {
-  // Countdown Target: 20 November 2026 23:59:59
-  const targetDate = new Date('2026-11-20T23:59:59').getTime();
+  // Countdown Target: 20 November 2026 23:59:59 WIB (UTC+7)
+  const targetDate = new Date('2026-11-20T23:59:59+07:00').getTime();
   
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -42,16 +43,14 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [targetDate]);
 
-  // Pricing calculation based on date
-  // const CUTOFF_EARLY_BIRD = new Date('2026-11-10T23:59:59');
-  // const [isEarlyBird, setIsEarlyBird] = useState(true);
+  const [periodInfo, setPeriodInfo] = useState(() => getRegistrationPeriod());
 
-  // useEffect(() => {
-  //   setIsEarlyBird(new Date() < CUTOFF_EARLY_BIRD);
-  // }, []);
+  useEffect(() => {
+    setPeriodInfo(getRegistrationPeriod());
+  }, []);
 
-  // const activePrice = isEarlyBird ? 'Rp 125.000' : 'Rp 175.000';
-  // const priceType = isEarlyBird ? 'Early Bird' : 'Harga Normal';
+  const activePrice = periodInfo.priceString;
+  const priceType = periodInfo.periodName;
 
   return (
     <div className="flex flex-col min-h-screen bg-brand-light">
@@ -137,39 +136,90 @@ export default function Home() {
           {/* Main Brief Info */}
           <div className="lg:col-span-2 space-y-8">
             <section className="bg-brand-white border border-brand-border p-8 rounded-none">
-              <h2 className="text-3xl font-extrabold text-brand-dark tracking-tight mb-4 border-b border-brand-border pb-4">
-                TENTANG EVENT
+              <h2 className="text-3xl font-extrabold text-brand-dark tracking-tight mb-2 uppercase">
+                MATIAS FUN RUN 2026
               </h2>
-              <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                Selamat datang di portal pendaftaran resmi untuk <strong className="text-brand-dark">Matias Fun Run &amp; Walk 2026</strong>. 
-                Tahun ini, kami mengundang para pelari, keluarga, dan seluruh pencinta olahraga untuk berpartisipasi dalam kategori pilihan Anda: <strong className="text-brand-dark">Lari 4K (Fun Run)</strong> dan <strong className="text-brand-dark">Jalan 2.5K (Fun Walk)</strong>. 
-                Mari berlari dan berjalan bersama demi kesehatan, kebersamaan, dan kegembiraan!
+              <p className="text-xs font-mono text-brand-blue font-bold uppercase tracking-wider mb-4">
+                &ldquo;Run For Happiness and Smiles&rdquo;
               </p>
+              
+              <div className="text-slate-600 space-y-4 leading-relaxed mb-6 text-sm">
+                <p className="text-base font-bold text-brand-dark">
+                  Saatnya melangkah bersama dalam semangat kebersamaan, kesehatan, dan sukacita.
+                </p>
+                <p>
+                  Ajak keluarga, sahabat, dan komunitasmu untuk menjadi bagian dari Matias Fun Run 2026. 
+                  Nikmati setiap langkah dengan santai, penuh semangat, dan penuh kebahagiaan.
+                </p>
+              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 border-t border-brand-border pt-6">
                 <div className="border-l-4 border-brand-blue pl-4">
                   <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Tanggal Acara</h4>
-                  <p className="text-lg font-bold text-brand-dark">Minggu, 6 Desember 2026</p>
+                  <p className="text-base font-bold text-brand-dark">Sabtu, 5 Desember 2026</p>
                 </div>
                 <div className="border-l-4 border-brand-blue pl-4">
-                  <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Lokasi Mulai</h4>
-                  <p className="text-lg font-bold text-brand-dark">Pintu B Stadion Utama, City Park</p>
+                  <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Lokasi Mulai &amp; Rute</h4>
+                  <p className="text-base font-bold text-brand-dark">Paroki Kosambi Baru &ndash; Gereja St. Matias Rasul</p>
                 </div>
                 <div className="border-l-4 border-brand-blue pl-4">
-                  <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Waktu Mulai</h4>
-                  <p className="text-lg font-bold text-brand-dark">06:00 WIB (Flag Off)</p>
+                  <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Waktu Flag-Off</h4>
+                  <p className="text-base font-bold text-brand-dark">06:00 WIB</p>
                 </div>
                 <div className="border-l-4 border-brand-blue pl-4">
-                  <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Kategori Pilihan</h4>
-                  <p className="text-lg font-bold text-brand-dark">Lari 4K | Jalan 2.5K</p>
+                  <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider">Cut-off Time</h4>
+                  <p className="text-base font-bold text-brand-dark">No Cut Off Time (Tanpa Batas Waktu)</p>
                 </div>
+              </div>
+            </section>
+
+            {/* Kategori Acara */}
+            <section className="bg-brand-white border border-brand-border p-8 rounded-none">
+              <h2 className="text-xl font-bold text-brand-dark mb-4 tracking-wide uppercase font-mono">
+                PILIHAN KATEGORI LANGKAH
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="bg-brand-light p-5 border border-brand-border">
+                  <h3 className="text-lg font-bold text-brand-blue font-mono">FUN WALK 2K</h3>
+                  <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+                    Santai, seru, dan sangat cocok untuk diikuti oleh semua usia bersama seluruh anggota keluarga.
+                  </p>
+                </div>
+                <div className="bg-brand-light p-5 border border-brand-border">
+                  <h3 className="text-lg font-bold text-brand-blue font-mono">FUN RUN 4.5K</h3>
+                  <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+                    Lebih menantang, penuh dengan energi, dan didesain tetap menyenangkan untuk pelari komunitas.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Benefit Section */}
+            <section className="bg-brand-white border border-brand-border p-8 rounded-none">
+              <h2 className="text-xl font-bold text-brand-dark mb-6 tracking-wide uppercase font-mono">
+                FASILITAS &amp; BENEFIT PESERTA
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
+                {[
+                  { title: 'Jersey Eksklusif', icon: '👕' },
+                  { title: 'Finisher Medal', icon: '🏅' },
+                  { title: 'Bib Number', icon: '🏷️' },
+                  { title: 'Race Bag', icon: '🎒' },
+                  { title: 'Product Sponsor', icon: '🎁' },
+                  { title: 'Water Station', icon: '💧' },
+                ].map((item, idx) => (
+                  <div key={idx} className="border border-brand-border p-4 bg-brand-light">
+                    <div className="text-2xl mb-1">{item.icon}</div>
+                    <div className="text-xs font-bold text-brand-dark leading-tight">{item.title}</div>
+                  </div>
+                ))}
               </div>
             </section>
 
             {/* Steps Guide */}
             <section className="bg-brand-white border border-brand-border p-8 rounded-none">
-              <h2 className="text-xl font-bold text-brand-dark mb-6 tracking-wide">
-                ALUR REGISTRASI
+              <h2 className="text-xl font-bold text-brand-dark mb-6 tracking-wide uppercase font-mono">
+                ALUR REGISTRASI PESERTA
               </h2>
               <div className="space-y-6">
                 <div className="flex gap-4">
@@ -179,7 +229,7 @@ export default function Home() {
                   <div>
                     <h4 className="font-bold text-brand-dark">Isi Formulir Pendaftaran</h4>
                     <p className="text-slate-600 text-sm mt-1">
-                      Pilih jenis kompetisi (&quot;Fun Run&quot; atau &quot;Fun Walk&quot;), lalu lengkapi informasi diri Anda (Nama, Email, WhatsApp, NIK, dan detail kontak darurat) serta unggah bukti transfer pendaftaran.
+                      Pilih jenis kompetisi (Fun Run atau Fun Walk), lengkapi data diri beserta kontak darurat, lalu transfer biaya pendaftaran sesuai periode aktif ke rekening BCA panitia dan unggah bukti transfer.
                     </p>
                   </div>
                 </div>
@@ -191,7 +241,7 @@ export default function Home() {
                   <div>
                     <h4 className="font-bold text-brand-dark">Proses Verifikasi</h4>
                     <p className="text-slate-600 text-sm mt-1">
-                      Anda akan mendapatkan email konfirmasi bahwa pendaftaran Anda sedang diverifikasi oleh penyelenggara.
+                      Penyelenggara akan memeriksa validitas bukti pembayaran Anda. Selama proses ini, Anda akan menerima email pemberitahuan verifikasi.
                     </p>
                   </div>
                 </div>
@@ -201,9 +251,9 @@ export default function Home() {
                     3
                   </div>
                   <div>
-                    <h4 className="font-bold text-brand-dark">Dapatkan Kode Registrasi</h4>
+                    <h4 className="font-bold text-brand-dark">Dapatkan Kode Registrasi &amp; QR Code</h4>
                     <p className="text-slate-600 text-sm mt-1">
-                      Setelah pembayaran terverifikasi, Anda akan menerima email berisi 8 digit kode registrasi sebagai bukti untuk pengambilan race bag.
+                      Setelah pembayaran diverifikasi lunas, Anda otomatis mendapatkan email berisi 8 digit kode registrasi unik dan QR Code sebagai bukti pendaftaran resmi.
                     </p>
                   </div>
                 </div>
@@ -215,7 +265,7 @@ export default function Home() {
                   <div>
                     <h4 className="font-bold text-brand-dark">Pengambilan Race Bag</h4>
                     <p className="text-slate-600 text-sm mt-1">
-                      Tunjukkan kode registrasi pada email kepada petugas di lokasi pengambilan race bag pada hari yang ditentukan.
+                      Tunjukkan kode registrasi unik atau tunjukkan QR Code pada email kepada petugas di lokasi meja penukaran race bag pada hari H.
                     </p>
                   </div>
                 </div>
@@ -228,19 +278,54 @@ export default function Home() {
             
             {/* Call to Action Box */}
             <div className="bg-brand-dark text-brand-white p-8 rounded-none border-t-4 border-brand-blue">
-              <h3 className="text-xl font-bold tracking-tight text-brand-white mb-2">
-                IKUTI KESERUANNYA
+              <h3 className="text-xl font-bold tracking-tight text-brand-white mb-2 uppercase">
+                MATIAS FUN RUN 2026
               </h3>
-              <p className="text-slate-300 text-sm mb-6 leading-relaxed">
-                Benefit: Jersey Resmi, Medali Finisher, Running Bag, Konsumsi, dan Nomor BIB.
+              <p className="text-[10px] text-sky-300 font-mono uppercase tracking-wider mb-4">
+                &ldquo;Run For Happiness and Smiles&rdquo;
               </p>
-              <p className="text-slate-300 text-sm mb-6 leading-relaxed">
-                <b>Early Bird</b>: Rp 125.000 (s.d. 10 Nov)<br />
-                <b>Normal</b>: Rp 175.000 (11 - 29 Nov)
-              </p>
-              <Link href="/register" className="block w-full text-center bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-bold py-3 px-4 transition duration-150 rounded-none tracking-wider text-sm">
-                MENUJU FORMULIR PENDAFTARAN
-              </Link>
+              
+              <div className="bg-brand-dark-light p-4 mb-6 border border-slate-700 text-xs space-y-4">
+                <div>
+                  <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wide">Status Pendaftaran</p>
+                  <p className="font-bold text-amber-400 mt-1 leading-normal">{periodInfo.message}</p>
+                </div>
+
+                <div className="border-t border-slate-700 pt-3">
+                  <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wide">Jadwal &amp; Biaya Pendaftaran</p>
+                  <ul className="space-y-2 mt-2 font-mono text-[11px] text-slate-300">
+                    <li className={periodInfo.status === 'EB1' ? 'text-white font-bold border-l-2 border-brand-blue pl-1.5' : 'pl-1.5'}>
+                      Early Bird 1 (15 - 30 Juli):<br/>
+                      <span className="font-bold text-brand-blue">Rp 125.000</span>
+                    </li>
+                    <li className={periodInfo.status === 'EB2' ? 'text-white font-bold border-l-2 border-brand-blue pl-1.5' : 'pl-1.5'}>
+                      Early Bird 2 (10 Agt - 30 Sept):<br/>
+                      <span className="font-bold text-brand-blue">Rp 150.000</span>
+                    </li>
+                    <li className={periodInfo.status === 'NORMAL' ? 'text-white font-bold border-l-2 border-brand-blue pl-1.5' : 'pl-1.5'}>
+                      Normal (4 Okt - 20 Nov):<br/>
+                      <span className="font-bold text-brand-blue">Rp 175.000</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {periodInfo.formActive && (
+                  <div className="border-t border-slate-700 pt-3">
+                    <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wide">Nominal</p>
+                    <p className="text-xl font-mono font-bold text-sky-300 mt-1">{activePrice}</p>
+                  </div>
+                )}
+              </div>
+              
+              {periodInfo.formActive ? (
+                <Link href="/register" className="block w-full text-center bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-bold py-3 px-4 transition duration-150 rounded-none tracking-wider text-sm">
+                  MENUJU FORMULIR PENDAFTARAN
+                </Link>
+              ) : (
+                <div className="block w-full text-center bg-slate-700 text-slate-400 font-bold py-3 px-4 rounded-none text-sm cursor-not-allowed select-none">
+                  PENDAFTARAN JEDA / DITUTUP
+                </div>
+              )}
             </div>
 
             {/* Service Desk Information */}

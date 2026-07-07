@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { sendVerificationPendingEmail } from '@/lib/email';
+import { getRegistrationPeriod } from '@/lib/registrationPeriods';
 import crypto from 'crypto';
 
 export async function POST(request) {
   try {
+    // Backend validation of registration period
+    const period = getRegistrationPeriod(new Date());
+    if (!period.formActive) {
+      return NextResponse.json({ success: false, error: period.message }, { status: 400 });
+    }
+
     const body = await request.json();
     const { 
       competition_type,

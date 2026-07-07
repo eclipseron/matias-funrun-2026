@@ -2,6 +2,8 @@ import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
 
+import { getRegistrationPeriod } from './registrationPeriods';
+
 const logFilePath = path.join(process.cwd(), 'emails.log');
 
 /**
@@ -26,9 +28,8 @@ function formatDateTime(date = new Date()) {
  * Helper to determine price dynamically based on registration date
  */
 function getPriceForDate(registeredAt) {
-  const CUTOFF_EARLY_BIRD = new Date('2026-11-10T23:59:59');
-  const date = registeredAt ? new Date(registeredAt) : new Date();
-  return date < CUTOFF_EARLY_BIRD ? '125.000' : '175.000';
+  const period = getRegistrationPeriod(registeredAt);
+  return period.priceString.replace('Rp ', '');
 }
 
 /**
@@ -178,7 +179,7 @@ export async function sendVerificationPendingEmail({
         <h3 style="margin-top: 0; color: #ffffff; font-size: 18px; font-weight: 700; border-bottom: 1px solid #374151; padding-bottom: 10px;">Dear ${name},</h3>
         
         <p style="font-size: 14px; line-height: 1.6; color: #d1d5db; margin-bottom: 20px;">
-          Mohon tunggu sebentar, saat ini bukti pembayaran/transfer pendaftaran Anda sedang dalam proses pengecekan dan verifikasi oleh panitia. Proses verifikasi biasanya membutuhkan waktu 1-3 hari kerja.
+          Mohon menunggu, saat ini bukti pembayaran/transfer pendaftaran Anda sedang dalam proses pengecekan dan verifikasi oleh panitia. Proses verifikasi biasanya membutuhkan waktu 1-3 hari kerja.
         </p>
 
         <h4 style="margin: 0 0 10px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #9ca3af; border-bottom: 1px solid #374151; padding-bottom: 5px;">Detail Pendaftaran</h4>
