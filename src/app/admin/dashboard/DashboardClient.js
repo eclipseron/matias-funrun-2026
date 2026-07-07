@@ -1,7 +1,7 @@
 'use strict';
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -33,6 +33,15 @@ export default function DashboardClient({ initialRunners }) {
   const [activeRunner, setActiveRunner] = useState(null);
   const [activeScreenshot, setActiveScreenshot] = useState('');
   const [loadingScreenshot, setLoadingScreenshot] = useState(false);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Reset page to 1 when filters or search change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, statusFilter, categoryFilter, pageSize]);
 
   // Stats calculation
   const totalCount = runners.length;
@@ -140,6 +149,15 @@ export default function DashboardClient({ initialRunners }) {
 
     return matchesStatus && matchesCategory && matchesSearch;
   });
+
+  // Pagination Calculations
+  const totalItems = filteredRunners.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const activePage = Math.min(currentPage, totalPages);
+  
+  const startIndex = (activePage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalItems);
+  const paginatedRunners = filteredRunners.slice(startIndex, endIndex);
 
   return (
     <div className="flex flex-col min-h-screen bg-brand-light">
@@ -291,7 +309,7 @@ export default function DashboardClient({ initialRunners }) {
                   </td>
                 </tr>
               ) : (
-                filteredRunners.map((runner, index) => (
+                paginatedRunners.map((runner, index) => (
                   <tr key={runner.id} className={index % 2 === 0 ? 'bg-brand-white' : 'bg-brand-light'}>
                     <td className="p-4 font-mono font-bold text-slate-400">{runner.id}</td>
                     <td className="p-4">
@@ -370,6 +388,71 @@ export default function DashboardClient({ initialRunners }) {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        {filteredRunners.length > 0 && (
+          <div className="bg-brand-white border border-brand-border border-t-0 p-4 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-slate-600">
+            <div className="flex items-center gap-2">
+              <span>Tampilkan</span>
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+                className="border border-brand-border bg-brand-white p-1 rounded-none text-brand-dark font-bold outline-none focus:border-brand-blue"
+              >
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+              </select>
+              <span>data per halaman</span>
+            </div>
+
+            <div>
+              <span>
+                Menampilkan <strong className="text-brand-dark">{startIndex + 1}</strong> - <strong className="text-brand-dark">{endIndex}</strong> dari <strong className="text-brand-dark">{totalItems}</strong> pendaftar
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setCurrentPage(1)}
+                disabled={activePage === 1}
+                className="px-2.5 py-1 border border-brand-border bg-brand-white text-brand-dark hover:bg-brand-light disabled:opacity-40 disabled:cursor-not-allowed font-bold"
+                title="Halaman Pertama"
+              >
+                &laquo;
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={activePage === 1}
+                className="px-2.5 py-1 border border-brand-border bg-brand-white text-brand-dark hover:bg-brand-light disabled:opacity-40 disabled:cursor-not-allowed font-bold"
+                title="Halaman Sebelumnya"
+              >
+                &larr;
+              </button>
+              
+              <span className="px-3 py-1 bg-brand-light border border-brand-border text-brand-dark font-bold">
+                Hal {activePage} dari {totalPages}
+              </span>
+
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={activePage === totalPages}
+                className="px-2.5 py-1 border border-brand-border bg-brand-white text-brand-dark hover:bg-brand-light disabled:opacity-40 disabled:cursor-not-allowed font-bold"
+                title="Halaman Selanjutnya"
+              >
+                &rarr;
+              </button>
+              <button
+                onClick={() => setCurrentPage(totalPages)}
+                disabled={activePage === totalPages}
+                className="px-2.5 py-1 border border-brand-border bg-brand-white text-brand-dark hover:bg-brand-light disabled:opacity-40 disabled:cursor-not-allowed font-bold"
+                title="Halaman Terakhir"
+              >
+                &raquo;
+              </button>
+            </div>
+          </div>
+        )}
 
       </main>
 
