@@ -13,27 +13,18 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "Matias Fun Run & Walk 2026 | Portal Pendaftaran Resmi",
-  description: "Ikuti keseruan acara lari 4K dan jalan sehat 2.5K oleh Gereja Santo Matias Rasul Paroki Kosambi Baru. Daftar sekarang!",
+  description: "Ikuti keseruan acara lari 4.5K dan jalan sehat 2K oleh Gereja Santo Matias Rasul Paroki Kosambi Baru. Daftar sekarang!",
   keywords: [
-    "acara lari 2026",
-    "event lari 2026",
-    "fun run dan fun walk 2026",
-    "gereja matias rasul",
-    "funrun matias 2026",
-    "matias fun run 2026",
-    "matias fun walk 2026",
-    "pendaftaran matias fun run",
-    "event lari jakarta 2026",
-    "gereja katolik kosambi baru",
-    "run for happiness and smiles",
-    "funrun", "fun run",
-    "funwalk", "fun walk",
+    "event lari",
+    "event jakarta",
+    "fun walk",
+    "fun run",
     "paroki kosambi baru",
   ],
   authors: [{ name: "Panitia Matias Fun Run" }],
   openGraph: {
     title: "Matias Fun Run & Walk 2026 | Portal Pendaftaran Resmi",
-    description: "Ikuti keseruan acara lari 4K & jalan sehat 2.5K dari Gereja Santo Matias Rasul Paroki Kosambi Baru. Dapatkan Jersey, Medali, dan BIB!",
+    description: "Ikuti keseruan acara lari 4.5K & jalan sehat 2K dari Gereja Santo Matias Rasul Paroki Kosambi Baru. Dapatkan Jersey, Medali, dan BIB!",
     url: "https://matias-funrun-2026.my.id",
     siteName: "Matias Fun Run & Walk 2026",
     images: [
@@ -50,7 +41,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Matias Fun Run & Walk 2026 | Portal Pendaftaran Resmi",
-    description: "Ikuti keseruan acara lari 4K & jalan sehat 2.5K dari Gereja Santo Matias Rasul Paroki Kosambi Baru.",
+    description: "Ikuti keseruan acara lari 4.5K & jalan sehat 2K dari Gereja Santo Matias Rasul Paroki Kosambi Baru.",
     images: ["https://matias-funrun-2026.my.id/logo-matias-run.png"],
   },
   robots: {
@@ -72,7 +63,7 @@ export default function RootLayout({ children }) {
     "@context": "https://schema.org",
     "@type": "Event",
     "name": "Matias Fun Run & Walk 2026",
-    "description": "Acara lari komunitas 4K dan jalan sehat 2.5K yang diselenggarakan oleh Gereja Santo Matias Rasul Paroki Kosambi Baru.",
+    "description": "Acara lari komunitas 4.5K dan jalan sehat 2K yang diselenggarakan oleh Gereja Santo Matias Rasul Paroki Kosambi Baru.",
     "image": [
       "https://matias-funrun-2026.my.id/logo-matias-run.png"
     ],
@@ -81,7 +72,7 @@ export default function RootLayout({ children }) {
     "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
     "location": {
       "@type": "Place",
-      "name": "Pintu B Stadion Utama, City Park",
+      "name": "Paroki Kosambi Baru – Gereja St. Matias Rasul",
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Jakarta Barat",
