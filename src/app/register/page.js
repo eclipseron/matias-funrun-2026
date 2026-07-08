@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getRegistrationPeriod } from '@/lib/registrationPeriods';
+import { AlertCircle } from 'lucide-react';
 
 export default function Register() {
   const router = useRouter();
@@ -203,7 +204,12 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-brand-light text-brand-dark">
+    <div className="flex flex-col min-h-screen relative overflow-hidden bg-transparent z-0 text-brand-dark">
+      {/* Dynamic Background Elements */}
+      <div className="absolute top-0 right-0 -z-10 w-[800px] h-[800px] bg-brand-blue/10 rounded-full blur-3xl opacity-50 pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
+      <div className="absolute bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-sky-300/10 rounded-full blur-3xl opacity-60 pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
+      <div className="absolute top-[10%] left-0 -z-10 w-full h-[800px] bg-gradient-to-br from-brand-blue/[0.02] to-sky-200/[0.05] skew-y-[-6deg] origin-top-left pointer-events-none"></div>
+
       {/* Header */}
       <header className="bg-brand-dark text-brand-white border-b border-brand-dark py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
@@ -226,35 +232,36 @@ export default function Register() {
           <div className="lg:col-span-4 space-y-8">
             
             {/* Rincian Pembayaran */}
-            <div className="bg-brand-white border border-brand-border p-6 rounded-none">
-              <h2 className="text-sm font-bold text-brand-dark uppercase tracking-wider mb-4 border-b border-brand-border pb-2 font-mono">
+            <div className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-6 sm:p-8 rounded-none relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-sky-300/10 rounded-full blur-2xl pointer-events-none"></div>
+              <h2 className="text-lg font-black text-brand-dark uppercase tracking-tight mb-4 border-b border-slate-200 pb-3 italic">
                 INFORMASI PEMBAYARAN
               </h2>
               <p className="text-xs text-slate-600 mb-4 leading-relaxed">
                 Silakan lakukan pembayaran sebesar <strong className="text-brand-dark">{activePrice}</strong> ({priceType}) ke rekening berikut sebelum mengisi formulir:
               </p>
               
-              <div className="bg-brand-light border border-brand-border p-4 mb-4 text-xs">
-                <table className="w-full">
+              <div className="bg-brand-light border border-brand-border p-4 mb-4 text-xs overflow-x-auto">
+                <table className="w-full whitespace-nowrap min-w-max">
                   <tbody>
                     <tr>
-                      <td className="py-2 text-slate-500 font-medium">Bank:</td>
+                      <td className="py-2 pr-6 text-slate-500 font-medium">Bank:</td>
                       <td className="py-2 font-bold text-brand-dark flex items-center gap-2">
                         Bank BCA
                         <img src="/bca-logo.svg" alt="BCA Logo" className="h-6 w-auto object-contain" />
                       </td>
                     </tr>
                     <tr>
-                      <td className="py-1 text-slate-500 font-medium">No. Rekening:</td>
-                      <td className="py-1 font-mono font-bold text-brand-blue tracking-wide">877-009-8765</td>
+                      <td className="py-2 pr-6 text-slate-500 font-medium">No. Rekening:</td>
+                      <td className="py-2 font-mono font-bold text-brand-blue tracking-wide">877-009-8765</td>
                     </tr>
                     <tr>
-                      <td className="py-1 text-slate-500 font-medium">Penerima:</td>
-                      <td className="py-1 font-bold text-brand-dark">Asosiasi Matias Fun Run</td>
+                      <td className="py-2 pr-6 text-slate-500 font-medium">Penerima:</td>
+                      <td className="py-2 font-bold text-brand-dark">Asosiasi Matias Fun Run</td>
                     </tr>
                     <tr>
-                      <td className="py-1 text-slate-500 font-medium">Nominal:</td>
-                      <td className="py-1 font-bold text-brand-dark">{activePrice} <span className="text-[10px] text-slate-500 font-normal">({priceType})</span></td>
+                      <td className="py-2 pr-6 text-slate-500 font-medium">Nominal:</td>
+                      <td className="py-2 font-bold text-brand-dark">{activePrice} <span className="text-[10px] text-slate-500 font-normal">({priceType})</span></td>
                     </tr>
                   </tbody>
                 </table>
@@ -266,9 +273,9 @@ export default function Register() {
             </div>
 
             {/* Service Desk Placeholders */}
-            <div className="bg-brand-white border border-brand-border p-6 rounded-none">
-              <h2 className="text-sm font-bold text-brand-dark uppercase tracking-wider mb-4 border-b border-brand-border pb-2 font-mono">
-                LAYANAN INFORMASI
+            <div className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-6 sm:p-8 rounded-none relative overflow-hidden">
+              <h2 className="text-lg font-black text-brand-dark uppercase tracking-tight mb-4 border-b border-slate-200 pb-3 italic">
+                KONTAK
               </h2>
               <div className="space-y-3 text-xs text-slate-600">
                 <p>
@@ -280,13 +287,14 @@ export default function Register() {
                     <a href="mailto:info@matias-funrun.my.id" className="text-brand-blue hover:underline">info@matias-funrun.my.id</a>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-[70px]">Telepon:</span>
-                    <span className="text-slate-800">+62 812-3456-7890</span>
+                    <span className="font-semibold text-brand-dark min-w-[70px]">Instagram:</span>
+                    <Link href="https://www.instagram.com/matiasfunrun" className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
+                  
                   </div>
-                  <div className="flex items-start gap-2">
+                  {/* <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-[70px]">Jam Layanan:</span>
                     <span className="text-slate-800">Senin - Jumat, 09:00 - 17:00</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -298,11 +306,12 @@ export default function Register() {
             
             {/* STEP 1: Choose Competition Type first */}
             {!periodInfo.formActive ? (
-              <div className="bg-brand-white border border-brand-border p-8 rounded-none text-center">
-                <div className="w-16 h-16 bg-amber-500 text-brand-white flex items-center justify-center mx-auto text-3xl font-bold mb-6">
-                  ⚠️
+              <div className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-8 rounded-none text-center relative overflow-hidden">
+                <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-brand-blue/5 rounded-full blur-3xl pointer-events-none"></div>
+                <div className="w-16 h-16 bg-amber-500 text-brand-white flex items-center justify-center mx-auto mb-6">
+                  <AlertCircle className="w-8 h-8 text-brand-white" />
                 </div>
-                <h2 className="text-2xl font-black text-brand-dark tracking-tight mb-2 uppercase">
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-dark tracking-tight mb-2 uppercase italic">
                   PENDAFTARAN SEDANG DITUTUP
                 </h2>
                 <p className="text-sm font-mono text-amber-600 font-bold uppercase tracking-wider mb-6">
@@ -318,76 +327,77 @@ export default function Register() {
                   <p className="leading-relaxed">
                     Silakan perhatikan jadwal periode pendaftaran resmi berikut agar Anda tidak melewatkan kesempatan berpartisipasi:
                   </p>
-                  <div className="border border-brand-border bg-brand-light p-4 text-xs font-mono">
-                    <table className="w-full">
+                  <div className="border border-brand-border bg-brand-light p-4 text-xs font-mono overflow-x-auto">
+                    <table className="w-full whitespace-nowrap min-w-max">
                       <thead>
                         <tr className="border-b border-brand-border text-left">
-                          <th className="pb-2">Periode</th>
-                          <th className="pb-2">Tanggal</th>
-                          <th className="pb-2 text-right">Biaya</th>
+                          <th className="pb-2 pr-6">Periode</th>
+                          <th className="pb-2 px-6">Tanggal</th>
+                          <th className="pb-2 pl-6 text-right">Biaya</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td className="py-1.5 font-bold">Early Bird 1</td>
-                          <td className="py-1.5">15 - 30 Juli 2026</td>
-                          <td className="py-1.5 text-right font-bold text-brand-blue">Rp 125.000</td>
+                        <tr className="border-b border-brand-border/50 border-dashed">
+                          <td className="py-2.5 pr-6 font-bold text-brand-dark">Early Bird 1</td>
+                          <td className="py-2.5 px-6">15 - 30 Juli 2026</td>
+                          <td className="py-2.5 pl-6 text-right font-bold text-brand-blue">Rp 125.000</td>
+                        </tr>
+                        <tr className="border-b border-brand-border/50 border-dashed">
+                          <td className="py-2.5 pr-6 font-bold text-brand-dark">Early Bird 2</td>
+                          <td className="py-2.5 px-6">10 Agt - 30 Sept 2026</td>
+                          <td className="py-2.5 pl-6 text-right font-bold text-brand-blue">Rp 150.000</td>
                         </tr>
                         <tr>
-                          <td className="py-1.5 font-bold">Early Bird 2</td>
-                          <td className="py-1.5">10 Agt - 30 Sept 2026</td>
-                          <td className="py-1.5 text-right font-bold text-brand-blue">Rp 150.000</td>
-                        </tr>
-                        <tr>
-                          <td className="py-1.5 font-bold">Normal Price</td>
-                          <td className="py-1.5">4 Okt - 20 Nov 2026</td>
-                          <td className="py-1.5 text-right font-bold text-brand-blue">Rp 175.000</td>
+                          <td className="py-2.5 pr-6 font-bold text-brand-dark">Normal Price</td>
+                          <td className="py-2.5 px-6">4 Okt - 20 Nov 2026</td>
+                          <td className="py-2.5 pl-6 text-right font-bold text-brand-blue">Rp 175.000</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
                 </div>
                 <div className="border-t border-brand-border pt-6 flex justify-center">
-                  <Link href="/" className="inline-block bg-brand-dark hover:bg-brand-dark-hover text-brand-white font-semibold py-2.5 px-6 transition duration-150 rounded-none text-xs tracking-wider uppercase">
+                  <Link href="/" className="inline-block bg-brand-dark hover:bg-brand-dark-hover text-brand-white font-semibold py-2.5 px-6 transition duration-150 rounded-none text-xs tracking-wider uppercase relative z-10">
                     KEMBALI KE BERANDA
                   </Link>
                 </div>
               </div>
             ) : (
               !competitionType ? (
-                <div className="bg-brand-white border border-brand-border p-8 rounded-none text-center">
-                <h2 className="text-2xl font-black text-brand-dark tracking-tight mb-2">
-                  PILIH KATEGORI ACARA
+                <div className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-8 rounded-none text-center relative overflow-hidden">
+                <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-brand-blue/10 rounded-full blur-2xl pointer-events-none"></div>
+                <h2 className="text-3xl sm:text-4xl font-black text-brand-dark tracking-tight mb-2 uppercase italic">
+                  PILIH KATEGORI
                 </h2>
                 <p className="text-sm text-slate-500 mb-8 max-w-md mx-auto">
-                  Silakan tentukan kategori acara yang ingin Anda ikuti terlebih dahulu untuk membuka formulir pendaftaran.
+                  Silakan tentukan kategori yang ingin Anda ikuti terlebih dahulu untuk membuka formulir pendaftaran.
                 </p>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-xl mx-auto">
                   
                   <button
                     type="button"
-                    onClick={() => setCompetitionType('Fun Run')}
-                    className="border-2 border-brand-dark hover:border-brand-blue bg-brand-dark hover:bg-brand-blue text-brand-white p-8 rounded-none transition duration-150 group cursor-pointer"
+                    onClick={() => setCompetitionType('Fun Run 4K')}
+                    className="bg-white p-6 border-2 sm:border-4 border-brand-blue shadow-[8px_8px_0px_0px_rgba(0,102,255,0.15)] hover:shadow-[12px_12px_0px_0px_rgba(0,102,255,0.25)] hover:-translate-y-1 hover:-translate-x-1 transition-all group text-left cursor-pointer"
                   >
-                    <h3 className="text-xl font-bold tracking-wider mb-2 font-mono group-hover:text-brand-white">
-                      FUN RUN
+                    <h3 className="text-xl font-black text-brand-blue italic tracking-tight mb-2">
+                      FUN RUN 4K
                     </h3>
-                    <p className="text-xs text-slate-300 group-hover:text-blue-100">
-                      Rute Lari Komunitas (4K). BIB personal, medali finisher, dan jersey pelari.
+                    <p className="text-xs text-slate-600 font-medium">
+                      Lebih menantang, penuh dengan energi, dan didesain tetap menyenangkan untuk pelari komunitas.
                     </p>
                   </button>
 
                   <button
                     type="button"
-                    onClick={() => setCompetitionType('Fun Walk')}
-                    className="border-2 border-brand-dark hover:border-brand-blue bg-brand-white hover:bg-brand-blue text-brand-dark hover:text-brand-white p-8 rounded-none transition duration-150 group cursor-pointer"
+                    onClick={() => setCompetitionType('Fun Walk 2.5K')}
+                    className="bg-white p-6 border-2 sm:border-4 border-sky-400 shadow-[8px_8px_0px_0px_rgba(56,189,248,0.15)] hover:shadow-[12px_12px_0px_0px_rgba(56,189,248,0.25)] hover:-translate-y-1 hover:-translate-x-1 transition-all group text-left cursor-pointer"
                   >
-                    <h3 className="text-xl font-bold tracking-wider mb-2 font-mono text-brand-dark group-hover:text-brand-white">
-                      FUN WALK
+                    <h3 className="text-xl font-black text-sky-500 italic tracking-tight mb-2">
+                      FUN WALK 2.5K
                     </h3>
-                    <p className="text-xs text-slate-500 group-hover:text-blue-100">
-                      Rute Jalan Sehat Santai (2.5K). Nomor BIB, medali finisher, dan jersey peserta.
+                    <p className="text-xs text-slate-600 font-medium">
+                      Santai, seru, dan sangat cocok untuk diikuti oleh semua usia bersama seluruh anggota keluarga.
                     </p>
                   </button>
 
@@ -396,7 +406,8 @@ export default function Register() {
             ) : (
               
               /* STEP 2: The Registration Form */
-              <div className="bg-brand-white border border-brand-border p-8 rounded-none">
+              <div className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-8 rounded-none relative overflow-hidden">
+              <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-sky-200/10 rounded-full blur-3xl pointer-events-none"></div>
                 
                 {/* Selected category header */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-brand-light border border-brand-border p-4 mb-6 gap-3">
@@ -420,7 +431,7 @@ export default function Register() {
                   </button>
                 </div>
 
-                <h2 className="text-xl font-black text-brand-dark tracking-tight mb-6">
+                <h2 className="text-2xl sm:text-3xl font-black text-brand-dark tracking-tight mb-6 uppercase italic">
                   FORMULIR PENDAFTARAN PESERTA
                 </h2>
 
@@ -839,9 +850,10 @@ export default function Register() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-brand-dark text-slate-400 py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-center text-xs">
+      <footer className="bg-brand-dark text-slate-400 py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-800 text-center text-xs relative z-10">
         <div className="max-w-6xl mx-auto">
-          <p>&copy; 2026 Matias Fun Run &amp; Walk. Hak Cipta Dilindungi.</p>
+          <p>Powered by Zellution &copy; 2026 Matias Fun Run &amp; Walk.</p>
+          <p className="mt-2 text-slate-500">Official Registration Portal for Matias Fun Run. The organizer does not charge any fees other than the official registration fee.</p>
         </div>
       </footer>
     </div>

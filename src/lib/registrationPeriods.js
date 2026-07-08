@@ -7,8 +7,8 @@ export function getRegistrationPeriod(dateInput) {
   const time = date.getTime();
 
   // Date constants in WIB (Waktu Indonesia Barat = UTC+7)
-  // Early Bird 1: 15 Juli – 30 Juli 2026
-  const EB1_START = new Date('2026-07-15T00:00:00+07:00').getTime();
+  // Early Bird 1: 10 Juli – 30 Juli 2026
+  const EB1_START = new Date('2026-07-10T00:00:00+07:00').getTime();
   const EB1_END = new Date('2026-07-30T23:59:59+07:00').getTime();
   
   // Early Bird 2: 10 Agustus – 30 September 2026
@@ -26,7 +26,7 @@ export function getRegistrationPeriod(dateInput) {
       price: 125000,
       priceString: 'Rp 125.000',
       periodName: 'Early Bird 1',
-      message: 'Pendaftaran belum dibuka. Periode Early Bird 1 akan dimulai pada 15 Juli 2026.'
+      message: 'Pendaftaran belum dibuka. Periode Early Bird 1 akan dimulai pada 10 Juli 2026.'
     };
   } else if (time >= EB1_START && time <= EB1_END) {
     return {
@@ -35,7 +35,7 @@ export function getRegistrationPeriod(dateInput) {
       price: 125000,
       priceString: 'Rp 125.000',
       periodName: 'Early Bird 1',
-      message: 'Periode Early Bird 1 sedang berlangsung (15 - 30 Juli 2026).'
+      message: 'Periode Early Bird 1 sedang berlangsung (10 - 30 Juli 2026).'
     };
   } else if (time > EB1_END && time < EB2_START) {
     return {

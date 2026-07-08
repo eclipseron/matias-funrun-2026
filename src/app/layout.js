@@ -87,7 +87,7 @@ export default function RootLayout({ children }) {
         "name": "Early Bird 1",
         "price": "125000",
         "priceCurrency": "IDR",
-        "validFrom": "2026-07-15",
+        "validFrom": "2026-07-10",
         "validThrough": "2026-07-30T23:59:59+07:00",
         "availability": "https://schema.org/InStock",
         "url": "https://matias-funrun-2026.my.id/register"

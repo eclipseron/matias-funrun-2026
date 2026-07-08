@@ -16,16 +16,24 @@
 }
 
 :root {
-  --background: #f4f7fc;
+  --background: #f4f9ff;
   --foreground: #07193b;
 }
 
 body {
-  background-color: var(--background);
+  background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 50%, #bae6fd 100%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, -apple-system, sans-serif;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+}
+
+/* Background decorative pattern */
+.bg-pattern {
+  background-image: radial-gradient(#bfdbfe 1px, transparent 1px);
+  background-size: 24px 24px;
 }
 
 /* Custom flat elements for clean design - avoiding typical gradient/glow borders */
