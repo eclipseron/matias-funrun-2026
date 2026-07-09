@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getRegistrationPeriod } from '@/lib/registrationPeriods';
 import { AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Register() {
   const router = useRouter();
@@ -206,17 +207,17 @@ export default function Register() {
   return (
     <div className="flex flex-col min-h-screen relative overflow-hidden bg-transparent z-0 text-brand-dark">
       {/* Dynamic Background Elements */}
-      <div className="absolute top-0 right-0 -z-10 w-[800px] h-[800px] bg-brand-blue/10 rounded-full blur-3xl opacity-50 pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
-      <div className="absolute bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-sky-300/10 rounded-full blur-3xl opacity-60 pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
-      <div className="absolute top-[10%] left-0 -z-10 w-full h-[800px] bg-gradient-to-br from-brand-blue/[0.02] to-sky-200/[0.05] skew-y-[-6deg] origin-top-left pointer-events-none"></div>
+      <div className="absolute top-0 right-0 -z-10 size-200 bg-brand-blue/10 rounded-full blur-3xl opacity-50 pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
+      <div className="absolute bottom-0 left-0 -z-10 size-150 bg-sky-300/10 rounded-full blur-3xl opacity-60 pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
+      <div className="absolute top-[10%] left-0 -z-10 w-full h-200 bg-linear-to-br from-brand-blue/2 to-sky-200/5 -skew-y-6 origin-top-left pointer-events-none"></div>
 
       {/* Header */}
       <header className="bg-brand-dark text-brand-white border-b border-brand-dark py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/logo-matias-run.png" alt="Matias Fun Run 2026" className="h-12 w-auto object-contain" />
-            <div className="h-6 w-[1px] bg-slate-700 hidden sm:block"></div>
-            <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-8 w-auto object-contain hidden sm:block" />
+            <Image src="/logo-matias-run.png" alt="Matias Fun Run 2026" height={1} width={200} className="h-12 w-auto object-contain" />
+            <div className="h-6 w-px bg-slate-700 hidden sm:block"></div>
+            <Image src="/logo-paroki.png" alt="Paroki Kosambi Baru" height={1} width={200} className="h-8 w-auto object-contain hidden sm:block" />
           </Link>
           <Link href="/" className="text-sm font-semibold hover:text-slate-300 text-brand-white border border-slate-700 px-4 py-2 hover:bg-brand-dark-light transition">
             &larr; Kembali ke Beranda
@@ -225,76 +226,36 @@ export default function Register() {
       </header>
 
       {/* Main Container */}
-      <main className="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Sidebar Column (4 cols) */}
           <div className="lg:col-span-4 space-y-8">
             
-            {/* Rincian Pembayaran */}
-            <div className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-6 sm:p-8 rounded-none relative overflow-hidden">
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-sky-300/10 rounded-full blur-2xl pointer-events-none"></div>
-              <h2 className="text-lg font-black text-brand-dark uppercase tracking-tight mb-4 border-b border-slate-200 pb-3 italic">
-                INFORMASI PEMBAYARAN
-              </h2>
-              <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                Silakan lakukan pembayaran sebesar <strong className="text-brand-dark">{activePrice}</strong> ({priceType}) ke rekening berikut sebelum mengisi formulir:
-              </p>
-              
-              <div className="bg-brand-light border border-brand-border p-4 mb-4 text-xs overflow-x-auto">
-                <table className="w-full whitespace-nowrap min-w-max">
-                  <tbody>
-                    <tr>
-                      <td className="py-2 pr-6 text-slate-500 font-medium">Bank:</td>
-                      <td className="py-2 font-bold text-brand-dark flex items-center gap-2">
-                        Bank BCA
-                        <img src="/bca-logo.svg" alt="BCA Logo" className="h-6 w-auto object-contain" />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-6 text-slate-500 font-medium">No. Rekening:</td>
-                      <td className="py-2 font-mono font-bold text-brand-blue tracking-wide">877-009-8765</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-6 text-slate-500 font-medium">Penerima:</td>
-                      <td className="py-2 font-bold text-brand-dark">Asosiasi Matias Fun Run</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2 pr-6 text-slate-500 font-medium">Nominal:</td>
-                      <td className="py-2 font-bold text-brand-dark">{activePrice} <span className="text-[10px] text-slate-500 font-normal">({priceType})</span></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="bg-brand-blue-light border-l-4 border-brand-blue p-4 text-[11px] text-brand-blue-hover leading-relaxed">
-                <strong>PENTING:</strong> Simpan bukti transfer dalam format gambar (PNG/JPG) untuk diunggah sebagai prasyarat pendaftaran.
-              </div>
-            </div>
-
             {/* Service Desk Placeholders */}
             <div className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-6 sm:p-8 rounded-none relative overflow-hidden">
               <h2 className="text-lg font-black text-brand-dark uppercase tracking-tight mb-4 border-b border-slate-200 pb-3 italic">
                 KONTAK
               </h2>
-              <div className="space-y-3 text-xs text-slate-600">
+              <div className="space-y-3 text-sm text-slate-600">
                 <p>
-                  Butuh bantuan mengenai pendaftaran, konfirmasi transaksi pembayaran, atau pengambilan jersey? Hubungi layanan bantuan kami:
+                  Butuh bantuan mengenai pendaftaran? Hubungi kami melalui:
                 </p>
-                <div className="pt-2 space-y-2 text-xs">
+                <div className="pt-2 space-y-2 text-sm">
                   <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-[70px]">Email:</span>
+                    <span className="font-semibold text-brand-dark min-w-17.5">Email:</span>
                     <a href="mailto:info@matias-funrun.my.id" className="text-brand-blue hover:underline">info@matias-funrun.my.id</a>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-[70px]">Instagram:</span>
+                    <span className="font-semibold text-brand-dark min-w-17.5">Instagram:</span>
                     <Link href="https://www.instagram.com/matiasfunrun" className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
-                  
                   </div>
-                  {/* <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-[70px]">Jam Layanan:</span>
-                    <span className="text-slate-800">Senin - Jumat, 09:00 - 17:00</span>
-                  </div> */}
+                  <div>
+                    <p className="font-semibold text-brand-dark min-w-17.5 mb-1">WhatsApp:</p>
+                    <p className="min-w-17.5">0858-1119-0695 (Vicktoria)</p>
+                    <p className="min-w-17.5">0813-1763-5341 (Veronika)</p>
+                    <p className="min-w-17.5">0812-3783-1860 (Vanessa)</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -321,7 +282,7 @@ export default function Register() {
                   <p className="text-center font-bold text-brand-dark">
                     Informasi Penting Peserta:
                   </p>
-                  <p className="bg-amber-50 border-l-4 border-amber-500 p-3 text-xs text-amber-800 leading-relaxed font-mono">
+                  <p className="bg-amber-50 border-l-4 border-amber-500 p-3 text-sm text-amber-800 leading-relaxed font-mono">
                     {periodInfo.message || 'Mohon maaf, saat ini pendaftaran tidak aktif.'}
                   </p>
                   <p className="leading-relaxed">
@@ -369,7 +330,7 @@ export default function Register() {
                 <h2 className="text-3xl sm:text-4xl font-black text-brand-dark tracking-tight mb-2 uppercase italic">
                   PILIH KATEGORI
                 </h2>
-                <p className="text-sm text-slate-500 mb-8 max-w-md mx-auto">
+                <p className="text-sm text-brand-dark mb-8 max-w-md mx-auto">
                   Silakan tentukan kategori yang ingin Anda ikuti terlebih dahulu untuk membuka formulir pendaftaran.
                 </p>
                 
@@ -383,7 +344,7 @@ export default function Register() {
                     <h3 className="text-xl font-black text-brand-blue italic tracking-tight mb-2">
                       FUN RUN 4K
                     </h3>
-                    <p className="text-xs text-slate-600 font-medium">
+                      <p className="text-sm text-brand-dark font-medium">
                       Lebih menantang, penuh dengan energi, dan didesain tetap menyenangkan untuk pelari komunitas.
                     </p>
                   </button>
@@ -396,7 +357,7 @@ export default function Register() {
                     <h3 className="text-xl font-black text-sky-500 italic tracking-tight mb-2">
                       FUN WALK 2.5K
                     </h3>
-                    <p className="text-xs text-slate-600 font-medium">
+                    <p className="text-sm text-brand-dark font-medium">
                       Santai, seru, dan sangat cocok untuk diikuti oleh semua usia bersama seluruh anggota keluarga.
                     </p>
                   </button>
@@ -444,15 +405,15 @@ export default function Register() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   
                   {/* Bagian 1: Data Diri Pelari */}
-                  <div className="border-b border-brand-border pb-6 space-y-4">
+                  <div className="border-b border-brand-border pb-16 space-y-8">
                     <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
                       I. DATA DIRI PESERTA
                     </h3>
 
                     {/* Nama Lengkap */}
                     <div>
-                      <label htmlFor="name" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                        Nama Lengkap (sesuai kartu identitas) *
+                      <label htmlFor="name" className="block text-sm font-bold text-brand-dark mb-2 uppercase tracking-wider ">
+                        Nama Lengkap (sesuai kartu identitas) <span className='text-rose-500'>*</span>
                       </label>
                       <input
                         type="text"
@@ -469,8 +430,8 @@ export default function Register() {
 
                     {/* Jenis Kelamin */}
                     <div>
-                      <label className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                        Jenis Kelamin *
+                      <label className="block text-sm font-bold text-brand-dark mb-2 uppercase tracking-wider">
+                        Jenis Kelamin <span className='text-rose-500'>*</span>
                       </label>
                       <div className="flex gap-6 mt-1">
                         <label className="inline-flex items-center gap-2 text-sm cursor-pointer">
@@ -503,8 +464,8 @@ export default function Register() {
                     {/* Tempat & Tanggal Lahir */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="birthPlace" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Tempat Lahir *
+                        <label htmlFor="birthPlace" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Tempat Lahir <span className='text-rose-500'>*</span>
                         </label>
                         <input
                           type="text"
@@ -519,8 +480,8 @@ export default function Register() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="birthDate" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Tanggal Lahir *
+                        <label htmlFor="birthDate" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Tanggal Lahir <span className='text-rose-500'>*</span>
                         </label>
                         <input
                           type="date"
@@ -538,8 +499,8 @@ export default function Register() {
                     {/* Jenis & Nomor Identitas */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="sm:col-span-1">
-                        <label htmlFor="identityType" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Jenis Identitas *
+                        <label htmlFor="identityType" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Jenis Identitas <span className='text-rose-500'>*</span>
                         </label>
                         <select
                           id="identityType"
@@ -557,8 +518,8 @@ export default function Register() {
                         </select>
                       </div>
                       <div className="sm:col-span-2">
-                        <label htmlFor="identityNumber" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Nomor Identitas *
+                        <label htmlFor="identityNumber" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Nomor Identitas <span className='text-rose-500'>*</span>
                         </label>
                         <input
                           type="text"
@@ -576,7 +537,7 @@ export default function Register() {
                   </div>
 
                   {/* Bagian 2: Kontak & Detail BIB/Jersey */}
-                  <div className="border-b border-brand-border pb-6 space-y-4">
+                  <div className="border-b border-brand-border pb-16 space-y-6">
                     <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
                       II. KONTAK &amp; ATRIBUT PESERTA
                     </h3>
@@ -584,8 +545,8 @@ export default function Register() {
                     {/* Email & Whatsapp */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="email" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Alamat Email *
+                        <label htmlFor="email" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Alamat Email <span className='text-rose-500'>*</span>
                         </label>
                         <input
                           type="email"
@@ -598,13 +559,13 @@ export default function Register() {
                           disabled={loading}
                           className="flat-input text-sm"
                         />
-                        <p className="text-[10px] text-slate-400 mt-1">
-                          Email tiket QR code dan konfirmasi dikirim ke sini.
+                        <p className="text-xs text-slate-400 mt-1">
+                          Email konfirmasi dikirim ke sini.
                         </p>
                       </div>
                       <div>
-                        <label htmlFor="whatsapp" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Nomor WhatsApp *
+                        <label htmlFor="whatsapp" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Nomor WhatsApp <span className='text-rose-500'>*</span>
                         </label>
                         <input
                           type="tel"
@@ -622,8 +583,8 @@ export default function Register() {
 
                     {/* Nama BIB */}
                     <div>
-                      <label htmlFor="bibName" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                        Nama Peserta untuk Nomor Dada (BIB) *
+                      <label htmlFor="bibName" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Nama Peserta untuk Nomor Dada (BIB) <span className='text-rose-500'>*</span>
                       </label>
                       <input
                         type="text"
@@ -642,8 +603,8 @@ export default function Register() {
                     {/* Ukuran Kaos */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="tshirtSize" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Ukuran Kaos (Jersey) *
+                        <label htmlFor="tshirtSize" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Ukuran Kaos (Jersey) <span className='text-rose-500'>*</span>
                         </label>
                         <img src='/jersey-chart.jpeg' className='mb-4' />
                         <select
@@ -688,7 +649,7 @@ export default function Register() {
                   </div>
 
                   {/* Bagian 3: Kontak Darurat */}
-                  <div className="border-b border-brand-border pb-6 space-y-4">
+                  <div className="border-b border-brand-border pb-6 space-y-6">
                     <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
                       III. KONTAK DARURAT (EMERGENCY CONTACT)
                     </h3>
@@ -696,8 +657,8 @@ export default function Register() {
                     {/* Nama Kontak Darurat */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="emergencyContactName" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Nama Kontak Darurat *
+                        <label htmlFor="emergencyContactName" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Nama Kontak Darurat <span className='text-rose-500'>*</span>
                         </label>
                         <input
                           type="text"
@@ -712,8 +673,8 @@ export default function Register() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="emergencyContactNumber" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Nomor Kontak Darurat *
+                        <label htmlFor="emergencyContactNumber" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Nomor Kontak Darurat <span className='text-rose-500'>*</span>
                         </label>
                         <input
                           type="text"
@@ -732,8 +693,8 @@ export default function Register() {
                     {/* Hubungan Kontak Darurat */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="emergencyContactRelationship" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                          Hubungan dengan Kontak *
+                        <label htmlFor="emergencyContactRelationship" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                          Hubungan dengan Kontak <span className='text-rose-500'>*</span>
                         </label>
                         <select
                           id="emergencyContactRelationship"
@@ -759,8 +720,8 @@ export default function Register() {
 
                       {formData.emergencyContactRelationship === 'other' && (
                         <div>
-                          <label htmlFor="customRelationship" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                            Tulis Hubungan Lainnya *
+                          <label htmlFor="customRelationship" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                            Tulis Hubungan Lainnya <span className='text-rose-500'>*</span>
                           </label>
                           <input
                             type="text"
@@ -784,9 +745,38 @@ export default function Register() {
                       IV. UNGGAH BUKTI TRANSFER PEMBAYARAN
                     </h3>
 
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      Silakan lakukan pembayaran sesuai informasi berikut:
+                    </p>
+
+                    <div className="bg-brand-light border border-brand-border p-4 text-sm overflow-x-auto">
+                      <table className="w-full whitespace-nowrap min-w-max">
+                        <tbody>
+                          <tr>
+                            <td className="py-2 pr-6 text-slate-500 font-medium">Bank:</td>
+                            <td className="py-2 font-bold text-brand-dark flex items-center gap-2">
+                              <Image src="/bca-logo.svg" alt="BCA Logo" height={400} width={1} className="w-15" />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 pr-6 text-slate-500 font-medium">No. Rekening:</td>
+                            <td className="py-2 font-mono font-bold text-brand-blue tracking-wide">2870284929</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 pr-6 text-slate-500 font-medium">Penerima:</td>
+                            <td className="py-2 font-bold text-brand-dark">Isadora Fanri Putri</td>
+                          </tr>
+                          <tr>
+                            <td className="py-2 pr-6 text-slate-500 font-medium">Nominal:</td>
+                            <td className="py-2 font-bold text-brand-dark">{activePrice} <span className="text-[10px] text-slate-500 font-normal">({priceType})</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
                     <div>
-                      <label className="block text-xs font-bold text-brand-dark mb-2 uppercase tracking-wider">
-                        Bukti Transfer Pembayaran (Maksimal 2MB) *
+                      <label className="block text-sm font-bold text-brand-dark mb-2 uppercase tracking-wider">
+                        Bukti Transfer Pembayaran (Maksimal 2MB) <span className='text-rose-500'>*</span>
                       </label>
                       
                       <div className="flex flex-col items-start gap-4">
@@ -827,6 +817,9 @@ export default function Register() {
 
                   {/* Submit Button */}
                   <div className="pt-6 border-t border-brand-border">
+                    <p className="text-[11px] text-slate-500 mb-3 text-center">
+                      Dengan mengklik tombol kirim, Anda menyatakan bahwa data yang diisi benar dan bukti transfer yang diunggah valid.
+                    </p>
                     <button
                       type="submit"
                       disabled={loading}
@@ -834,9 +827,6 @@ export default function Register() {
                     >
                       {loading ? 'Mengirim Data Pendaftaran...' : 'Kirim Pendaftaran'}
                     </button>
-                    <p className="text-[11px] text-slate-500 mt-3 text-center">
-                      Dengan mengklik tombol kirim, Anda menyatakan bahwa data yang diisi benar dan bukti transfer yang diunggah valid.
-                    </p>
                   </div>
 
                 </form>

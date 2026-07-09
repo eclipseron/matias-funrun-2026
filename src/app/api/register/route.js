@@ -28,7 +28,7 @@ export async function POST(request) {
       emergency_contact_relationship,
       emergency_contact_number,
       tshirt_size,
-      payment_screenshot 
+      payment_screenshot
     } = body;
 
     // Validation
@@ -69,9 +69,10 @@ export async function POST(request) {
       INSERT INTO runners (
         uuid, competition_type, name, email, whatsapp, gender, birth_place, birth_date,
         identity_type, identity_number, bib_name, emergency_contact_name,
-        emergency_contact_relationship, emergency_contact_number, tshirt_size, payment_screenshot
+        emergency_contact_relationship, emergency_contact_number, tshirt_size, payment_screenshot,
+        payment_period, payment_amount
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
@@ -90,7 +91,9 @@ export async function POST(request) {
       emergency_contact_relationship.trim(),
       emergency_contact_number.trim(),
       tshirt_size.trim(),
-      payment_screenshot
+      payment_screenshot,
+      period.status,
+      period.price,
     ];
 
     const dbResult = await query(sql, values);

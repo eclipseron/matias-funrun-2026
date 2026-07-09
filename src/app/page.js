@@ -1,6 +1,3 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getRegistrationPeriod } from '@/lib/registrationPeriods';
 import { 
@@ -15,72 +12,33 @@ import {
   Gift, 
   Droplet 
 } from 'lucide-react';
+import Image from 'next/image';
+import { CountDownHeader } from './CountDownHeader';
 
 export default function Home() {
   // Countdown Target: 20 November 2026 23:59:59 WIB (UTC+7)
   const targetDate = new Date('2026-11-20T23:59:59+07:00').getTime();
-  
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-    isExpired: false
-  });
 
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-
-      if (difference <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true });
-        return;
-      }
-
-      const msInDay = 24 * 60 * 60 * 1000;
-      const msInHour = 60 * 60 * 1000;
-      const msInMinute = 60 * 1000;
-
-      const days = Math.floor(difference / msInDay);
-      const hours = Math.floor((difference % msInDay) / msInHour);
-      const minutes = Math.floor((difference % msInHour) / msInMinute);
-      const seconds = Math.floor((difference % msInMinute) / 1000);
-
-      setTimeLeft({ days, hours, minutes, seconds, isExpired: false });
-    };
-
-    calculateTimeLeft();
-    const interval = setInterval(calculateTimeLeft, 1000);
-    return () => clearInterval(interval);
-  }, [targetDate]);
-
-  const [periodInfo, setPeriodInfo] = useState(() => getRegistrationPeriod());
-
-  useEffect(() => {
-    setPeriodInfo(getRegistrationPeriod());
-  }, []);
-
+  const periodInfo = getRegistrationPeriod()
   const activePrice = periodInfo.priceString;
-  const priceType = periodInfo.periodName;
 
   return (
     <div className="flex flex-col min-h-screen relative overflow-hidden bg-transparent z-0">
       {/* Dynamic Background Elements */}
-      <div className="absolute top-0 right-0 -z-10 w-[800px] h-[800px] bg-brand-blue/10 rounded-full blur-3xl opacity-50 pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
-      <div className="absolute bottom-0 left-0 -z-10 w-[600px] h-[600px] bg-sky-300/10 rounded-full blur-3xl opacity-60 pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
+      <div className="absolute top-0 right-0 -z-10 size-200 bg-brand-blue/10 rounded-full blur-3xl opacity-50 pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
+      <div className="absolute bottom-0 left-0 -z-10 size-150 bg-sky-300/10 rounded-full blur-3xl opacity-60 pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
       
       {/* Decorative sharp geometric element like poster */}
-      <div className="absolute top-[10%] left-0 -z-10 w-full h-[800px] bg-gradient-to-br from-brand-blue/[0.02] to-sky-200/[0.05] skew-y-[-6deg] origin-top-left pointer-events-none"></div>
-      <div className="absolute top-[40%] right-0 -z-10 w-full h-[600px] bg-gradient-to-bl from-brand-blue/[0.03] to-sky-300/[0.05] skew-y-[8deg] origin-bottom-right pointer-events-none"></div>
+      <div className="absolute top-[10%] left-0 -z-10 w-full h-200 bg-linear-to-br from-brand-blue/2 to-sky-200/5 -skew-y-6 origin-top-left pointer-events-none"></div>
+      <div className="absolute top-[40%] right-0 -z-10 w-full h-150 bg-linear-to-bl from-brand-blue/3 to-sky-300/5 skew-y-8 origin-bottom-right pointer-events-none"></div>
 
       {/* Header */}
       <header className="bg-brand-dark text-brand-white border-b border-brand-dark py-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-3">
-            <img src="/logo-matias-run.png" alt="Matias Fun Run 2026" className="h-14 w-auto object-contain" />
+            <Image height={1} width={100} src="/logo-matias-run.png" alt="Matias Fun Run 2026" className="h-14 w-auto object-contain" />
             <div className="h-8 w-px bg-slate-700 hidden sm:block"></div>
-            <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-10 w-auto object-contain hidden sm:block" />
+            <Image height={1} width={100} src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-10 w-auto object-contain hidden sm:block" />
             <div className="hidden md:block pl-1 text-left">
               <p className="text-[10px] font-bold text-brand-blue uppercase tracking-wider">Organized by</p>
               <p className="text-[9px] text-slate-400 leading-tight">Gereja St. Matias Rasul<br/>Paroki Kosambi Baru</p>
@@ -95,59 +53,7 @@ export default function Home() {
       </header>
 
       {/* Countdown Penutupan Pendaftaran */}
-      <div className="bg-brand-dark text-brand-white pt-4 pb-8 px-4 border-b border-slate-800">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-xs font-bold font-mono tracking-widest text-slate-400 uppercase mb-4">
-            PENDAFTARAN DITUTUP DALAM (20 NOVEMBER 2026)
-          </h2>
-          
-          {timeLeft.isExpired ? (
-            <div className="text-xl font-bold text-red-500 uppercase tracking-wider py-2">
-              Pendaftaran Telah Ditutup
-            </div>
-          ) : (
-            <div className="flex flex-row justify-center items-center gap-1.5 sm:gap-3 max-w-xl mx-auto w-full px-2">
-              {/* Box Hari */}
-              <div className="bg-brand-dark-light border border-slate-700 flex-1 min-w-0 p-2 sm:p-3 rounded-none text-center">
-                <div className="text-xl sm:text-3xl md:text-4xl font-extrabold font-mono text-brand-white tracking-tight leading-none">
-                  {String(timeLeft.days).padStart(2, '0')}
-                </div>
-                <div className="text-[8px] sm:text-[10px] text-sky-300 font-mono uppercase tracking-wider mt-1 sm:mt-2">Hari</div>
-              </div>
-
-              <div className="text-xs sm:text-xl font-bold text-slate-600 select-none">:</div>
-
-              {/* Box Jam */}
-              <div className="bg-brand-dark-light border border-slate-700 flex-1 min-w-0 p-2 sm:p-3 rounded-none text-center">
-                <div className="text-xl sm:text-3xl md:text-4xl font-extrabold font-mono text-brand-white tracking-tight leading-none">
-                  {String(timeLeft.hours).padStart(2, '0')}
-                </div>
-                <div className="text-[8px] sm:text-[10px] text-sky-300 font-mono uppercase tracking-wider mt-1 sm:mt-2">Jam</div>
-              </div>
-
-              <div className="text-xs sm:text-xl font-bold text-slate-600 select-none">:</div>
-
-              {/* Box Menit */}
-              <div className="bg-brand-dark-light border border-slate-700 flex-1 min-w-0 p-2 sm:p-3 rounded-none text-center">
-                <div className="text-xl sm:text-3xl md:text-4xl font-extrabold font-mono text-brand-white tracking-tight leading-none">
-                  {String(timeLeft.minutes).padStart(2, '0')}
-                </div>
-                <div className="text-[8px] sm:text-[10px] text-sky-300 font-mono uppercase tracking-wider mt-1 sm:mt-2">Menit</div>
-              </div>
-
-              <div className="text-xs sm:text-xl font-bold text-slate-600 select-none">:</div>
-
-              {/* Box Detik */}
-              <div className="bg-brand-dark-light border border-slate-700 flex-1 min-w-0 p-2 sm:p-3 rounded-none text-center">
-                <div className="text-xl sm:text-3xl md:text-4xl font-extrabold font-mono text-brand-white tracking-tight leading-none">
-                  {String(timeLeft.seconds).padStart(2, '0')}
-                </div>
-                <div className="text-[8px] sm:text-[10px] text-sky-300 font-mono uppercase tracking-wider mt-1 sm:mt-2">Detik</div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      <CountDownHeader targetDate={targetDate} />
 
       {/* Main Section */}
       <main className="grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -159,7 +65,7 @@ export default function Home() {
               {/* Decorative Circle Accent */}
               <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-blue/10 rounded-full blur-2xl pointer-events-none"></div>
 
-              <h2 className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-brand-dark to-brand-blue tracking-tighter mb-2 italic uppercase">
+              <h2 className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-linear-to-br from-brand-dark to-brand-blue tracking-tighter mb-2 italic uppercase">
                 MATIAS FUN RUN 2026
               </h2>
               <p className="text-sm font-bold text-brand-blue font-mono uppercase tracking-wider mb-5 italic">
@@ -325,7 +231,7 @@ export default function Home() {
           <div className="space-y-8 relative z-10">
             
             {/* Call to Action Box */}
-            <div className="bg-gradient-to-b from-brand-dark to-brand-dark-light text-brand-white p-8 border-t-4 border-brand-blue shadow-2xl shadow-brand-blue/20 relative overflow-hidden">
+            <div className="bg-linear-to-b from-brand-dark to-brand-dark-light text-brand-white p-8 border-t-4 border-brand-blue shadow-2xl shadow-brand-blue/20 relative overflow-hidden">
               {/* Dynamic decorative shape */}
               <div className="absolute bottom-0 right-0 w-32 h-32 bg-brand-blue/10 rounded-tl-[100px] pointer-events-none"></div>
 
@@ -386,20 +292,22 @@ export default function Home() {
               </h3>
               <div className="space-y-3 text-sm text-slate-600">
                 <p>
-                  Memiliki pertanyaan terkait pendaftaran, pembayaran, atau pengambilan running bag? Hubungi kami:
+                  Butuh bantuan mengenai pendaftaran, persiapan, atau pelaksanaan kegiatan? Hubungi kami melalui:
                 </p>
-                <div className="pt-2 space-y-2">
+                <div className="pt-2 space-y-2 text-sm">
                   <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-12.5">Email:</span>
-                    <a href="mailto:info@matias-funrun.my.id" className="text-brand-blue hover:underline font-semibold">info@matias-funrun.my.id</a>
+                    <span className="font-semibold text-brand-dark min-w-17.5">Email:</span>
+                    <a href="mailto:info@matias-funrun.my.id" className="text-brand-blue hover:underline">info@matias-funrun.my.id</a>
                   </div>
-                  {/* <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-12.5">Whatsapp:</span>
-                    <span className="text-slate-800 font-semibold">+62 812-3456-7890</span>
-                  </div> */}
                   <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-12.5">Instagram:</span>
+                    <span className="font-semibold text-brand-dark min-w-17.5">Instagram:</span>
                     <Link href="https://www.instagram.com/matiasfunrun" className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-brand-dark min-w-17.5 mb-1">WhatsApp:</p>
+                    <p className="min-w-17.5">0858-1119-0695 (Vicktoria)</p>
+                    <p className="min-w-17.5">0813-1763-5341 (Veronika)</p>
+                    <p className="min-w-17.5">0812-3783-1860 (Vanessa)</p>
                   </div>
                 </div>
               </div>

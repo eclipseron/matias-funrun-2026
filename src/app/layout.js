@@ -90,7 +90,7 @@ export default function RootLayout({ children }) {
         "validFrom": "2026-07-10",
         "validThrough": "2026-07-30T23:59:59+07:00",
         "availability": "https://schema.org/InStock",
-        "url": "https://matias-funrun-2026.my.id/register"
+        "url": "https://matias-funrun.my.id/register"
       },
       {
         "@type": "Offer",
@@ -100,7 +100,7 @@ export default function RootLayout({ children }) {
         "validFrom": "2026-08-10",
         "validThrough": "2026-09-30T23:59:59+07:00",
         "availability": "https://schema.org/InStock",
-        "url": "https://matias-funrun-2026.my.id/register"
+        "url": "https://matias-funrun.my.id/register"
       },
       {
         "@type": "Offer",
@@ -110,7 +110,7 @@ export default function RootLayout({ children }) {
         "validFrom": "2026-10-4",
         "validThrough": "2026-11-20T23:59:59+07:00",
         "availability": "https://schema.org/InStock",
-        "url": "https://matias-funrun-2026.my.id/register"
+        "url": "https://matias-funrun.my.id/register"
       }
     ],
     "organizer": {

@@ -314,12 +314,18 @@ export default function DashboardClient({ initialRunners }) {
                     <td className="p-4 font-mono font-bold text-slate-400">{runner.id}</td>
                     <td className="p-4">
                       <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-none font-mono border uppercase ${
-                        runner.competition_type === 'Fun Run' 
+                        runner.competition_type === 'Fun Run 4K' 
                           ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
                           : 'bg-indigo-50 text-indigo-700 border-indigo-200'
                       }`}>
                         {runner.competition_type}
                       </span>
+                      {
+                        runner.payment_period && 
+                        <p className="ml-1 inline-block text-[10px] font-bold px-2 py-0.5 rounded-none font-mono border uppercase bg-cyan-50 text-cyan-700 border-cyan-200">
+                          {runner.payment_period}
+                        </p>
+                      }
                     </td>
                     <td className="p-4">
                       <p className="font-bold text-brand-dark">{runner.name}</p>
