@@ -19,8 +19,7 @@ export function getRegistrationPeriod(dateInput) {
   const NORMAL_START = new Date('2026-10-04T00:00:00+07:00').getTime();
   const NORMAL_END = new Date('2026-11-20T23:59:59+07:00').getTime();
 
-  // if (time < EB1_START) {
-  if (false) {
+  if (time < EB1_START) {
     return {
       status: 'PRE_OPENING',
       formActive: false,
@@ -29,8 +28,7 @@ export function getRegistrationPeriod(dateInput) {
       periodName: 'Early Bird 1',
       message: 'Pendaftaran belum dibuka. Periode Early Bird 1 akan dimulai pada 15 Juli 2026.'
     };
-  // } else if (time >= EB1_START && time <= EB1_END) {
-  } else if (true) {
+  } else if (time >= EB1_START && time <= EB1_END) {
     return {
       status: 'EB1',
       formActive: true,
