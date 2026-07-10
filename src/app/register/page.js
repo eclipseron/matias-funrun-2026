@@ -41,6 +41,13 @@ export default function Register() {
   const [fileName, setFileName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // Confirmation state
+  const [isChecked, setIsChecked] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  // Validation state
+  const [validationErrors, setValidationErrors] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,10 +55,27 @@ export default function Register() {
       ...prev,
       [name]: value,
     }));
+
+    if (validationErrors[name]) {
+      setValidationErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
+
+    if (validationErrors.paymentScreenshot) {
+      setValidationErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.paymentScreenshot;
+        return newErrors;
+      });
+    }
+
     if (!file) return;
 
     // Validate size (limit to 2MB)
@@ -73,8 +97,8 @@ export default function Register() {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const processSubmit = async () => {
+    setShowConfirmModal(false);
     setLoading(true);
     setError('');
 
@@ -86,83 +110,6 @@ export default function Register() {
     const finalTshirtSize = formData.tshirtSize === 'other'
       ? formData.customTshirtSize.trim()
       : formData.tshirtSize;
-
-    // Form validation
-    if (!competitionType) {
-      setError('Silakan pilih tipe kompetisi terlebih dahulu.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.name.trim()) {
-      setError('Nama lengkap wajib diisi.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.email.trim() || !formData.email.includes('@')) {
-      setError('Email tidak valid.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.whatsapp.trim()) {
-      setError('Nomor WhatsApp wajib diisi.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.gender) {
-      setError('Jenis kelamin wajib dipilih.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.birthPlace.trim()) {
-      setError('Tempat lahir wajib diisi.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.birthDate) {
-      setError('Tanggal lahir wajib diisi.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.identityType) {
-      setError('Jenis identitas wajib dipilih.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.identityNumber.trim()) {
-      setError('Nomor identitas wajib diisi.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.bibName.trim()) {
-      setError('Nama BIB wajib diisi.');
-      setLoading(false);
-      return;
-    }
-    if (formData.bibName.trim().length > 15) {
-      setError('Nama BIB maksimal 15 karakter.');
-      setLoading(false);
-      return;
-    }
-    if (!formData.emergencyContactName.trim()) {
-      setError('Nama kontak darurat wajib diisi.');
-      setLoading(false);
-      return;
-    }
-    if (!finalRelationship) {
-      setError('Hubungan kontak darurat wajib diisi.');
-      setLoading(false);
-      return;
-    }
-    if (!finalTshirtSize) {
-      setError('Ukuran kaos wajib diisi.');
-      setLoading(false);
-      return;
-    }
-    if (!screenshotBase64) {
-      setError('Bukti pembayaran wajib diunggah.');
-      setLoading(false);
-      return;
-    }
 
     try {
       const response = await fetch('/api/register', {
@@ -202,6 +149,58 @@ export default function Register() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFormSubmitClick = (e) => {
+    e.preventDefault();
+    
+    const errors = {};
+    let firstErrorField = null;
+
+    const checkField = (condition, fieldName, errorMessage) => {
+      if (condition) {
+        errors[fieldName] = errorMessage;
+        if (!firstErrorField) firstErrorField = fieldName;
+      }
+    };
+
+    checkField(!competitionType, 'competitionType', 'Silakan pilih tipe kompetisi terlebih dahulu.');
+    checkField(!formData.name.trim(), 'name', 'Nama lengkap wajib diisi.');
+    checkField(!formData.email.trim() || !formData.email.includes('@'), 'email', 'Email tidak valid.');
+    checkField(!formData.whatsapp.trim(), 'whatsapp', 'Nomor WhatsApp wajib diisi.');
+    checkField(!formData.gender, 'gender', 'Jenis kelamin wajib dipilih.');
+    checkField(!formData.birthPlace.trim(), 'birthPlace', 'Tempat lahir wajib diisi.');
+    checkField(!formData.birthDate, 'birthDate', 'Tanggal lahir wajib diisi.');
+    checkField(!formData.identityType, 'identityType', 'Jenis identitas wajib dipilih.');
+    checkField(!formData.identityNumber.trim(), 'identityNumber', 'Nomor identitas wajib diisi.');
+    checkField(!formData.bibName.trim(), 'bibName', 'Nama BIB wajib diisi.');
+    checkField(formData.bibName.trim().length > 15, 'bibName', 'Nama BIB maksimal 15 karakter.');
+    checkField(!formData.emergencyContactName.trim(), 'emergencyContactName', 'Nama kontak darurat wajib diisi.');
+    
+    const finalRelationship = formData.emergencyContactRelationship === 'other'
+      ? formData.customRelationship.trim() : formData.emergencyContactRelationship;
+    checkField(!finalRelationship, 'emergencyContactRelationship', 'Hubungan kontak darurat wajib diisi.');
+
+    const finalTshirtSize = formData.tshirtSize === 'other'
+      ? formData.customTshirtSize.trim() : formData.tshirtSize;
+    checkField(!finalTshirtSize, 'tshirtSize', 'Ukuran kaos wajib diisi.');
+
+    checkField(!screenshotBase64, 'paymentScreenshot', 'Bukti pembayaran wajib diunggah.');
+    checkField(!isChecked, 'terms', 'Harap centang kotak persetujuan.');
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      setError('Ada beberapa isian yang belum lengkap atau valid. Silakan periksa kolom yang ditandai merah.');
+      if (firstErrorField) {
+        const el = document.getElementById(firstErrorField);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    setValidationErrors({});
+    setError('');
+    setShowConfirmModal(true);
   };
 
   return (
@@ -248,7 +247,7 @@ export default function Register() {
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-17.5">Instagram:</span>
-                    <Link href="https://www.instagram.com/matiasfunrun" className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
+                    <Link href="https://www.instagram.com/matiasfunrun" target='_blank' className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
                   </div>
                   <div>
                     <p className="font-semibold text-brand-dark min-w-17.5 mb-1">WhatsApp:</p>
@@ -305,7 +304,7 @@ export default function Register() {
                         </tr>
                         <tr className="border-b border-brand-border/50 border-dashed">
                           <td className="py-2.5 pr-6 font-bold text-brand-dark">Early Bird 2</td>
-                          <td className="py-2.5 px-6">10 Agt - 30 Sept 2026</td>
+                          <td className="py-2.5 px-6">15 Agt - 30 Sept 2026</td>
                           <td className="py-2.5 pl-6 text-right font-bold text-brand-blue">Rp 150.000</td>
                         </tr>
                         <tr>
@@ -402,7 +401,7 @@ export default function Register() {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleFormSubmitClick} className="space-y-6">
                   
                   {/* Bagian 1: Data Diri Pelari */}
                   <div className="border-b border-brand-border pb-16 space-y-8">
@@ -412,28 +411,29 @@ export default function Register() {
 
                     {/* Nama Lengkap */}
                     <div>
-                      <label htmlFor="name" className="block text-sm font-bold text-brand-dark mb-2 uppercase tracking-wider ">
+                      <label htmlFor="name" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider ">
                         Nama Lengkap (sesuai kartu identitas) <span className='text-rose-500'>*</span>
                       </label>
+                      {validationErrors.name && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.name}</span>}
                       <input
                         type="text"
                         id="name"
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
-                        required
                         placeholder="e.g. Budi Santoso"
                         disabled={loading}
-                        className="flat-input text-sm"
+                        className={`flat-input text-sm ${validationErrors.name ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                       />
                     </div>
 
                     {/* Jenis Kelamin */}
-                    <div>
-                      <label className="block text-sm font-bold text-brand-dark mb-2 uppercase tracking-wider">
+                    <div id="gender">
+                      <label className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                         Jenis Kelamin <span className='text-rose-500'>*</span>
                       </label>
-                      <div className="flex gap-6 mt-1">
+                      {validationErrors.gender && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.gender}</span>}
+                      <div className={`flex gap-6 mt-1 p-2 ${validationErrors.gender ? 'border border-red-500 bg-red-50/50' : ''}`}>
                         <label className="inline-flex items-center gap-2 text-sm cursor-pointer">
                           <input
                             type="radio"
@@ -467,31 +467,31 @@ export default function Register() {
                         <label htmlFor="birthPlace" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Tempat Lahir <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.birthPlace && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.birthPlace}</span>}
                         <input
                           type="text"
                           id="birthPlace"
                           name="birthPlace"
                           value={formData.birthPlace}
                           onChange={handleInputChange}
-                          required
                           placeholder="e.g. Jakarta"
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.birthPlace ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         />
                       </div>
                       <div>
                         <label htmlFor="birthDate" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Tanggal Lahir <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.birthDate && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.birthDate}</span>}
                         <input
                           type="date"
                           id="birthDate"
                           name="birthDate"
                           value={formData.birthDate}
                           onChange={handleInputChange}
-                          required
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.birthDate ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         />
                       </div>
                     </div>
@@ -502,14 +502,14 @@ export default function Register() {
                         <label htmlFor="identityType" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Jenis Identitas <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.identityType && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.identityType}</span>}
                         <select
                           id="identityType"
                           name="identityType"
                           value={formData.identityType}
                           onChange={handleInputChange}
-                          required
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.identityType ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         >
                           <option value="">-- Pilih --</option>
                           <option value="KTP/NIK">KTP/NIK</option>
@@ -521,16 +521,16 @@ export default function Register() {
                         <label htmlFor="identityNumber" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Nomor Identitas <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.identityNumber && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.identityNumber}</span>}
                         <input
                           type="text"
                           id="identityNumber"
                           name="identityNumber"
                           value={formData.identityNumber}
                           onChange={handleInputChange}
-                          required
                           placeholder="e.g. 3171xxxxxxxxxxxx"
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.identityNumber ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         />
                       </div>
                     </div>
@@ -548,16 +548,16 @@ export default function Register() {
                         <label htmlFor="email" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Alamat Email <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.email && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.email}</span>}
                         <input
                           type="email"
                           id="email"
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          required
                           placeholder="e.g. budi@gmail.com"
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.email ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         />
                         <p className="text-xs text-slate-400 mt-1">
                           Email konfirmasi dikirim ke sini.
@@ -567,16 +567,16 @@ export default function Register() {
                         <label htmlFor="whatsapp" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Nomor WhatsApp <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.whatsapp && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.whatsapp}</span>}
                         <input
                           type="tel"
                           id="whatsapp"
                           name="whatsapp"
                           value={formData.whatsapp}
                           onChange={handleInputChange}
-                          required
                           placeholder="e.g. 081234567890"
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.whatsapp ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         />
                       </div>
                     </div>
@@ -586,17 +586,17 @@ export default function Register() {
                       <label htmlFor="bibName" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Nama Peserta untuk Nomor Dada (BIB) <span className='text-rose-500'>*</span>
                       </label>
+                      {validationErrors.bibName && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.bibName}</span>}
                       <input
                         type="text"
                         id="bibName"
                         name="bibName"
                         value={formData.bibName}
                         onChange={handleInputChange}
-                        required
                         maxLength={15}
                         placeholder="e.g. BUDI (Maksimal 15 karakter)"
                         disabled={loading}
-                        className="flat-input text-sm font-mono"
+                        className={`flat-input text-sm font-mono ${validationErrors.bibName ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                       />
                     </div>
 
@@ -606,15 +606,15 @@ export default function Register() {
                         <label htmlFor="tshirtSize" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Ukuran Kaos (Jersey) <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.tshirtSize && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.tshirtSize}</span>}
                         <img src='/jersey-chart.jpeg' className='mb-4' />
                         <select
                           id="tshirtSize"
                           name="tshirtSize"
                           value={formData.tshirtSize}
                           onChange={handleInputChange}
-                          required
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.tshirtSize ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         >
                           <option value="">-- Pilih Ukuran --</option>
                           <option value="xs">XS</option>
@@ -630,18 +630,18 @@ export default function Register() {
                       {formData.tshirtSize === 'other' && (
                         <div>
                           <label htmlFor="customTshirtSize" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                            Tulis Ukuran Kaos Anda *
+                            Tulis Ukuran Kaos Anda <span className='text-rose-500'>*</span>
                           </label>
+                          {validationErrors.tshirtSize && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.tshirtSize}</span>}
                           <input
                             type="text"
                             id="customTshirtSize"
                             name="customTshirtSize"
                             value={formData.customTshirtSize}
                             onChange={handleInputChange}
-                            required
                             placeholder="e.g. XXXL, 4XL, dsb."
                             disabled={loading}
-                            className="flat-input text-sm"
+                            className={`flat-input text-sm ${validationErrors.tshirtSize ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                           />
                         </div>
                       )}
@@ -660,32 +660,32 @@ export default function Register() {
                         <label htmlFor="emergencyContactName" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Nama Kontak Darurat <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.emergencyContactName && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.emergencyContactName}</span>}
                         <input
                           type="text"
                           id="emergencyContactName"
                           name="emergencyContactName"
                           value={formData.emergencyContactName}
                           onChange={handleInputChange}
-                          required
                           placeholder="e.g. Siti Rahma"
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.emergencyContactName ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         />
                       </div>
                       <div>
                         <label htmlFor="emergencyContactNumber" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Nomor Kontak Darurat <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.emergencyContactNumber && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.emergencyContactNumber}</span>}
                         <input
                           type="text"
                           id="emergencyContactNumber"
                           name="emergencyContactNumber"
                           value={formData.emergencyContactNumber}
                           onChange={handleInputChange}
-                          required
                           placeholder="e.g. 081234567890"
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.emergencyContactNumber ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         />
                       </div>
                     </div>
@@ -696,14 +696,14 @@ export default function Register() {
                         <label htmlFor="emergencyContactRelationship" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                           Hubungan dengan Kontak <span className='text-rose-500'>*</span>
                         </label>
+                        {validationErrors.emergencyContactRelationship && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.emergencyContactRelationship}</span>}
                         <select
                           id="emergencyContactRelationship"
                           name="emergencyContactRelationship"
                           value={formData.emergencyContactRelationship}
                           onChange={handleInputChange}
-                          required
                           disabled={loading}
-                          className="flat-input text-sm"
+                          className={`flat-input text-sm ${validationErrors.emergencyContactRelationship ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         >
                           <option value="">-- Pilih Hubungan --</option>
                           <option value="ayah">Ayah</option>
@@ -723,16 +723,16 @@ export default function Register() {
                           <label htmlFor="customRelationship" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                             Tulis Hubungan Lainnya <span className='text-rose-500'>*</span>
                           </label>
+                          {validationErrors.emergencyContactRelationship && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.emergencyContactRelationship}</span>}
                           <input
                             type="text"
                             id="customRelationship"
                             name="customRelationship"
                             value={formData.customRelationship}
                             onChange={handleInputChange}
-                            required
                             placeholder="e.g. Paman, Bibi, Sepupu"
                             disabled={loading}
-                            className="flat-input text-sm"
+                            className={`flat-input text-sm ${validationErrors.emergencyContactRelationship ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                           />
                         </div>
                       )}
@@ -774,10 +774,11 @@ export default function Register() {
                       </table>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-bold text-brand-dark mb-2 uppercase tracking-wider">
+                    <div id="paymentScreenshot">
+                      <label className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
                         Bukti Transfer Pembayaran (Maksimal 2MB) <span className='text-rose-500'>*</span>
                       </label>
+                      {validationErrors.paymentScreenshot && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.paymentScreenshot}</span>}
                       
                       <div className="flex flex-col items-start gap-4">
                         <div className="relative w-full">
@@ -791,7 +792,7 @@ export default function Register() {
                           />
                           <label
                             htmlFor="screenshot-upload"
-                            className="flex items-center justify-center border border-dashed border-slate-300 hover:border-brand-blue py-6 px-4 cursor-pointer text-sm text-slate-500 hover:text-brand-blue transition duration-150 w-full"
+                            className={`flex items-center justify-center border border-dashed py-6 px-4 cursor-pointer text-sm transition duration-150 w-full ${validationErrors.paymentScreenshot ? 'border-red-500 text-red-500 bg-red-50/50' : 'border-slate-300 text-slate-500 hover:text-brand-blue hover:border-brand-blue'}`}
                           >
                             {fileName ? (
                               <span className="font-semibold text-brand-dark truncate">{fileName} (Ubah File)</span>
@@ -816,10 +817,33 @@ export default function Register() {
                   </div>
 
                   {/* Submit Button */}
-                  <div className="pt-6 border-t border-brand-border">
-                    <p className="text-[11px] text-slate-500 mb-3 text-center">
-                      Dengan mengklik tombol kirim, Anda menyatakan bahwa data yang diisi benar dan bukti transfer yang diunggah valid.
-                    </p>
+                  <div className="pt-6 border-t border-brand-border" id="terms">
+                    <label className={`flex items-start gap-3 mb-6 cursor-pointer group p-2 ${validationErrors.terms ? 'border border-red-500 bg-red-50/50' : ''}`}>
+                      <div className="pt-0.5">
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            setIsChecked(e.target.checked);
+                            if (validationErrors.terms) {
+                              setValidationErrors(prev => {
+                                const newErrors = { ...prev };
+                                delete newErrors.terms;
+                                return newErrors;
+                              });
+                            }
+                          }}
+                          className="w-4 h-4 mt-0.5 text-brand-blue rounded border-brand-border focus:ring-brand-blue focus:ring-2 cursor-pointer"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[11px] text-slate-500 leading-relaxed group-hover:text-brand-dark transition-colors font-medium">
+                          Dengan ini saya menyatakan bahwa data yang diisi benar dan bukti transfer yang dikirimkan valid.
+                        </span>
+                        {validationErrors.terms && <span className="text-rose-500 text-xs italic block mt-1">{validationErrors.terms}</span>}
+                      </div>
+                    </label>
+
                     <button
                       type="submit"
                       disabled={loading}
@@ -846,6 +870,36 @@ export default function Register() {
           <p className="mt-2 text-slate-500">Official Registration Portal for Matias Fun Run. The organizer does not charge any fees other than the official registration fee.</p>
         </div>
       </footer>
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-dark/80 backdrop-blur-sm transition-opacity">
+          <div className="bg-white p-8 max-w-sm w-full border-4 border-brand-blue shadow-[12px_12px_0px_0px_rgba(0,102,255,0.2)] relative">
+            <h3 className="text-xl font-black text-brand-dark italic uppercase tracking-tight mb-3">
+              Konfirmasi Registrasi
+            </h3>
+            <p className="text-sm text-slate-600 mb-8 font-medium leading-relaxed">
+              Apakah Anda yakin ingin mengirim data pendaftaran ini? Pastikan kembali data dan bukti transfer sudah benar.
+            </p>
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => setShowConfirmModal(false)}
+                className="flex-1 py-3 px-4 border-2 border-brand-dark text-brand-dark font-bold uppercase tracking-wider text-xs hover:bg-slate-100 transition-colors"
+              >
+                Batalkan
+              </button>
+              <button
+                type="button"
+                onClick={processSubmit}
+                className="flex-1 py-3 px-4 bg-brand-blue border-2 border-brand-blue text-white font-bold uppercase tracking-wider text-xs hover:bg-brand-blue/90 hover:-translate-y-0.5 hover:-translate-x-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,102,255,0.3)] transition-all"
+              >
+                Kirim
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
