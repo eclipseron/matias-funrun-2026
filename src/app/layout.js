@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Matias Fun Run & Walk 2026 | Portal Pendaftaran Resmi",
-  description: "Ikuti keseruan acara lari 4.5K dan jalan sehat 2K oleh Gereja Santo Matias Rasul Paroki Kosambi Baru. Daftar sekarang!",
+  title: "Matias Fun Run & Walk 2026 | 4K & 2.5K",
+  description: "Ikuti keseruan acara lari 4K dan jalan sehat 2.5K oleh Gereja Santo Matias Rasul Paroki Kosambi Baru. Daftar sekarang!",
   keywords: [
     "event lari",
     "event jakarta",
@@ -23,8 +23,8 @@ export const metadata = {
   ],
   authors: [{ name: "Panitia Matias Fun Run" }],
   openGraph: {
-    title: "Matias Fun Run & Walk 2026 | Portal Pendaftaran Resmi",
-    description: "Ikuti keseruan acara lari 4.5K & jalan sehat 2K dari Gereja Santo Matias Rasul Paroki Kosambi Baru. Dapatkan Jersey, Medali, dan BIB!",
+    title: "Matias Fun Run & Walk 2026 | 4K & 2.5K",
+    description: "Ikuti keseruan acara lari 4K & jalan sehat 2.5K dari Gereja Santo Matias Rasul Paroki Kosambi Baru. Dapatkan Jersey, Medali, dan BIB!",
     url: "https://matias-funrun-2026.my.id",
     siteName: "Matias Fun Run & Walk 2026",
     images: [
@@ -40,7 +40,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Matias Fun Run & Walk 2026 | 4K & 2.5K ",
+    title: "Matias Fun Run & Walk 2026 | 4K & 2.5K",
     description: "Ikuti keseruan acara lari 4K & jalan sehat 2.5K dari Gereja Santo Matias Rasul Paroki Kosambi Baru.",
     images: ["https://matias-funrun-2026.my.id/logo-matias-run.png"],
   },
@@ -62,8 +62,8 @@ export default function RootLayout({ children }) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Event",
-    "name": "Matias Fun Run & Walk 2026",
-    "description": "Acara lari komunitas 4.5K dan jalan sehat 2K yang diselenggarakan oleh Gereja Santo Matias Rasul Paroki Kosambi Baru.",
+    "name": "Matias Fun Run & Walk 2026 | 4K & 2.5K",
+    "description": "Acara lari komunitas 4K dan jalan sehat 2.5K yang diselenggarakan oleh Gereja Santo Matias Rasul Paroki Kosambi Baru.",
     "image": [
       "https://matias-funrun-2026.my.id/logo-matias-run.png"
     ],
