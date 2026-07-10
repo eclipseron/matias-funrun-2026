@@ -40,8 +40,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Matias Fun Run & Walk 2026 | Portal Pendaftaran Resmi",
-    description: "Ikuti keseruan acara lari 4.5K & jalan sehat 2K dari Gereja Santo Matias Rasul Paroki Kosambi Baru.",
+    title: "Matias Fun Run & Walk 2026 | 4K & 2.5K ",
+    description: "Ikuti keseruan acara lari 4K & jalan sehat 2.5K dari Gereja Santo Matias Rasul Paroki Kosambi Baru.",
     images: ["https://matias-funrun-2026.my.id/logo-matias-run.png"],
   },
   robots: {

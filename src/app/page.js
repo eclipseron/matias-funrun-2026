@@ -252,7 +252,7 @@ export default function Home() {
                   <p className="text-[10px] font-mono text-slate-400 uppercase tracking-wide">Jadwal &amp; Biaya Pendaftaran</p>
                   <ul className="space-y-2 mt-2 font-mono text-[11px] text-slate-300">
                     <li className={periodInfo.status === 'EB1' ? 'text-white font-bold border-l-2 border-brand-blue pl-1.5' : 'pl-1.5'}>
-                      Early Bird 1 (10 - 30 Juli):<br/>
+                      Early Bird 1 (15 - 30 Juli):<br/>
                       <span className="font-bold text-brand-blue">Rp 125.000</span>
                     </li>
                     <li className={periodInfo.status === 'EB2' ? 'text-white font-bold border-l-2 border-brand-blue pl-1.5' : 'pl-1.5'}>
@@ -301,7 +301,7 @@ export default function Home() {
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-17.5">Instagram:</span>
-                    <Link href="https://www.instagram.com/matiasfunrun" className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
+                    <Link href="https://www.instagram.com/matiasfunrun" target='_blank' className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
                   </div>
                   <div>
                     <p className="font-semibold text-brand-dark min-w-17.5 mb-1">WhatsApp:</p>
