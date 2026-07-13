@@ -23,7 +23,8 @@ export default async function AdminDashboard() {
         id, uuid, competition_type, name, email, whatsapp, gender, birth_place, birth_date, 
         identity_type, identity_number, bib_name, emergency_contact_name, 
         emergency_contact_relationship, emergency_contact_number, tshirt_size, status, registration_code,
-        registered_at, verified_at, bag_distributed_at, payment_period, payment_amount 
+        registered_at, verified_at, bag_distributed_at, payment_period, payment_amount, blood_type, doct_recommendation,
+        info_source, prev_diagnose, prev_alergy, email_status  
       FROM runners 
       ORDER BY id DESC`
     );

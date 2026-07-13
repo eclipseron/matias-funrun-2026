@@ -28,7 +28,13 @@ export async function POST(request) {
       emergency_contact_relationship,
       emergency_contact_number,
       tshirt_size,
-      payment_screenshot
+      payment_screenshot,
+      blood_type,
+      doct_recommendation,
+      info_source,
+      prev_diagnose,
+      prev_alergy,
+      approval,
     } = body;
 
     // Validation
@@ -47,7 +53,10 @@ export async function POST(request) {
       emergency_contact_relationship: 'Hubungan kontak darurat wajib diisi',
       emergency_contact_number: 'Nomor kontak darurat wajib diisi',
       tshirt_size: 'Ukuran kaos wajib dipilih',
-      payment_screenshot: 'Bukti pembayaran wajib diunggah'
+      payment_screenshot: 'Bukti pembayaran wajib diunggah',
+      blood_type: 'Golongan darah wajib dipilih',
+      doct_recommendation: 'Informasi rekomendasi dokter wajib dipilih',
+      approval: 'Pernyataan persetujuan wajib diisi',
     };
 
     for (const [key, message] of Object.entries(requiredFields)) {
@@ -60,7 +69,11 @@ export async function POST(request) {
     if (!email.trim() || !email.includes('@')) {
       return NextResponse.json({ success: false, error: 'Format email tidak valid' }, { status: 400 });
     }
-
+    
+    const bloodType = ["A+", "A-", "AB+", "AB-", "B+", "B-", "O+", "O-"]
+    if (!bloodType.includes(blood_type)) {
+      return NextResponse.json({ success: false, error: 'Golongan darah tidak valid' }, { status: 400 });
+    }
     // Generate UUID v4 in JavaScript for MySQL compatibility
     const uuid = crypto.randomUUID();
 
@@ -70,9 +83,9 @@ export async function POST(request) {
         uuid, competition_type, name, email, whatsapp, gender, birth_place, birth_date,
         identity_type, identity_number, bib_name, emergency_contact_name,
         emergency_contact_relationship, emergency_contact_number, tshirt_size, payment_screenshot,
-        payment_period, payment_amount
+        payment_period, payment_amount, blood_type, doct_recommendation, info_source, prev_diagnose, prev_alergy, approval
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const values = [
@@ -94,6 +107,12 @@ export async function POST(request) {
       payment_screenshot,
       period.status,
       period.price,
+      blood_type,
+      doct_recommendation.toLowerCase() === "ya",
+      info_source,
+      prev_diagnose,
+      prev_alergy,
+      true,
     ];
 
     const dbResult = await query(sql, values);
@@ -104,24 +123,43 @@ export async function POST(request) {
       id: newRunnerId,
       uuid,
       name: name.trim(),
+      status: 'pending',
+      sex: gender.trim(),
+      birthLoc: birth_place.trim(),
+      birthDate: new Date(birth_date).toLocaleDateString('id-ID'),
+      identity: identity_type.trim(),
+      identityNumber: identity_number.trim(),
       email: email.trim().toLowerCase(),
-      status: 'pending'
+      whatsapp: whatsapp.trim(),
+      bibName: bib_name.trim(),
+      tshirtSize: tshirt_size.trim().toUpperCase(),
+      bloodType: blood_type,
+      doctRecommendation: doct_recommendation,
+      prevDiagnose: prev_diagnose,
+      prevAlergy: prev_alergy,
+      emergencyContact: emergency_contact_name.trim(),
+      emergencyContactRelationship: emergency_contact_relationship.trim(),
+      emergencyContactNumber: emergency_contact_number.trim(),
+      eventSource: info_source.trim(),
+      competition_type: competition_type.trim(),
+      registered_at: new Date(),
     };
+
+    let isSuccess = false
 
     // Trigger verification pending email asynchronously
     try {
-      await sendVerificationPendingEmail({
-        email: newRunner.email,
-        name: newRunner.name,
-        uuid: newRunner.uuid,
-        competition_type: competition_type.trim(),
-        whatsapp: whatsapp.trim(),
-        bib_name: bib_name.trim(),
-        tshirt_size: tshirt_size.trim(),
-        registered_at: new Date()
-      });
+      await sendVerificationPendingEmail(newRunner);
+
+      await query(`UPDATE runners SET email_status = ? WHERE id = ?`, ['success', newRunnerId])
+      isSuccess = true
     } catch (emailErr) {
       console.error('Registration email sending failed (proceeding with registration):', emailErr);
+    }
+
+
+    if (!isSuccess) {
+      await query(`UPDATE runners SET email_status = ? WHERE id = ?`, ['failed', newRunnerId])
     }
 
     return NextResponse.json({

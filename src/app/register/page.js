@@ -35,6 +35,12 @@ export default function Register() {
     customRelationship: '',
     tshirtSize: '',
     customTshirtSize: '',
+    bloodType: '',
+    doctRecommendation: '',
+    infoSource: '',
+    prevDiagnose: '',
+    prevAlergy: '',
+    approval: '',
   });
 
   const [screenshotBase64, setScreenshotBase64] = useState('');
@@ -107,10 +113,6 @@ export default function Register() {
       ? formData.customRelationship.trim()
       : formData.emergencyContactRelationship;
 
-    const finalTshirtSize = formData.tshirtSize === 'other'
-      ? formData.customTshirtSize.trim()
-      : formData.tshirtSize;
-
     try {
       const response = await fetch('/api/register', {
         method: 'POST',
@@ -131,8 +133,14 @@ export default function Register() {
           emergency_contact_name: formData.emergencyContactName,
           emergency_contact_relationship: finalRelationship,
           emergency_contact_number: formData.emergencyContactNumber,
-          tshirt_size: finalTshirtSize,
+          tshirt_size: formData.tshirtSize,
           payment_screenshot: screenshotBase64,
+          blood_type: formData.bloodType,
+          doct_recommendation: formData.doctRecommendation,
+          info_source: formData.infoSource,
+          prev_diagnose: formData.prevDiagnose,
+          prev_alergy: formData.prevAlergy,
+          approval: isChecked,
         }),
       });
 
@@ -176,6 +184,9 @@ export default function Register() {
     checkField(!formData.bibName.trim(), 'bibName', 'Nama BIB wajib diisi.');
     checkField(formData.bibName.trim().length > 15, 'bibName', 'Nama BIB maksimal 15 karakter.');
     checkField(!formData.emergencyContactName.trim(), 'emergencyContactName', 'Nama kontak darurat wajib diisi.');
+    checkField(!formData.emergencyContactNumber.trim(), 'emergencyContactNumber', 'Nomor kontak darurat wajib diisi.');
+    checkField(!formData.bloodType, 'bloodType', 'Golongan darah wajib diisi.');
+    checkField(!formData.doctRecommendation, 'doctRecommendation', 'Informasi rekomendasi dokter wajib diisi.');
     
     const finalRelationship = formData.emergencyContactRelationship === 'other'
       ? formData.customRelationship.trim() : formData.emergencyContactRelationship;
@@ -528,7 +539,7 @@ export default function Register() {
                           name="identityNumber"
                           value={formData.identityNumber}
                           onChange={handleInputChange}
-                          placeholder="e.g. 3171xxxxxxxxxxxx"
+                          placeholder="e.g. 3171****"
                           disabled={loading}
                           className={`flat-input text-sm ${validationErrors.identityNumber ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
                         />
@@ -607,7 +618,7 @@ export default function Register() {
                           Ukuran Kaos (Jersey) <span className='text-rose-500'>*</span>
                         </label>
                         {validationErrors.tshirtSize && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.tshirtSize}</span>}
-                        <img src='/jersey-chart.jpeg' className='mb-4' />
+                          <Image alt="jersey-chart" height={1080} width={1080} src='/jersey-chart.jpeg' className='w-72 mb-4' />
                         <select
                           id="tshirtSize"
                           name="tshirtSize"
@@ -623,35 +634,117 @@ export default function Register() {
                           <option value="l">L</option>
                           <option value="xl">XL</option>
                           <option value="xxl">XXL</option>
-                          <option value="other">Lainnya (Tulis manual)</option>
                         </select>
                       </div>
-                      
-                      {formData.tshirtSize === 'other' && (
-                        <div>
-                          <label htmlFor="customTshirtSize" className="block text-xs font-bold text-brand-dark mb-1 uppercase tracking-wider">
-                            Tulis Ukuran Kaos Anda <span className='text-rose-500'>*</span>
-                          </label>
-                          {validationErrors.tshirtSize && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.tshirtSize}</span>}
-                          <input
-                            type="text"
-                            id="customTshirtSize"
-                            name="customTshirtSize"
-                            value={formData.customTshirtSize}
-                            onChange={handleInputChange}
-                            placeholder="e.g. XXXL, 4XL, dsb."
-                            disabled={loading}
-                            className={`flat-input text-sm ${validationErrors.tshirtSize ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
-                          />
-                        </div>
-                      )}
                     </div>
                   </div>
 
-                  {/* Bagian 3: Kontak Darurat */}
-                  <div className="border-b border-brand-border pb-6 space-y-6">
+                  {/* Bagian 3: Informasi Kesehatan Peserta */}
+                  <div className="border-b border-brand-border pb-16 space-y-8">
                     <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
-                      III. KONTAK DARURAT (EMERGENCY CONTACT)
+                      III. INFORMASI KESEHATAN PESERTA
+                    </h3>
+
+                    {/* Golongan Darah */}
+                    <div>
+                      <label htmlFor="bloodType" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider ">
+                        Golongan Darah <span className='text-rose-500'>*</span>
+                      </label>
+                        {validationErrors.bloodType && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.bloodType}</span>}
+                      <select
+                        id="bloodType"
+                        name="bloodType"
+                        value={formData.bloodType}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                        className={`flat-input text-sm ${validationErrors.bloodType ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
+                      >
+                        <option value="">-- Pilih --</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                      </select>
+                    </div>
+
+                    {/* Rekomendasi Dokter */}
+                    <div id="doctRecommendation">
+                      <label className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                      Rekomendasi Dokter <span className='text-rose-500'>*</span>
+                      </label>
+                      {validationErrors.doctRecommendation && <span className="text-rose-500 text-xs italic block mb-1">{validationErrors.doctRecommendation}</span>}
+                      <p className='block text-sm text-slate-600 tracking-wider'>Apakah dokter pernah mendiagnosa Anda memiliki masalah atau penyakit jantung atau tekanan darah tinggi dan Anda hanya boleh melakukan aktivitas fisik sesuai anjuran dokter?</p>
+                            <div className={`flex flex-col gap-2 mt-1 p-2 w-fit ${validationErrors.doctRecommendation ? ' border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}>
+                        <label className="inline-flex items-center gap-2 text-sm cursor-pointer">
+                          <input
+                            type="radio"
+                            name="doctRecommendation"
+                            value="Ya"
+                            checked={formData.doctRecommendation === 'Ya'}
+                            onChange={handleInputChange}
+                            disabled={loading}
+                            className="accent-brand-blue"
+                          />
+                          Ya
+                        </label>
+                        <label className="inline-flex items-center gap-2 text-sm cursor-pointer">
+                          <input
+                            type="radio"
+                            name="doctRecommendation"
+                            value="Tidak"
+                            checked={formData.doctRecommendation === 'Tidak'}
+                            onChange={handleInputChange}
+                            disabled={loading}
+                            className="accent-brand-blue"
+                          />
+                          Tidak
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Riwayat Penyakit */}
+                    <div>
+                      <label htmlFor="prevDiagnose" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                        Riwayat Penyakit
+                      </label>
+                      <p className='block text-sm text-slate-600 tracking-wider mb-1'>Apakah Anda memiliki riwayat penyakit tertentu? <b>Kosongkan jika tidak ada.</b></p>
+                      <input
+                        type="text"
+                        id="prevDiagnose"
+                        name="prevDiagnose"
+                        value={formData.prevDiagnose}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                        className={`flat-input text-sm`}
+                      />
+                    </div>
+
+                    {/* Riwayat Alergi */}
+                    <div>
+                      <label htmlFor="prevAlergy" className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                        Riwayat Alergi
+                      </label>
+                      <p className='block text-sm text-slate-600 tracking-wider mb-1'>Apakah Anda memiliki alergi? <b>Kosongkan jika tidak ada.</b></p>
+                      <input
+                        type="text"
+                        id="prevAlergy"
+                        name="prevAlergy"
+                        value={formData.prevAlergy}
+                        onChange={handleInputChange}
+                        disabled={loading}
+                        className={`flat-input text-sm`}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Bagian 4: Kontak Darurat */}
+                  <div className="border-b border-brand-border pb-16 space-y-6">
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
+                      IV. KONTAK DARURAT (EMERGENCY CONTACT)
                     </h3>
 
                     {/* Nama Kontak Darurat */}
@@ -739,10 +832,10 @@ export default function Register() {
                     </div>
                   </div>
 
-                  {/* Bagian 4: Unggah Bukti Bayar */}
-                  <div className="space-y-4">
+                  {/* Bagian 5: Unggah Bukti Bayar */}
+                  <div className="border-b border-brand-border pb-16 space-y-6">
                     <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
-                      IV. UNGGAH BUKTI TRANSFER PEMBAYARAN
+                      V. UNGGAH BUKTI TRANSFER PEMBAYARAN
                     </h3>
 
                     <p className="text-sm text-slate-600 leading-relaxed">
@@ -754,7 +847,7 @@ export default function Register() {
                         <tbody>
                           <tr>
                             <td className="py-2 pr-6 text-slate-500 font-medium">Bank:</td>
-                                  <td className="py-2 font-bold text-brand-dark">SEABANK</td>
+                            <td className="py-2 font-bold text-brand-dark">SEABANK</td>
                           </tr>
                           <tr>
                             <td className="py-2 pr-6 text-slate-500 font-medium">No. Rekening:</td>
@@ -814,8 +907,49 @@ export default function Register() {
                     </div>
                   </div>
 
+                  {/* VI. Informasi lainnya */}
+                  <div className="space-y-6">
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-brand-blue mb-4">
+                      V. INFORMASI LAINNYA
+                    </h3>
+                    <div id="infoSource">
+                      <label className="block text-sm font-bold text-brand-dark mb-1 uppercase tracking-wider">
+                        Sumber Informasi Event
+                      </label>
+                      <p className='block text-sm text-slate-600 tracking-wider mb-1'>Darimana Anda memperoleh informasi terkait event ini?</p>
+                      <input
+                        type="text"
+                        id="infoSource"
+                        name="infoSource"
+                        value={formData.infoSource}
+                        onChange={handleInputChange}
+                        placeholder="e.g. Instagram, Teman, Website"
+                        disabled={loading}
+                        className={`flat-input text-sm`}
+                      />
+                    </div>
+                  </div>
+
                   {/* Submit Button */}
                   <div className="pt-6 border-t border-brand-border" id="terms">
+                    <label htmlFor="emergencyContactRelationship" className="block text-sm font-bold text-brand-dark mb-2 uppercase tracking-wider">
+                      Pernyataan persetujuan <span className='text-rose-500'>*</span>
+                    </label>
+                    <p className="text-sm text-slate-600 mb-1 font-medium leading-relaxed">
+                      1. Saya menyatakan bahwa data yang saya isi benar.
+                    </p>
+                    <p className="text-sm text-slate-600 mb-1 font-medium leading-relaxed">
+                      2. Saya memahami bahwa mengikuti acara ini, baik fun run maupun fun walk memiliki risiko cedera.
+                    </p>
+                    <p className="text-sm text-slate-600 mb-1 font-medium leading-relaxed">
+                      3. Saya menyatakan dalam kondisi sehat untuk mengikuti kegiatan.
+                    </p>
+                    <p className="text-sm text-slate-600 mb-1 font-medium leading-relaxed">
+                      4. Saya membebaskan panitia dari tuntutan yang timbul akibat kelalaian peserta sendiri selama kegiatan berlangsung.
+                    </p>
+                    <p className="text-sm text-slate-600 mb-1 font-medium leading-relaxed">
+                      5. Saya menyetujui dokumentasi foto/video saya digunakan untuk keperluan publikasi acara.
+                    </p>
                     <label className={`flex items-start gap-3 mb-6 cursor-pointer group p-2 ${validationErrors.terms ? 'border border-red-500 bg-red-50/50' : ''}`}>
                       <div className="pt-0.5">
                         <input
@@ -835,8 +969,8 @@ export default function Register() {
                         />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[11px] text-slate-500 leading-relaxed group-hover:text-brand-dark transition-colors font-medium">
-                          Dengan ini saya menyatakan bahwa data yang diisi benar dan bukti transfer yang dikirimkan valid.
+                        <span className="text-sm text-slate-500 leading-relaxed group-hover:text-brand-dark transition-colors font-medium">
+                          Saya telah membaca, memahami, dan menyetujui seluruh ketentuan tersebut.
                         </span>
                         {validationErrors.terms && <span className="text-rose-500 text-xs italic block mt-1">{validationErrors.terms}</span>}
                       </div>
@@ -874,10 +1008,10 @@ export default function Register() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-dark/80 backdrop-blur-sm transition-opacity">
           <div className="bg-white p-8 max-w-sm w-full border-4 border-brand-blue shadow-[12px_12px_0px_0px_rgba(0,102,255,0.2)] relative">
             <h3 className="text-xl font-black text-brand-dark italic uppercase tracking-tight mb-3">
-              Konfirmasi Registrasi
+              Konfirmasi
             </h3>
-            <p className="text-sm text-slate-600 mb-8 font-medium leading-relaxed">
-              Apakah Anda yakin ingin mengirim data pendaftaran ini? Pastikan kembali data dan bukti transfer sudah benar.
+            <p className="text-sm text-slate-600 mb-2 font-medium leading-relaxed">
+              Pastikan data yang Anda masukkan sudah sesuai.
             </p>
             <div className="flex gap-4">
               <button

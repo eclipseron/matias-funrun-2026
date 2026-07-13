@@ -170,7 +170,7 @@ export default function DashboardClient({ initialRunners }) {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-3">
             <img src="/logo-matias-run.png" alt="Matias Fun Run" className="h-10 w-auto object-contain" />
-            <div className="h-6 w-[1px] bg-slate-700"></div>
+            <div className="h-6 w-px bg-slate-700"></div>
             <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-8 w-auto object-contain hidden sm:block" />
             <div className="pl-1">
               <h1 className="text-sm font-bold text-brand-white leading-tight">
@@ -196,7 +196,7 @@ export default function DashboardClient({ initialRunners }) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         {/* Verification Errors Notification */}
         {actionError && (
@@ -235,7 +235,7 @@ export default function DashboardClient({ initialRunners }) {
         <div className="bg-brand-white border border-brand-border p-6 mb-6 rounded-none flex flex-col md:flex-row md:items-center justify-between gap-4">
           
           {/* Search bar */}
-          <div className="flex-grow max-w-md">
+          <div className="grow max-w-md">
             <input
               type="text"
               placeholder="Cari Nama, Email, WhatsApp, NIK, Kode, UUID..."
@@ -301,7 +301,8 @@ export default function DashboardClient({ initialRunners }) {
                 <th className="p-4 border-b border-brand-dark font-semibold">BIB &amp; Kaos</th>
                 <th className="p-4 border-b border-brand-dark font-semibold">Status</th>
                 <th className="p-4 border-b border-brand-dark font-semibold">Kode</th>
-                <th className="p-4 border-b border-brand-dark font-semibold text-right">Aksi</th>
+                <th className="p-4 border-b border-brand-dark font-semibold">Aksi</th>
+                <th className="p-4 border-b border-brand-dark font-semibold">Status Email</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-brand-border text-sm">
@@ -333,7 +334,7 @@ export default function DashboardClient({ initialRunners }) {
                     <td className="p-4">
                       <p className="font-bold text-brand-dark">{runner.name}</p>
                       <p className="text-xs text-slate-500 mt-0.5 uppercase tracking-wide font-mono">
-                        {runner.gender === 'Laki-laki' ? 'Laki-laki (L)' : 'Perempuan (P)'} | <strong className="text-brand-blue">{calculateAge(runner.birth_date)} Tahun</strong>
+                        {runner.gender === 'Laki-laki' ? 'Laki-laki (L)' : 'Perempuan (P)'} | <strong className="text-brand-blue">{calculateAge(runner.birth_date)}</strong>
                       </p>
                       <p className="text-[10px] text-slate-400 mt-1 font-mono">Lahir: {runner.birth_place}, {new Date(runner.birth_date).toLocaleDateString('id-ID')}</p>
                     </td>
@@ -390,6 +391,18 @@ export default function DashboardClient({ initialRunners }) {
                         </button>
                       )}
 
+                    </td>
+                    <td className="p-4">
+                      {runner.email_status === 'failed' && (
+                        <span className="inline-block bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-none border border-rose-200 uppercase font-mono">
+                          Fail
+                        </span>
+                      )}
+                      {runner.email_status === 'success' && (
+                        <span className="inline-block bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-none border border-emerald-200 uppercase font-mono">
+                          Sent
+                        </span>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -467,8 +480,8 @@ export default function DashboardClient({ initialRunners }) {
 
       {/* Modal: View Details & Receipt */}
       {activeRunner && (
-        <div className="fixed inset-0 bg-brand-dark bg-opacity-70 flex items-center justify-center p-4 z-50">
-          <div className="bg-brand-white border border-brand-border p-6 max-w-4xl w-full rounded-none relative max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 bg-brand-dark bg-opacity-70 flex items-center justify-center p-4 z-50 min-w-screen">
+          <div className="bg-brand-white border border-brand-border p-6 max-w-4xl w-full rounded-none relative flex flex-col max-h-[90vh]">
             
             <div className="flex justify-between items-center border-b border-brand-border pb-3 mb-4">
               <div>
@@ -483,7 +496,7 @@ export default function DashboardClient({ initialRunners }) {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto pr-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pr-2 overflow-y-scroll">
               
               {/* Left Column: Full Registration Data */}
               <div className="space-y-4 text-xs">
@@ -524,12 +537,6 @@ export default function DashboardClient({ initialRunners }) {
                   </div>
                 </div>
 
-                <div className="border-t border-brand-border pt-3">
-                  <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Kontak Darurat</h4>
-                  <p className="text-xs font-bold text-slate-800">{activeRunner.emergency_contact_number} ({activeRunner.emergency_contact_name})</p>
-                  <p className="text-xs text-slate-600 mt-0.5">Hubungan: <span className="capitalize font-semibold text-brand-blue">{activeRunner.emergency_contact_relationship}</span></p>
-                </div>
-
                 <div className="border-t border-brand-border pt-4 mt-4 flex flex-col items-start justify-center">
                   <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider mb-1">Status Pembayaran</p>
                   {activeRunner.status === 'pending' && <span className="text-amber-500 font-bold uppercase font-mono text-lg">Menunggu Verifikasi</span>}
@@ -561,6 +568,25 @@ export default function DashboardClient({ initialRunners }) {
                   </div>
                 )}
               </div>
+            </div>
+
+            <div className='mt-6 pt-4 border-t border-brand-border overflow-y-scroll'>
+              <h4 className='text-xs uppercase tracking-wider font-bold mb-4'>Informasi Kesehatan</h4>
+              
+              <div className="border-t border-brand-border pt-3">
+                <h4 className="text-xs uppercase text-slate-600 mt-4">Kontak Darurat</h4>
+                <p className="text-lg font-bold text-brand-blue">{activeRunner.emergency_contact_number} ({activeRunner.emergency_contact_name})</p>
+                <p className="text-xs text-slate-600 mt-0.5">Hubungan: <span className="capitalize font-semibold text-brand-blue">{activeRunner.emergency_contact_relationship}</span></p>
+              </div>
+
+              <p className='text-xs uppercase text-slate-600 mt-4'>Golongan Darah</p>
+              <p className='text-2xl uppercase text-brand-blue font-mono font-bold'>{activeRunner.blood_type}</p>
+              <p className='text-xs text-slate-600 tracking-wide max-w-prose leading-relaxed mt-4'>Apakah dokter pernah mendiagnosa Anda memiliki masalah atau penyakit jantung atau tekanan darah tinggi dan Anda hanya boleh melakukan aktivitas fisik sesuai anjuran dokter?</p>
+              <p className='text-sm uppercase text-brand-blue font-bold tracking-widest mt-1'>{activeRunner.doct_recommendation === 1 ? "Ya" : "Tidak"}</p>
+              <p className='text-xs text-slate-600 tracking-wide max-w-prose leading-relaxed mt-4'>Apakah Anda memiliki riwayat penyakit tertentu?</p>
+              <p className='text-sm text-brand-blue  mt-1'>{activeRunner.prev_diagnose === "" ? "-" : activeRunner.prev_diagnose}</p>
+              <p className='text-xs text-slate-600 tracking-wide max-w-prose leading-relaxed mt-4'>Apakah Anda memiliki alergi?</p>
+              <p className='text-sm text-brand-blue  mt-1'>{activeRunner.prev_alergy === "" ? "-" : activeRunner.prev_alergy}</p>
             </div>
 
             <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-brand-border">
