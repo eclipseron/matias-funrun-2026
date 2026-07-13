@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getRegistrationPeriod } from '@/lib/registrationPeriods';
+import { getRegistrationPeriod, getCountdownTarget } from '@/lib/registrationPeriods';
 import { 
   Calendar, 
   Clock, 
@@ -16,8 +16,7 @@ import Image from 'next/image';
 import { CountDownHeader } from './CountDownHeader';
 
 export default function Home() {
-  // Countdown Target: 20 November 2026 23:59:59 WIB (UTC+7)
-  const targetDate = new Date('2026-11-20T23:59:59+07:00').getTime();
+  const countdownInfo = getCountdownTarget();
 
   const periodInfo = getRegistrationPeriod()
   const activePrice = periodInfo.priceString;
@@ -52,8 +51,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Countdown Penutupan Pendaftaran */}
-      <CountDownHeader targetDate={targetDate} />
+      {/* Countdown Dinamis (Dihide setelah event selesai) */}
+      <CountDownHeader countdownInfo={countdownInfo} />
 
       {/* Main Section */}
       <main className="grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -87,7 +86,7 @@ export default function Home() {
                 <div className="flex items-start gap-3 ">
                   <Calendar className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Tanggal Acara</h4>
+                    <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Tanggal</h4>
                     <p className="text-sm font-bold text-brand-dark mt-0.5">Sabtu, 5 Desember 2026</p>
                   </div>
                 </div>
@@ -104,9 +103,18 @@ export default function Home() {
                 {/* Waktu Flag-Off */}
                 <div className="flex items-start gap-3">
                   <Clock className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" />
-                  <div>
+                  <div className="w-full">
                     <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Waktu Flag-Off</h4>
-                    <p className="text-sm font-bold text-brand-dark mt-0.5">TBC</p>
+                    <div className="mt-1 w-[80%]">
+                      <p className="text-sm font-bold text-brand-dark flex items-center justify-between gap-3 border-b border-dashed border-slate-200 pb-1">
+                        <span className="text-[11px] font-bold text-slate-500">Fun Run 4K</span>
+                        <span>06.00 WIB</span>
+                      </p>
+                      <p className="text-sm font-bold text-brand-dark flex items-center justify-between gap-3 pt-1">
+                        <span className="text-[11px] font-bold text-slate-500">Fun Walk 2.5K</span>
+                        <span>06.15 WIB</span>
+                      </p>
+                    </div>
                   </div>
                 </div>
 

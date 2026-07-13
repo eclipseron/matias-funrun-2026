@@ -8,7 +8,7 @@ export function getRegistrationPeriod(dateInput) {
 
   // Date constants in WIB (Waktu Indonesia Barat = UTC+7)
   // Early Bird 1: 15 Juli – 30 Juli 2026
-  const EB1_START = new Date('2026-07-15T00:00:00+07:00').getTime();
+  const EB1_START = new Date('2026-07-11T00:00:00+07:00').getTime();
   const EB1_END = new Date('2026-07-30T23:59:59+07:00').getTime();
   
   // Early Bird 2: 10 Agustus – 30 September 2026
@@ -18,6 +18,9 @@ export function getRegistrationPeriod(dateInput) {
   // Normal: 4 Oktober – 20 November 2026
   const NORMAL_START = new Date('2026-10-04T00:00:00+07:00').getTime();
   const NORMAL_END = new Date('2026-11-20T23:59:59+07:00').getTime();
+  
+  // Event Date: 5 Desember 2026
+  const EVENT_START = new Date('2026-12-05T06:00:00+07:00').getTime();
 
   if (time < EB1_START) {
   // if (false) {
@@ -84,5 +87,40 @@ export function getRegistrationPeriod(dateInput) {
       periodName: 'Closed',
       message: 'Pendaftaran Matias Fun Run & Walk 2026 telah resmi ditutup.'
     };
+  }
+}
+
+/**
+ * Utility to determine the next countdown target and its label.
+ */
+export function getCountdownTarget(dateInput) {
+  const date = dateInput ? new Date(dateInput) : new Date();
+  const time = date.getTime();
+
+  // Re-use same constants
+  const EB1_START = new Date('2026-07-11T00:00:00+07:00').getTime();
+  const EB1_END = new Date('2026-07-30T23:59:59+07:00').getTime();
+  const EB2_START = new Date('2026-08-10T00:00:00+07:00').getTime();
+  const EB2_END = new Date('2026-09-30T23:59:59+07:00').getTime();
+  const NORMAL_START = new Date('2026-10-04T00:00:00+07:00').getTime();
+  const NORMAL_END = new Date('2026-11-20T23:59:59+07:00').getTime();
+  const EVENT_START = new Date('2026-12-05T06:00:00+07:00').getTime();
+
+  if (time < EB1_START) {
+    return { targetDate: EB1_START, label: "MENUJU PEMBUKAAN EARLY BIRD 1" };
+  } else if (time <= EB1_END) {
+    return { targetDate: EB1_END, label: "PENUTUPAN EARLY BIRD 1 DALAM" };
+  } else if (time < EB2_START) {
+    return { targetDate: EB2_START, label: "MENUJU PEMBUKAAN EARLY BIRD 2" };
+  } else if (time <= EB2_END) {
+    return { targetDate: EB2_END, label: "PENUTUPAN EARLY BIRD 2 DALAM" };
+  } else if (time < NORMAL_START) {
+    return { targetDate: NORMAL_START, label: "MENUJU PEMBUKAAN PENDAFTARAN NORMAL" };
+  } else if (time <= NORMAL_END) {
+    return { targetDate: NORMAL_END, label: "PENUTUPAN PENDAFTARAN DALAM" };
+  } else if (time < EVENT_START) {
+    return { targetDate: EVENT_START, label: "MENUJU MATIAS FUN RUN DALAM" };
+  } else {
+    return null; // hide countdown
   }
 }
