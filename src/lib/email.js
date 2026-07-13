@@ -40,9 +40,8 @@ function getPriceForDate(registeredAt) {
  * @param {string} options.subject - Email subject line
  * @param {string} options.html - HTML content
  * @param {string} [options.text] - Plain text content
- * @param {Array} [options.attachments] - Array of attachments (e.g. for CID images)
  */
-export async function sendEmail({ to, subject, html, text, attachments }) {
+export async function sendEmail({ to, subject, html, text }) {
   const host = process.env.SMTP_HOST;
   const port = process.env.SMTP_PORT;
   const user = process.env.SMTP_USER;
@@ -56,7 +55,7 @@ export async function sendEmail({ to, subject, html, text, attachments }) {
 [EMAIL SENT]
 Timestamp: ${new Date().toISOString()}
 To: ${to}
-From: ${from}
+From: ${from} 
 Subject: ${subject}
 ----------------------------------------
 TEXT CONTENT:
@@ -90,8 +89,7 @@ ${html}
       to,
       subject,
       text,
-      html,
-      attachments: attachments || [],
+      html
     });
 
     console.log('SMTP email sent successfully:', info.messageId);
@@ -237,7 +235,7 @@ export async function sendConfirmationEmail({
   const subject = 'Pendaftaran Terverifikasi! Kode Registrasi Anda - Matias Fun Run & Walk 2026';
   const formattedDate = formatDateTime(registered_at || new Date());
 
-  const text = `Halo ${name},\n\nTerima kasih! Pembayaran Anda sudah diterima dan diverifikasi oleh panitia.\n\nDetail Transaksi:\n- ID Pesanan: ${uuid}\n- Status: SETTLEMENT (Berhasil)\n- Kode Registrasi: ${registration_code}\n\nDetail Pendaftaran:\n- Kategori: ${competition_type}\n- Nama di BIB: ${bib_name}\n- Ukuran Jersey: ${tshirt_size}\n\nHarap simpan email ini dan tunjukkan Kode Registrasi atau QR Code yang terlampir saat hari pengambilan running bag.\n\nSalam hangat,\nPanitia Matias Fun Run`;
+  const text = `Halo ${name},\n\nTerima kasih! Pembayaran Anda sudah diterima dan diverifikasi oleh panitia.\n\nDetail Transaksi:\n- ID Pesanan: ${uuid}\n- Status: SETTLEMENT (Berhasil)\n- Kode Registrasi: ${registration_code}\n\nDetail Pendaftaran:\n- Kategori: ${competition_type}\n- Nama di BIB: ${bib_name}\n- Ukuran Jersey: ${tshirt_size}\n\nHarap simpan email ini dan tunjukkan Kode Registrasi saat hari pengambilan running bag.\n\nSalam hangat,\nPanitia Matias Fun Run`;
 
   const html = `
     <div style="background-color: #d1eae5; padding: 40px 20px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; max-width: 600px; margin: 0 auto; border-radius: 12px;">
@@ -323,46 +321,28 @@ export async function sendConfirmationEmail({
           </tr>
         </table>
 
-        <!-- QR Code & Registration Code Section -->
+        <!-- Running Bag Collection Box --!>
+        <div style="background-color: #111827; border-left: 4px solid #10b981; padding: 15px; margin: 25px 0 0 0; border-radius: 4px;">
+          <h4 style="margin: 0 0 5px 0; color: #ffffff; font-size: 13px; font-weight: bold;">Untuk Informasi pengambilan running bag akan diumumkan di Instagram Kami <a href="https://www.instagram.com/matiasfunrun/" style="color: #10b981; text-decoration: none; font-weight: bold;">@matiasfunrun</a>.</h4>
+          
+        </div>
+        
+        <!-- Registration Code Section -->
         <div style="text-align: center; background-color: #111827; border: 1px dashed #4b5563; padding: 25px; border-radius: 12px; margin-top: 25px;">
           <p style="margin: 0; font-size: 13px; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px;">Kode Registrasi Anda</p>
-          <h1 style="margin: 10px 0; font-size: 36px; font-weight: 800; color: #10b981; letter-spacing: 4px; font-family: monospace;">${registration_code}</h1>
-          
-          ${qrCodeDataUrl ? `
-            <div style="margin: 20px auto 10px auto; background-color: #ffffff; padding: 12px; display: inline-block; border-radius: 8px;">
-              <img src="cid:qrcode" alt="Check-in QR Code" width="180" height="180" style="display: block; width: 180px; height: 180px;" />
-            </div>
-            <p style="margin: 10px 0 0 0; font-size: 11px; color: #9ca3af; line-height: 1.5;">
-              Tunjukkan QR Code ini kepada panitia saat pengambilan running bag.
-            </p>
-          ` : ''}
+          <h1 style="margin: 10px 0 0 0; font-size: 36px; font-weight: 800; color: #10b981; letter-spacing: 4px; font-family: monospace;">${registration_code}</h1>
         </div>
 
-        <!-- Running Bag Collection Box -->
-        <div style="background-color: #111827; border-left: 4px solid #10b981; padding: 15px; margin: 25px 0 0 0; border-radius: 4px;">
-          <h4 style="margin: 0 0 5px 0; color: #ffffff; font-size: 14px; font-weight: bold;">Informasi Pengambilan Running Bag:</h4>
-          <p style="margin: 0; font-size: 13px; color: #d1d5db; line-height: 1.5;">
-            <strong>Hari:</strong> Jumat & Sabtu sebelum hari H<br/>
-            <strong>Lokasi:</strong> Pintu B Stadion Utama, Loket Penukaran<br/>
-            <strong>Persyaratan:</strong> Tunjukkan email ini (QR Code / Kode Registrasi) kepada petugas.
-          </p>
-        </div>
+        
 
         <!-- Footer of Card -->
         <div style="border-top: 1px solid #374151; padding-top: 15px; margin-top: 20px; font-size: 12px; color: #9ca3af; text-align: center;">
-          Jika Anda memiliki pertanyaan, silakan hubungi Layanan Informasi kami di <a href="mailto:info@matias-funrun.my.id" style="color: #10b981; text-decoration: none; font-weight: bold;">info@matias-funrun.my.id</a>.
+          Jika Anda memiliki pertanyaan, silakan hubungi via DM Instagram kami di <a href="https://www.instagram.com/matiasfunrun/" style="color: #10b981; text-decoration: none; font-weight: bold;">@matiasfunrun</a>, atau ke email kami <a href="mailto:info@matias-funrun.my.id" style="color: #10b981; text-decoration: none; font-weight: bold;">info@matias-funrun.my.id</a>.
         </div>
       </div>
     </div>
   `;
 
-  const attachments = qrCodeDataUrl ? [
-    {
-      filename: 'qrcode.png',
-      path: qrCodeDataUrl,
-      cid: 'qrcode'
-    }
-  ] : [];
 
-  return sendEmail({ to: email, subject, text, html, attachments });
+  return sendEmail({ to: email, subject, text, html });
 }

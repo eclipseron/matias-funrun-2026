@@ -36,10 +36,10 @@ function SuccessDetails() {
           Petugas administrator kami akan memeriksa bukti pembayaran transfer Anda. Proses verifikasi ini memakan waktu maksimal <strong>3 hari kerja</strong>.
         </p>
         <p>
-          Setelah pembayaran Anda dinyatakan valid, sistem akan secara otomatis mengirimkan email konfirmasi lanjutan yang berisi **8 digit kode registrasi unik** beserta **QR Code** untuk digunakan pada saat pengambilan perlengkapan race bag.
+          Setelah pembayaran Anda dinyatakan valid, sistem akan secara otomatis mengirimkan email konfirmasi lanjutan yang berisi <b>8 digit kode registrasi unik</b> untuk digunakan pada saat pengambilan perlengkapan race bag.
         </p>
         <p className="text-xs text-slate-500 border-t border-brand-border pt-4">
-          Catatan: Jika Anda tidak menemukan email kami, silakan periksa folder spam. Pada mode pengembangan, Anda dapat mengecek log server atau file `emails.log` di direktori proyek.
+          Catatan: Jika Anda tidak menemukan email kami, silakan periksa folder spam.
         </p>
       </div>
 

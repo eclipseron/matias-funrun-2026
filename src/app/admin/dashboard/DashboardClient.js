@@ -116,13 +116,16 @@ export default function DashboardClient({ initialRunners }) {
       );
 
       // If details modal is open for this runner, update the modal display status too
-      if (activeRunner && activeRunner.id === id) {
-        setActiveRunner((prev) => ({
-          ...prev,
-          status: 'verified',
-          registration_code: data.runner.registration_code
-        }));
-      }
+      setActiveRunner((prev) => {
+        if (prev && prev.id === id) {
+          return {
+            ...prev,
+            status: 'verified',
+            registration_code: data.runner.registration_code
+          };
+        }
+        return prev;
+      });
     } catch (err) {
       setActionError(err.message || 'Error memverifikasi pendaftaran.');
     } finally {
@@ -464,8 +467,8 @@ export default function DashboardClient({ initialRunners }) {
 
       {/* Modal: View Details & Receipt */}
       {activeRunner && (
-        <div className="fixed inset-0 bg-brand-dark bg-opacity-70 flex items-center justify-center p-4 z-50 overflow-y-auto">
-          <div className="bg-brand-white border border-brand-border p-6 max-w-2xl w-full rounded-none relative">
+        <div className="fixed inset-0 bg-brand-dark bg-opacity-70 flex items-center justify-center p-4 z-50">
+          <div className="bg-brand-white border border-brand-border p-6 max-w-4xl w-full rounded-none relative max-h-[90vh] flex flex-col">
             
             <div className="flex justify-between items-center border-b border-brand-border pb-3 mb-4">
               <div>
@@ -480,7 +483,7 @@ export default function DashboardClient({ initialRunners }) {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto pr-2">
               
               {/* Left Column: Full Registration Data */}
               <div className="space-y-4 text-xs">
@@ -526,14 +529,12 @@ export default function DashboardClient({ initialRunners }) {
                   <p className="text-xs font-bold text-slate-800">{activeRunner.emergency_contact_number} ({activeRunner.emergency_contact_name})</p>
                   <p className="text-xs text-slate-600 mt-0.5">Hubungan: <span className="capitalize font-semibold text-brand-blue">{activeRunner.emergency_contact_relationship}</span></p>
                 </div>
-              </div>
 
-              <div className="border-t border-brand-border pt-4 mt-4 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider">Status Pembayaran</p>
-                  {activeRunner.status === 'pending' && <span className="text-amber-500 font-bold uppercase font-mono">Menunggu Verifikasi</span>}
-                  {activeRunner.status === 'verified' && <span className="text-brand-blue font-bold uppercase font-mono">Terverifikasi (Kode: {activeRunner.registration_code})</span>}
-                  {activeRunner.status === 'completed' && <span className="text-slate-500 font-bold uppercase font-mono">Selesai (Bag Diambil)</span>}
+                <div className="border-t border-brand-border pt-4 mt-4 flex flex-col items-start justify-center">
+                  <p className="text-[10px] text-slate-400 font-mono uppercase tracking-wider mb-1">Status Pembayaran</p>
+                  {activeRunner.status === 'pending' && <span className="text-amber-500 font-bold uppercase font-mono text-lg">Menunggu Verifikasi</span>}
+                  {activeRunner.status === 'verified' && <span className="text-brand-blue font-bold uppercase font-mono text-lg">Terverifikasi (Kode: {activeRunner.registration_code})</span>}
+                  {activeRunner.status === 'completed' && <span className="text-slate-500 font-bold uppercase font-mono text-lg">Selesai (Bag Diambil)</span>}
                 </div>
               </div>
 
@@ -560,20 +561,18 @@ export default function DashboardClient({ initialRunners }) {
                   </div>
                 )}
               </div>
-
             </div>
 
             <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-brand-border">
               {activeRunner.status === 'pending' && !loadingScreenshot && activeScreenshot && (
                 <button
                   onClick={() => {
-                    const id = activeRunner.id;
-                    closeDetailsModal();
-                    handleVerify(id);
+                    handleVerify(activeRunner.id);
                   }}
-                  className="bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-semibold py-2 px-4 transition duration-150 rounded-none text-xs tracking-wider uppercase font-mono"
+                  disabled={verifyingId === activeRunner.id}
+                  className="bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-semibold py-2 px-4 transition duration-150 rounded-none text-xs tracking-wider uppercase font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  VERIFIKASI &amp; KIRIM EMAIL
+                  {verifyingId === activeRunner.id ? 'PROSES...' : 'VERIFIKASI & KIRIM EMAIL'}
                 </button>
               )}
               <button
