@@ -24,22 +24,27 @@ function SuccessDetails() {
         Status: Dalam Proses Verifikasi
       </p>
 
-      <div className="text-slate-600 space-y-4 mb-8 text-left max-w-md mx-auto text-sm">
+      <div className="text-slate-600 space-y-4 mb-8 text-left max-w-md mx-auto leading-relaxed">
         <p className="text-center font-bold text-brand-dark">
           Terima kasih telah mendaftar, {name}!
         </p>
         <p>
-          Data pendaftaran Anda beserta bukti transfer pembayaran telah kami terima dengan sukses.
+          Email konfirmasi pendaftaran akan dikirimkan ke <strong className="text-brand-blue">{email}</strong> dalam 5 menit berikutnya. 
         </p>
         <p>
-          Email pemberitahuan awal telah dikirimkan ke alamat email <strong className="text-brand-dark">{email}</strong>. 
-          Petugas administrator kami akan memeriksa bukti pembayaran transfer Anda. Proses verifikasi ini memakan waktu maksimal <strong>3 hari kerja</strong>.
+          Apabila Anda belum menerima email konfirmasi, harap menghubungi kontak berikut:
         </p>
-        <p>
-          Setelah pembayaran Anda dinyatakan valid, sistem akan secara otomatis mengirimkan email konfirmasi lanjutan yang berisi **8 digit kode registrasi unik** beserta **QR Code** untuk digunakan pada saat pengambilan perlengkapan race bag.
+        <div className='flex flex-col gap-1 text-sm w-fit'>
+          <Link href={"https://wa.me/+6285811190695"} target="_blank" className="min-w-17.5 hover:underline hover:text-brand-blue-hover">0858-1119-0695 (Vicktoria)</Link>
+          <Link href={"https://wa.me/+6281317635341"} target="_blank" className="min-w-17.5 hover:underline hover:text-brand-blue-hover">0813-1763-5341 (Veronika)</Link>
+          <Link href={"https://wa.me/+6281237831860"} target="_blank" className="min-w-17.5 hover:underline hover:text-brand-blue-hover">0812-3783-1860 (Vanessa)</Link>
+        </div>
+
+        <p className='text-sm'>
+          Penyelenggara akan melakukan verifikasi data pendaftaran. Setelah pendaftaran terverifikasi, Anda akan menerima <strong>8 digit </strong> kode pengambilan race bag yang dikirim melalui email terdaftar.
         </p>
         <p className="text-xs text-slate-500 border-t border-brand-border pt-4">
-          Catatan: Jika Anda tidak menemukan email kami, silakan periksa folder spam. Pada mode pengembangan, Anda dapat mengecek log server atau file `emails.log` di direktori proyek.
+          Catatan: Jika Anda tidak menemukan email kami, silakan periksa folder spam.
         </p>
       </div>
 
@@ -63,14 +68,14 @@ export default function RegisterSuccess() {
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3">
             <img src="/logo-matias-run.png" alt="Matias Fun Run 2026" className="h-12 w-auto object-contain" />
-            <div className="h-6 w-[1px] bg-slate-700 hidden sm:block"></div>
+            <div className="h-6 w-px bg-slate-700 hidden sm:block"></div>
             <img src="/logo-paroki.png" alt="Paroki Kosambi Baru" className="h-8 w-auto object-contain hidden sm:block" />
           </Link>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16">
+      <main className="grow flex items-center justify-center px-4 sm:px-6 lg:px-8 py-16">
         <Suspense fallback={
           <div className="text-center p-8 bg-brand-white border border-brand-border max-w-2xl mx-auto">
             <p className="text-slate-500 font-semibold text-sm">Memuat halaman konfirmasi pendaftaran...</p>

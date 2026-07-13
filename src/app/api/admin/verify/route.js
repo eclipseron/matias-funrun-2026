@@ -97,6 +97,7 @@ export async function POST(request) {
     `;
     const selectResult = await query(selectSql, [id]);
     const updatedRunner = selectResult.rows[0];
+    let isSuccess = false
 
     // 6. Send confirmation email (contains registration code and embedded QR Code image)
     try {
@@ -114,8 +115,14 @@ export async function POST(request) {
         bib_name: updatedRunner.bib_name,
         qrCodeDataUrl
       });
+      await query(`UPDATE runners SET email_status = ? WHERE id = ?`, ['success', id])
+      isSuccess = true
     } catch (emailErr) {
       console.error('Failed to send verification confirmation email:', emailErr);
+    }
+
+    if (!isSuccess) {
+      await query(`UPDATE runners SET email_status = ? WHERE id = ?`, ['failed', id])
     }
 
     return NextResponse.json({

@@ -2,7 +2,11 @@
 import { useState, useEffect } from "react";
 
 
-export const CountDownHeader = ({ targetDate }) => {
+export const CountDownHeader = ({ countdownInfo }) => {
+  if (!countdownInfo) return null; // Hide countdown when event is over
+
+  const { targetDate, label } = countdownInfo;
+  
   const [timeLeft, setTimeLeft] = useState({
       days: 0,
       hours: 0,
@@ -42,12 +46,12 @@ export const CountDownHeader = ({ targetDate }) => {
     <div className="bg-brand-dark text-brand-white pt-4 pb-8 px-4 border-b border-slate-800">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-xs font-bold font-mono tracking-widest text-slate-400 uppercase mb-4">
-          PENDAFTARAN DITUTUP DALAM (20 NOVEMBER 2026)
+          {label}
         </h2>
 
         {timeLeft.isExpired ? (
           <div className="text-xl font-bold text-red-500 uppercase tracking-wider py-2">
-            Pendaftaran Telah Ditutup
+            Waktu Habis (Silakan muat ulang halaman)
           </div>
         ) : (
           <div className="flex flex-row justify-center items-center gap-1.5 sm:gap-3 max-w-xl mx-auto w-full px-2">
