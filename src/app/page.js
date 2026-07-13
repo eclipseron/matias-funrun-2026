@@ -305,17 +305,17 @@ export default function Home() {
                 <div className="pt-2 space-y-2 text-sm">
                   <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-17.5">Email:</span>
-                    <a href="mailto:info@matias-funrun.my.id" className="text-brand-blue hover:underline">info@matias-funrun.my.id</a>
+                    <a href="mailto:matiasfunrun@gmail.com" className="text-brand-blue hover:underline">matiasfunrun@gmail.com</a>
                   </div>
                   <div className="flex items-start gap-2">
                     <span className="font-semibold text-brand-dark min-w-17.5">Instagram:</span>
                     <Link href="https://www.instagram.com/matiasfunrun" target='_blank' className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
                   </div>
-                  <div>
+                  <div className='flex flex-col gap-1'>
                     <p className="font-semibold text-brand-dark min-w-17.5 mb-1">WhatsApp:</p>
-                    <p className="min-w-17.5">0858-1119-0695 (Vicktoria)</p>
-                    <p className="min-w-17.5">0813-1763-5341 (Veronika)</p>
-                    <p className="min-w-17.5">0812-3783-1860 (Vanessa)</p>
+                    <Link href={"https://wa.me/+6285811190695"} target="_blank" className="min-w-17.5 hover:underline hover:text-brand-blue-hover">0858-1119-0695 (Vicktoria)</Link>
+                    <Link href={"https://wa.me/+6281317635341"} target="_blank" className="min-w-17.5 hover:underline hover:text-brand-blue-hover">0813-1763-5341 (Veronika)</Link>
+                    <Link href={"https://wa.me/+6281237831860"} target="_blank" className="min-w-17.5 hover:underline hover:text-brand-blue-hover">0812-3783-1860 (Vanessa)</Link>
                   </div>
                 </div>
               </div>
