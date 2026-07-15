@@ -36,7 +36,7 @@ export default async function AdminCheckinPage({ searchParams }) {
           emergency_contact_relationship, tshirt_size, status, registration_code, 
           registered_at, verified_at, bag_distributed_at, payment_screenshot 
          FROM runners 
-         WHERE registration_code = ?`,
+         WHERE registration_code = ? AND is_active = 1`,
         [cleanCode]
       );
       if (res.rowCount > 0) {

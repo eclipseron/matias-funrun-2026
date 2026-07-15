@@ -28,12 +28,12 @@ export async function GET(request) {
         emergency_contact_relationship, tshirt_size, status, registration_code, 
         registered_at, verified_at, bag_distributed_at, payment_screenshot 
        FROM runners 
-       WHERE registration_code = ?`, 
+       WHERE registration_code = ? AND is_active = 1`, 
       [cleanCode]
     );
     
     if (runnerRes.rowCount === 0) {
-      return NextResponse.json({ success: false, error: 'Runner with this registration code not found' }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'Runner with this registration code not found or inactive' }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -67,9 +67,9 @@ export async function POST(request) {
     const cleanCode = registration_code.trim().toUpperCase();
 
     // 2. Fetch runner by registration code
-    const runnerRes = await query('SELECT * FROM runners WHERE registration_code = ?', [cleanCode]);
+    const runnerRes = await query('SELECT * FROM runners WHERE registration_code = ? AND is_active = 1', [cleanCode]);
     if (runnerRes.rowCount === 0) {
-      return NextResponse.json({ success: false, error: 'Runner with this registration code not found' }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'Runner with this registration code not found or inactive' }, { status: 404 });
     }
 
     const runner = runnerRes.rows[0];
@@ -94,7 +94,7 @@ export async function POST(request) {
     const updateSql = `
       UPDATE runners 
       SET status = 'completed', bag_distributed_at = CURRENT_TIMESTAMP 
-      WHERE registration_code = ?
+      WHERE registration_code = ? AND is_active = 1
     `;
     await query(updateSql, [cleanCode]);
 
