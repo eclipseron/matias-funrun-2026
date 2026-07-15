@@ -24,7 +24,7 @@ export default async function AdminDashboard() {
         identity_type, identity_number, bib_name, emergency_contact_name, 
         emergency_contact_relationship, emergency_contact_number, tshirt_size, status, registration_code,
         registered_at, verified_at, bag_distributed_at, payment_period, payment_amount, blood_type, doct_recommendation,
-        info_source, prev_diagnose, prev_alergy, email_status  
+        info_source, prev_diagnose, prev_alergy, email_status, deleted_at, is_active
       FROM runners 
       ORDER BY id DESC`
     );
@@ -35,6 +35,7 @@ export default async function AdminDashboard() {
       registered_at: row.registered_at ? row.registered_at.toISOString() : null,
       verified_at: row.verified_at ? row.verified_at.toISOString() : null,
       bag_distributed_at: row.bag_distributed_at ? row.bag_distributed_at.toISOString() : null,
+      deleted_at: row.deleted_at ? row.deleted_at.toISOString() : null,
     }));
   } catch (error) {
     console.error('Failed to fetch runners for admin dashboard:', error);

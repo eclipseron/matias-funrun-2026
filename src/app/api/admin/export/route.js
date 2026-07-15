@@ -36,6 +36,7 @@ export async function GET(request) {
         emergency_contact_relationship, emergency_contact_number, tshirt_size, status, registration_code,
         registered_at, verified_at, bag_distributed_at 
       FROM runners 
+      WHERE is_active = 1
       ORDER BY id ASC
     `;
     const dbResult = await query(sql);

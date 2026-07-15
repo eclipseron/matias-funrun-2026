@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Ban } from 'lucide-react';
 
 // Helper to calculate age from birthdate string
 function calculateAge(birthDateString) {
@@ -38,6 +39,10 @@ export default function DashboardClient({ initialRunners }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
+  // Inactivate Modal states
+  const [inactivateConfirmId, setInactivateConfirmId] = useState(null);
+  const [inactivateCheckbox, setInactivateCheckbox] = useState(false);
+
   // Reset page to 1 when filters or search change
   useEffect(() => {
     setCurrentPage(1);
@@ -48,6 +53,7 @@ export default function DashboardClient({ initialRunners }) {
   const pendingCount = runners.filter((r) => r.status === 'pending').length;
   const verifiedCount = runners.filter((r) => r.status === 'verified').length;
   const completedCount = runners.filter((r) => r.status === 'completed').length;
+  const inactiveCount = runners.filter((r) => r.is_active === 0).length;
 
   // Handle Logout
   const handleLogout = async () => {
@@ -133,6 +139,58 @@ export default function DashboardClient({ initialRunners }) {
     }
   };
 
+  const handleInactivate = (id) => {
+    setInactivateConfirmId(id);
+    setInactivateCheckbox(false);
+  };
+
+  const confirmInactivate = async () => {
+    if (!inactivateConfirmId || !inactivateCheckbox) return;
+    const id = inactivateConfirmId;
+    
+    setActionError('');
+    try {
+      const res = await fetch('/api/admin/inactivate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Gagal inactivate.');
+      
+      setRunners((prev) =>
+        prev.map((r) =>
+          r.id === id ? { ...r, is_active: 0, deleted_at: new Date().toISOString() } : r
+        )
+      );
+      setInactivateConfirmId(null);
+    } catch (err) {
+      setActionError(err.message || 'Error menonaktifkan pendaftar.');
+    }
+  };
+
+  const handleRestore = async (id) => {
+    if (!confirm('Apakah Anda yakin ingin memulihkan pendaftar ini?')) return;
+    setActionError('');
+    try {
+      const res = await fetch('/api/admin/restore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Gagal restore.');
+      
+      setRunners((prev) =>
+        prev.map((r) =>
+          r.id === id ? { ...r, is_active: 1, deleted_at: null } : r
+        )
+      );
+    } catch (err) {
+      setActionError(err.message || 'Error memulihkan pendaftar.');
+    }
+  };
+
   // Filter and search runners
   const filteredRunners = runners.filter((runner) => {
     const matchesStatus = statusFilter === 'all' || runner.status === statusFilter;
@@ -207,7 +265,7 @@ export default function DashboardClient({ initialRunners }) {
         )}
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           
           <div className="bg-brand-white border border-brand-border p-5 rounded-none">
             <p className="text-xs font-mono text-slate-400 uppercase tracking-wider">Total Pendaftar</p>
@@ -227,6 +285,11 @@ export default function DashboardClient({ initialRunners }) {
           <div className="bg-brand-white border border-brand-border p-5 rounded-none border-l-4 border-slate-400">
             <p className="text-xs font-mono text-slate-400 uppercase tracking-wider text-slate-500">Bag Terdistribusi</p>
             <h3 className="text-3xl font-extrabold text-brand-dark mt-2">{completedCount}</h3>
+          </div>
+
+          <div className="bg-brand-white border border-brand-border p-5 rounded-none border-l-4 border-red-500">
+            <p className="text-xs font-mono text-red-400 uppercase tracking-wider text-red-500">Inactive</p>
+            <h3 className="text-3xl font-extrabold text-red-600 mt-2">{inactiveCount}</h3>
           </div>
 
         </div>
@@ -301,7 +364,7 @@ export default function DashboardClient({ initialRunners }) {
                 <th className="p-4 border-b border-brand-dark font-semibold">BIB &amp; Kaos</th>
                 <th className="p-4 border-b border-brand-dark font-semibold">Status</th>
                 <th className="p-4 border-b border-brand-dark font-semibold">Kode</th>
-                <th className="p-4 border-b border-brand-dark font-semibold">Aksi</th>
+                <th className="p-4 border-b border-brand-dark font-semibold text-center ">Aksi</th>
                 <th className="p-4 border-b border-brand-dark font-semibold">Status Email</th>
               </tr>
             </thead>
@@ -314,7 +377,7 @@ export default function DashboardClient({ initialRunners }) {
                 </tr>
               ) : (
                 paginatedRunners.map((runner, index) => (
-                  <tr key={runner.id} className={index % 2 === 0 ? 'bg-brand-white' : 'bg-brand-light'}>
+                  <tr key={runner.id} className={runner.is_active === 0 ? 'bg-red-100' : (index % 2 === 0 ? 'bg-brand-white' : 'bg-brand-light')}>
                     <td className="p-4 font-mono font-bold text-slate-400">{runner.id}</td>
                     <td className="p-4">
                       <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-none font-mono border uppercase ${
@@ -370,27 +433,51 @@ export default function DashboardClient({ initialRunners }) {
                         <span className="text-slate-400 font-normal italic text-xs">Belum Ada</span>
                       )}
                     </td>
-                    <td className="p-4 text-right space-x-2 whitespace-nowrap">
-                      
-                      {/* View Screenshot / Details */}
-                      <button
-                        onClick={() => openDetailsModal(runner)}
-                        className="bg-transparent hover:bg-brand-light text-brand-dark border border-brand-dark font-semibold py-1.5 px-3 transition duration-150 rounded-none text-xs tracking-wider uppercase font-mono"
-                      >
-                        DETAIL
-                      </button>
+                    <td className={`p-4 whitespace-nowrap ${runner.is_active === 1 ? 'text-right' : 'text-left'}`}>
+                      {runner.is_active === 1 ? (
+                        <div className="flex items-center justify-end gap-2">
+                          {/* View Screenshot / Details */}
+                          <button
+                            onClick={() => openDetailsModal(runner)}
+                            className="bg-transparent hover:bg-brand-light text-brand-dark border border-brand-dark font-semibold py-1.5 px-3 transition duration-150 rounded-none text-xs tracking-wider uppercase font-mono inline-block align-middle"
+                          >
+                            DETAIL
+                          </button>
 
-                      {/* Verify Action */}
-                      {runner.status === 'pending' && (
-                        <button
-                          onClick={() => handleVerify(runner.id)}
-                          disabled={verifyingId === runner.id}
-                          className="bg-brand-blue hover:bg-brand-blue-hover text-brand-white font-semibold py-1.5 px-3 transition duration-150 rounded-none text-xs tracking-wider disabled:opacity-50 disabled:cursor-not-allowed uppercase font-mono"
-                        >
-                          {verifyingId === runner.id ? 'PROSES...' : 'VERIFIKASI'}
-                        </button>
+                          {/* Verify Action */}
+                          {runner.status === 'pending' && (
+                            <button
+                              onClick={() => handleVerify(runner.id)}
+                              disabled={verifyingId === runner.id}
+                              className="bg-brand-blue hover:bg-brand-blue-hover text-brand-white border border-transparent font-semibold py-1.5 px-3 transition duration-150 rounded-none text-xs tracking-wider disabled:opacity-50 disabled:cursor-not-allowed uppercase font-mono inline-block align-middle"
+                            >
+                              {verifyingId === runner.id ? 'PROSES...' : 'VERIFIKASI'}
+                            </button>
+                          )}
+
+                          {/* Inactivate Action */}
+                          <button
+                            onClick={() => handleInactivate(runner.id)}
+                            className="bg-red-500 hover:bg-red-600 text-white font-semibold flex items-center justify-center transition rounded-none align-middle"
+                            style={{ height: '30px', width: '32px' }}
+                            title="Inactivate (Soft Delete)"
+                          >
+                            <Ban className="w-[18px] h-[18px]" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-start gap-2">
+                          <span className="text-[10px] text-red-700 font-bold uppercase font-mono leading-tight">
+                            Dihapus: {runner.deleted_at ? new Date(runner.deleted_at).toLocaleString('id-ID') : '-'}
+                          </span>
+                          <button
+                            onClick={() => handleRestore(runner.id)}
+                            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-1.5 px-3 transition duration-150 rounded-none text-[10px] tracking-wider uppercase font-mono shadow-sm w-full text-center"
+                          >
+                            PULIHKAN
+                          </button>
+                        </div>
                       )}
-
                     </td>
                     <td className="p-4">
                       {runner.email_status === 'failed' && (
@@ -609,6 +696,54 @@ export default function DashboardClient({ initialRunners }) {
               </button>
             </div>
 
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Inactivate Confirmation */}
+      {inactivateConfirmId && (
+        <div className="fixed inset-0 bg-brand-dark bg-opacity-70 flex items-center justify-center p-4 z-50 min-w-screen">
+          <div className="bg-brand-white border border-brand-border p-6 max-w-lg w-full rounded-none relative flex flex-col">
+            <div className="flex justify-between items-center border-b border-brand-border pb-3 mb-4">
+              <h3 className="font-black text-red-600 text-lg uppercase tracking-tight">Konfirmasi Penonaktifan</h3>
+              <button
+                onClick={() => setInactivateConfirmId(null)}
+                className="text-slate-400 hover:text-brand-dark text-2xl font-bold font-mono cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="mb-6">
+              <p className="text-sm text-slate-700 mb-4">
+                Apakah Anda yakin ingin menonaktifkan data peserta ini? Data akan ditandai sebagai tidak aktif dan disembunyikan dari fungsi-fungsi utama (termasuk export Excel).
+              </p>
+              <label className="flex items-start gap-2 cursor-pointer bg-red-50 p-3 border border-red-200">
+                <input
+                  type="checkbox"
+                  checked={inactivateCheckbox}
+                  onChange={(e) => setInactivateCheckbox(e.target.checked)}
+                  className="mt-1 w-4 h-4 text-red-600 bg-brand-white border-brand-border focus:ring-red-500 rounded-none"
+                />
+                <span className="text-xs font-semibold text-red-700 leading-tight">
+                  Ya, saya menyatakan dengan sadar untuk menonaktifkan data pendaftar ini.
+                </span>
+              </label>
+            </div>
+            <div className="flex justify-end gap-3 border-t border-brand-border pt-4">
+              <button
+                onClick={() => setInactivateConfirmId(null)}
+                className="bg-transparent hover:bg-brand-light text-brand-dark border border-brand-dark font-semibold py-2 px-4 transition duration-150 rounded-none text-xs tracking-wider uppercase font-mono"
+              >
+                BATAL
+              </button>
+              <button
+                onClick={confirmInactivate}
+                disabled={!inactivateCheckbox}
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 transition duration-150 rounded-none text-xs tracking-wider uppercase font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                NONAKTIFKAN
+              </button>
+            </div>
           </div>
         </div>
       )}
