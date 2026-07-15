@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getRegistrationPeriod, getCountdownTarget } from '@/lib/registrationPeriods';
+import { getCountdownTarget, getRegistrationPeriodWithCurrCount } from '@/lib/registrationPeriods';
 import { 
   Calendar, 
   Clock, 
@@ -14,11 +14,20 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { CountDownHeader } from './CountDownHeader';
+import { query } from '@/lib/db';
 
-export default function Home() {
-  const countdownInfo = getCountdownTarget();
+export default async function Home() {
+  let currRegisteredCount = 0;
+  try {
+    const res = await query(`SELECT COUNT(is_active) AS registered FROM runners WHERE is_active = 1`);
+    currRegisteredCount = res.rows[0]
+  } catch (error) {
+    console.error('Failed to fetch runners for admin dashboard:', error);
+  }
+  
+  const periodInfo = getRegistrationPeriodWithCurrCount(currRegisteredCount.registered)
+  const countdownInfo = getCountdownTarget(currRegisteredCount.registered);
 
-  const periodInfo = getRegistrationPeriod()
   const activePrice = periodInfo.priceString;
 
   return (
@@ -50,9 +59,20 @@ export default function Home() {
           </div>
         </div>
       </header>
+      {
+        countdownInfo.notice ? (
+          <div className="bg-brand-dark text-brand-white pt-4 pb-8 px-4 border-b border-slate-800">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-sm font-bold font-mono tracking-widest text-amber-400 uppercase mb-4 animate-pulse">
+                {countdownInfo.notice}
+              </h2>
+            </div>
+          </div>
+        ) :
+        // Countdown Dinamis (Dihide setelah event selesai)
+        <CountDownHeader countdownInfo={countdownInfo} />
+      }
 
-      {/* Countdown Dinamis (Dihide setelah event selesai) */}
-      <CountDownHeader countdownInfo={countdownInfo} />
 
       {/* Main Section */}
       <main className="grow max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
