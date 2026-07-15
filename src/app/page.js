@@ -96,7 +96,7 @@ export default function Home() {
                   <MapPin className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Lokasi Mulai &amp; Rute</h4>
-                    <p className="text-sm font-bold text-brand-dark mt-0.5">Paroki Kosambi Baru &ndash; Gereja St. Matias Rasul</p>
+                    <p className="text-sm font-bold text-brand-dark mt-0.5">Perumahan Kosambi baru, Duri Kosambi, Jakarta Barat</p>
                   </div>
                 </div>
 
@@ -172,6 +172,23 @@ export default function Home() {
                     <div className="text-xs font-bold text-brand-dark leading-tight">{item.title}</div>
                   </div>
                 ))}
+              </div>
+            </section>
+
+            {/* Route Map Section */}
+            <section className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/10 rounded-full blur-2xl pointer-events-none"></div>
+              <h2 className="text-2xl font-black text-brand-dark mb-6 tracking-tight uppercase italic">
+                RUTE FUN RUN 4K
+              </h2>
+              <div className="relative w-full">
+                <Image 
+                  src="/route-4k.jpg" 
+                  alt="Rute Matias Fun Run 4K" 
+                  width={800} 
+                  height={1000} 
+                  className="w-full h-auto border-4 border-white shadow-md"
+                />
               </div>
             </section>
 

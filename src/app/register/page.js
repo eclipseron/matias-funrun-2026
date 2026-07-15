@@ -634,6 +634,7 @@ export default function Register() {
                           <option value="l">L</option>
                           <option value="xl">XL</option>
                           <option value="xxl">XXL</option>
+                          <option value="xxl">XXXL</option>
                         </select>
                       </div>
                     </div>
