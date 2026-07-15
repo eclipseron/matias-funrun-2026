@@ -8,7 +8,7 @@ export function getRegistrationPeriod(dateInput) {
 
   // Date constants in WIB (Waktu Indonesia Barat = UTC+7)
   // Early Bird 1: 15 Juli – 30 Juli 2026
-  const EB1_START = new Date('2026-07-15T00:00:00+07:00').getTime();
+  const EB1_START = new Date('2026-07-15T12:00:00+07:00').getTime();
   const EB1_END = new Date('2026-07-30T23:59:59+07:00').getTime();
   
   // Early Bird 2: 10 Agustus – 30 September 2026
@@ -98,7 +98,7 @@ export function getCountdownTarget(dateInput) {
   const time = date.getTime();
 
   // Re-use same constants
-  const EB1_START = new Date('2026-07-15T00:00:00+07:00').getTime();
+  const EB1_START = new Date('2026-07-15T12:00:00+07:00').getTime();
   const EB1_END = new Date('2026-07-30T23:59:59+07:00').getTime();
   const EB2_START = new Date('2026-08-10T00:00:00+07:00').getTime();
   const EB2_END = new Date('2026-09-30T23:59:59+07:00').getTime();
