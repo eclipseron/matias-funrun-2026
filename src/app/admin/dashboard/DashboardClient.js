@@ -50,10 +50,10 @@ export default function DashboardClient({ initialRunners }) {
   }, [search, statusFilter, categoryFilter, pageSize]);
 
   // Stats calculation
-  const totalCount = runners.length;
-  const pendingCount = runners.filter((r) => r.status === 'pending').length;
-  const verifiedCount = runners.filter((r) => r.status === 'verified').length;
-  const completedCount = runners.filter((r) => r.status === 'completed').length;
+  const totalCount = runners.filter((r) => r.is_active === 1).length;
+  const pendingCount = runners.filter((r) => r.status === 'pending' && r.is_active === 1).length;
+  const verifiedCount = runners.filter((r) => r.status === 'verified' && r.is_active === 1).length;
+  const completedCount = runners.filter((r) => r.status === 'completed' && r.is_active === 1).length;
   const inactiveCount = runners.filter((r) => r.is_active === 0).length;
 
   // Handle Logout
