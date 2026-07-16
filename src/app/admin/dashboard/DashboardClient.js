@@ -25,6 +25,7 @@ export default function DashboardClient({ initialRunners }) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [periodFilter, setPeriodFilter] = useState('all');
   
   // Verification states
   const [verifyingId, setVerifyingId] = useState(null);
@@ -195,6 +196,7 @@ export default function DashboardClient({ initialRunners }) {
   const filteredRunners = runners.filter((runner) => {
     const matchesStatus = statusFilter === 'all' || runner.status === statusFilter;
     const matchesCategory = categoryFilter === 'all' || runner.competition_type === categoryFilter;
+    const matchesPeriod = periodFilter === 'all' || runner.payment_period === periodFilter;
     
     const term = search.toLowerCase().trim();
     const matchesSearch =
@@ -208,7 +210,7 @@ export default function DashboardClient({ initialRunners }) {
       (runner.registration_code && runner.registration_code.toLowerCase().includes(term)) ||
       runner.uuid.toLowerCase().includes(term);
 
-    return matchesStatus && matchesCategory && matchesSearch;
+    return matchesStatus && matchesCategory && matchesPeriod && matchesSearch;
   });
 
   // Pagination Calculations
@@ -320,8 +322,8 @@ export default function DashboardClient({ initialRunners }) {
                 className="border border-brand-border bg-brand-white p-2 text-xs rounded-none text-brand-dark outline-none focus:border-brand-blue"
               >
                 <option value="all">Semua Kategori</option>
-                <option value="Fun Run">Fun Run</option>
-                <option value="Fun Walk">Fun Walk</option>
+                <option value="Fun Run 4K">Fun Run 4K</option>
+                <option value="Fun Walk 2.5K">Fun Walk 2.5K</option>
               </select>
             </div>
 
@@ -337,6 +339,21 @@ export default function DashboardClient({ initialRunners }) {
                 <option value="pending">Pending</option>
                 <option value="verified">Verified</option>
                 <option value="completed">Completed</option>
+              </select>
+            </div>
+
+            {/* Periode Filter */}
+            <div className="flex items-center gap-2">
+              <label className="text-xs font-bold uppercase tracking-wider font-mono text-slate-500">Periode:</label>
+              <select
+                value={periodFilter}
+                onChange={(e) => setPeriodFilter(e.target.value)}
+                className="border border-brand-border bg-brand-white p-2 text-xs rounded-none text-brand-dark outline-none focus:border-brand-blue"
+              >
+                <option value="all">Semua Periode</option>
+                <option value="EB1">EB1</option>
+                <option value="EB2">EB2</option>
+                <option value="NORMAL">NORMAL</option>
               </select>
             </div>
 
@@ -511,6 +528,9 @@ export default function DashboardClient({ initialRunners }) {
                 <option value={10}>10</option>
                 <option value={25}>25</option>
                 <option value={50}>50</option>
+                <option value={100}>100</option>
+                <option value={250}>250</option>
+                <option value={1000}>1000</option>
               </select>
               <span>data per halaman</span>
             </div>
@@ -621,6 +641,21 @@ export default function DashboardClient({ initialRunners }) {
                     <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Kontak Utama</h4>
                     <p className="text-xs font-semibold text-brand-dark font-mono">{activeRunner.whatsapp}</p>
                     <p className="text-xs text-slate-500 truncate">{activeRunner.email}</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Waktu Registrasi</h4>
+                    <p className="text-[11px] font-semibold text-brand-dark font-mono mt-0.5">
+                      {activeRunner.registered_at ? new Date(activeRunner.registered_at).toLocaleString('id-ID') : '-'}
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Waktu Verifikasi</h4>
+                    <p className="text-[11px] font-semibold text-brand-dark font-mono mt-0.5">
+                      {activeRunner.verified_at ? new Date(activeRunner.verified_at).toLocaleString('id-ID') : '-'}
+                    </p>
                   </div>
                 </div>
 
