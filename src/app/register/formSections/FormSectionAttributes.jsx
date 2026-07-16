@@ -23,8 +23,8 @@ export const FormSectionAttributes = ({ headerText, wrapperClassname, validation
             disabled={isLoading}
             className={`flat-input text-sm ${validationErrors.email ? 'border-red-500 focus:ring-red-500 bg-red-50/50' : ''}`}
           />
-          <p className="text-xs text-slate-400 mt-1">
-            Email konfirmasi dikirim ke sini.
+          <p className="text-xs text-slate-600 mt-1">
+            Dianjurkan menggunakan <b>@gmail</b>. Email konfirmasi dikirim ke sini.
           </p>
         </div>
         <div>
