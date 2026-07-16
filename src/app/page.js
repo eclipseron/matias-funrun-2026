@@ -116,7 +116,7 @@ export default async function Home() {
                   <MapPin className="w-5 h-5 text-brand-blue shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Lokasi Mulai &amp; Rute</h4>
-                    <p className="text-sm font-bold text-brand-dark mt-0.5">Perumahan Kosambi baru, Duri Kosambi, Jakarta Barat</p>
+                    <p className="text-sm font-bold text-brand-dark mt-0.5">Perumahan Kosambi Baru, Duri Kosambi, Jakarta Barat</p>
                   </div>
                 </div>
 
@@ -198,17 +198,37 @@ export default async function Home() {
             {/* Route Map Section */}
             <section className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-8 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/10 rounded-full blur-2xl pointer-events-none"></div>
-              <h2 className="text-2xl font-black text-brand-dark mb-6 tracking-tight uppercase italic">
-                RUTE FUN RUN 4K
+              <h2 className="text-2xl font-black text-brand-dark mb-8 tracking-tight uppercase italic text-center">
+                RUTE LINTASAN
               </h2>
-              <div className="relative w-full">
-                <Image 
-                  src="/route-4k.jpg" 
-                  alt="Rute Matias Fun Run 4K" 
-                  width={800} 
-                  height={1000} 
-                  className="w-full h-auto border-4 border-white shadow-md"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                {/* 4K Route */}
+                <div className="flex flex-col items-center">
+                  <h3 className="text-lg font-black text-brand-blue mb-4 italic tracking-tight">FUN RUN 4K</h3>
+                  <div className="relative w-full group">
+                    <Image 
+                      src="/route-4K.png" 
+                      alt="Rute Matias Fun Run 4K" 
+                      width={800} 
+                      height={1000} 
+                      className="w-full h-auto border-4 border-white shadow-[8px_8px_0px_0px_rgba(0,102,255,0.15)] group-hover:-translate-y-1 group-hover:-translate-x-1 group-hover:shadow-[12px_12px_0px_0px_rgba(0,102,255,0.25)] transition-all duration-300 ease-out"
+                    />
+                  </div>
+                </div>
+
+                {/* 2.5K Route */}
+                <div className="flex flex-col items-center">
+                  <h3 className="text-lg font-black text-sky-500 mb-4 italic tracking-tight">FUN WALK 2.5K</h3>
+                  <div className="relative w-full group">
+                    <Image 
+                      src="/route-2.5K.png" 
+                      alt="Rute Matias Fun Walk 2.5K" 
+                      width={800} 
+                      height={1000} 
+                      className="w-full h-auto border-4 border-white shadow-[8px_8px_0px_0px_rgba(56,189,248,0.15)] group-hover:-translate-y-1 group-hover:-translate-x-1 group-hover:shadow-[12px_12px_0px_0px_rgba(56,189,248,0.25)] transition-all duration-300 ease-out"
+                    />
+                  </div>
+                </div>
               </div>
             </section>
 
