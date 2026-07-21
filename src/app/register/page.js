@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
-import { ContactInformation } from './ContactInformation';
+import { ContactInformation } from '../ContactInformation';
 import { RegistrationForm } from './RegistrationForm';
 import { getRegistrationPeriodWithCurrCount } from '@/lib/registrationPeriods';
 import { RegistrationClosedInfo } from './RegistrationClosedInfo';

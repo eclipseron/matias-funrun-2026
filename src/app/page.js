@@ -17,6 +17,7 @@ import {
 import Image from 'next/image';
 import { CountDownHeader } from './CountDownHeader';
 import { query } from '@/lib/db';
+import { ContactInformation } from './ContactInformation';
 
 export default async function Home() {
   let currRegisteredCount = 0;
@@ -208,8 +209,8 @@ export default async function Home() {
                 <div className="flex flex-col items-center">
                   <h3 className="text-lg font-black text-brand-blue mb-4 italic tracking-tight">FUN RUN 4K</h3>
                   <div className="relative w-full group">
-                    <Image 
-                      src="/route-4K.png" 
+                    <Image
+                      src="/route-4K.webp" 
                       alt="Rute Matias Fun Run 4K" 
                       width={800} 
                       height={1000} 
@@ -222,8 +223,8 @@ export default async function Home() {
                 <div className="flex flex-col items-center">
                   <h3 className="text-lg font-black text-sky-500 mb-4 italic tracking-tight">FUN WALK 2.5K</h3>
                   <div className="relative w-full group">
-                    <Image 
-                      src="/route-2.5K.png" 
+                    <Image
+                      src="/route-2.5K.webp" 
                       alt="Rute Matias Fun Walk 2.5K" 
                       width={800} 
                       height={1000} 
@@ -353,28 +354,23 @@ export default async function Home() {
             </div>
 
             {/* Service Desk Information */}
+            <ContactInformation />
+
             <div className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-6 relative overflow-hidden">
               <h3 className="text-lg font-black text-brand-dark uppercase tracking-tight mb-4 border-b border-slate-200 pb-3 italic">
-                Kontak
+                Supported by
               </h3>
               <div className="space-y-3 text-sm text-slate-600">
-                <p>
-                  Butuh bantuan mengenai pendaftaran, persiapan, atau pelaksanaan kegiatan? Hubungi kami melalui:
+                <div className='mb-16'>
+                  <Image src="/sponsor-silirr.png" alt='silirr' width={100} height={1} className='opacity-40' />
+                </div>
+                <p className='text-xs max-w-3/4'>
+                  Tertarik untuk bekerja sama dengan kami? Hubungi:
                 </p>
-                <div className="pt-2 space-y-2 text-sm">
-                  <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-17.5">Email:</span>
-                    <a href="mailto:matiasfunrun@gmail.com" className="text-brand-blue hover:underline">matiasfunrun@gmail.com</a>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <span className="font-semibold text-brand-dark min-w-17.5">Instagram:</span>
-                    <Link href="https://www.instagram.com/matiasfunrun" target='_blank' className="text-slate-800 underline hover:text-brand-blue">@matiasfunrun</Link>
-                  </div>
+                <div className="space-y-2 text-xs">
                   <div className='flex flex-col gap-1'>
-                    <p className="font-semibold text-brand-dark min-w-17.5 mb-1">WhatsApp:</p>
-                    <Link href={"https://wa.me/+6285811190695"} target="_blank" className="min-w-17.5 hover:underline hover:text-brand-blue-hover">0858-1119-0695 (Vicktoria)</Link>
-                    <Link href={"https://wa.me/+6281317635341"} target="_blank" className="min-w-17.5 hover:underline hover:text-brand-blue-hover">0813-1763-5341 (Veronika)</Link>
-                    <Link href={"https://wa.me/+6281237831860"} target="_blank" className="min-w-17.5 hover:underline hover:text-brand-blue-hover">0812-3783-1860 (Vanessa)</Link>
+                    <Link href={"https://wa.me/+6285951650526"} target="_blank" className="hover:underline hover:text-brand-blue-hover"><b>Partnership:</b> 0859-5165-0526 (Clara)</Link>
+                    <Link href={"https://wa.me/+6289635039916"} target="_blank" className="hover:underline hover:text-brand-blue-hover"><b>Sponsorship:</b> 0896-3503-9916 (Mourin)</Link>
                   </div>
                 </div>
               </div>
