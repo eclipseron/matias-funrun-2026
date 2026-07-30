@@ -214,6 +214,7 @@ export default async function Home() {
                       alt="Rute Matias Fun Run 4K" 
                       width={800} 
                       height={1000} 
+                      loading="eager"
                       className="w-full h-auto border-4 border-white shadow-[8px_8px_0px_0px_rgba(0,102,255,0.15)] group-hover:-translate-y-1 group-hover:-translate-x-1 group-hover:shadow-[12px_12px_0px_0px_rgba(0,102,255,0.25)] transition-all duration-300 ease-out"
                     />
                   </div>
@@ -228,6 +229,7 @@ export default async function Home() {
                       alt="Rute Matias Fun Walk 2.5K" 
                       width={800} 
                       height={1000} 
+                      loading="eager"
                       className="w-full h-auto border-4 border-white shadow-[8px_8px_0px_0px_rgba(56,189,248,0.15)] group-hover:-translate-y-1 group-hover:-translate-x-1 group-hover:shadow-[12px_12px_0px_0px_rgba(56,189,248,0.25)] transition-all duration-300 ease-out"
                     />
                   </div>
@@ -362,7 +364,7 @@ export default async function Home() {
               </h3>
               <div className="space-y-3 text-sm text-slate-600">
                 <div className='mb-16'>
-                  <Image src="/sponsor-silirr.png" alt='silirr' width={100} height={1} className='opacity-40' />
+                  <Image src="/sponsor-silirr.png" alt='silirr' width={100} height={1} style={{ width: "auto" }} className='opacity-40' />
                 </div>
                 <p className='text-xs max-w-3/4'>
                   Tertarik untuk bekerja sama dengan kami? Hubungi:
