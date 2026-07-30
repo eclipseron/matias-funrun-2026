@@ -13,10 +13,10 @@ export async function GET(request) {
 
     // Get search params
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
+    const id = parseInt(searchParams.get('id'), 10);
 
-    if (!id) {
-      return NextResponse.json({ success: false, error: 'Runner ID is required' }, { status: 400 });
+    if (!id || !Number.isInteger(id) || id <= 0) {
+      return NextResponse.json({ success: false, error: 'Valid Runner ID is required' }, { status: 400 });
     }
 
     // 2. Fetch only payment_screenshot text from db (MySQL ? placeholder)
