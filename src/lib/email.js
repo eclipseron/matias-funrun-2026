@@ -322,8 +322,7 @@ export async function sendConfirmationEmail({
   tshirt_size,
   registration_code,
   registered_at,
-  bib_name,
-  qrCodeDataUrl
+  bib_name
 }) {
   const subject = 'Pendaftaran Terverifikasi! Kode Registrasi Anda - Matias Fun Run & Walk 2026';
   const formattedDate = formatDateTime(registered_at || new Date());
