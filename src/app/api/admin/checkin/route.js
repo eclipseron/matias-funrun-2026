@@ -86,7 +86,11 @@ export async function POST(request) {
       return NextResponse.json({
         success: false,
         error: 'Running bag has already been distributed for this participant.',
-        runner
+        runner: {
+          name: runner.name,
+          registration_code: runner.registration_code,
+          bag_distributed_at: runner.bag_distributed_at
+        }
       }, { status: 400 });
     }
 
