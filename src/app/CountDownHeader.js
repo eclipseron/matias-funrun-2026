@@ -3,10 +3,6 @@ import { useState, useEffect } from "react";
 
 
 export const CountDownHeader = ({ countdownInfo }) => {
-  if (!countdownInfo) return null; // Hide countdown when event is over
-
-  const { targetDate, label } = countdownInfo;
-  
   const [timeLeft, setTimeLeft] = useState({
       days: 0,
       hours: 0,
@@ -16,6 +12,9 @@ export const CountDownHeader = ({ countdownInfo }) => {
     });
     
     useEffect(() => {
+      if (!countdownInfo) return;
+      const { targetDate } = countdownInfo;
+
       const calculateTimeLeft = () => {
         const now = new Date().getTime();
         const difference = targetDate - now;
@@ -40,7 +39,10 @@ export const CountDownHeader = ({ countdownInfo }) => {
       calculateTimeLeft();
       const interval = setInterval(calculateTimeLeft, 1000);
       return () => clearInterval(interval);
-    }, [targetDate]);
+    }, [countdownInfo?.targetDate, countdownInfo?.label]);
+
+  if (!countdownInfo) return null; // Hide countdown when event is over
+  const { label } = countdownInfo;
 
   return (
     <div className="bg-brand-dark text-brand-white pt-4 pb-8 px-4 border-b border-slate-800">
