@@ -43,12 +43,12 @@ export const RegistrationClosedInfo = ({ message }) => {
               </tr>
               <tr className="border-b border-brand-border/50 border-dashed">
                 <td className="py-2.5 pr-6 font-bold text-brand-dark">Early Bird 2</td>
-                <td className="py-2.5 px-6">10 Agt - 30 Sept 2026</td>
+                <td className="py-2.5 px-6">10 - 30 Agt 2026</td>
                 <td className="py-2.5 pl-6 text-right font-bold text-brand-blue">Rp 150.000</td>
               </tr>
               <tr>
                 <td className="py-2.5 pr-6 font-bold text-brand-dark">Normal Price</td>
-                <td className="py-2.5 px-6">4 Okt - 20 Nov 2026</td>
+                <td className="py-2.5 px-6">1 Sep - 26 Okt 2026</td>
                 <td className="py-2.5 pl-6 text-right font-bold text-brand-blue">Rp 175.000</td>
               </tr>
             </tbody>

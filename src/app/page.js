@@ -326,11 +326,11 @@ export default async function Home() {
                       <span className="font-bold text-brand-blue">Rp 125.000</span>
                     </li>
                     <li className={periodInfo.status === 'EB2' ? 'text-white font-bold border-l-2 border-brand-blue pl-1.5' : 'pl-1.5'}>
-                      Early Bird 2 (10 Agt - 30 Sept):<br/>
+                      Early Bird 2 (10 - 30 Agt):<br/>
                       <span className="font-bold text-brand-blue">Rp 150.000</span>
                     </li>
                     <li className={periodInfo.status === 'NORMAL' ? 'text-white font-bold border-l-2 border-brand-blue pl-1.5' : 'pl-1.5'}>
-                      Normal (4 Okt - 20 Nov):<br/>
+                      Normal (1 Sep - 26 Okt):<br/>
                       <span className="font-bold text-brand-blue">Rp 175.000</span>
                     </li>
                   </ul>

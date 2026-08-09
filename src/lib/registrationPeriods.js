@@ -3,7 +3,7 @@
  * based on a given date (defaulting to the current local server/client time).
  */
 const EB1_LIMIT = 100
-const EB2_LIMIT = 250
+const EB2_LIMIT = 250 + 20 // additional 20 participants
 
 export function getRegistrationPeriod(dateInput) {
   const date = dateInput ? new Date(dateInput) : new Date();
@@ -14,13 +14,13 @@ export function getRegistrationPeriod(dateInput) {
   const EB1_START = new Date('2026-07-15T12:00:00+07:00').getTime();
   const EB1_END = new Date('2026-07-30T21:00:00+07:00').getTime();
   
-  // Early Bird 2: 10 Agustus – 30 September 2026
+  // Early Bird 2: 10 – 30 Agustus 2026
   const EB2_START = new Date('2026-08-10T00:00:00+07:00').getTime();
-  const EB2_END = new Date('2026-09-30T23:59:59+07:00').getTime();
+  const EB2_END = new Date('2026-08-30T23:59:59+07:00').getTime();
   
-  // Normal: 4 Oktober – 20 November 2026
-  const NORMAL_START = new Date('2026-10-04T00:00:00+07:00').getTime();
-  const NORMAL_END = new Date('2026-11-20T23:59:59+07:00').getTime();
+  // Normal: 1 September – 26 Oktober 2026
+  const NORMAL_START = new Date('2026-09-01T00:00:00+07:00').getTime();
+  const NORMAL_END = new Date('2026-10-26T23:59:59+07:00').getTime();
   
   // Event Date: 5 Desember 2026
   const EVENT_START = new Date('2026-12-05T06:00:00+07:00').getTime();
@@ -59,7 +59,7 @@ export function getRegistrationPeriod(dateInput) {
       price: 150000,
       priceString: 'Rp 150.000',
       periodName: 'Early Bird 2',
-      message: 'Periode Early Bird 2 sedang berlangsung (10 Agustus - 30 September 2026).'
+      message: 'Periode Early Bird 2 sedang berlangsung (10 - 30 Agustus 2026).'
     };
   } else if (time > EB2_END && time < NORMAL_START) {
     return {
@@ -68,7 +68,7 @@ export function getRegistrationPeriod(dateInput) {
       price: 175000,
       priceString: 'Rp 175.000',
       periodName: 'Normal',
-      message: 'Pendaftaran periode Early Bird 2 telah berakhir. Periode Normal akan dibuka pada 4 Oktober 2026.'
+      message: 'Pendaftaran periode Early Bird 2 telah berakhir. Periode Normal akan dibuka pada 1 September 2026.'
     };
   } else if (time >= NORMAL_START && time <= NORMAL_END) {
     return {
@@ -77,7 +77,7 @@ export function getRegistrationPeriod(dateInput) {
       price: 175000,
       priceString: 'Rp 175.000',
       periodName: 'Normal',
-      message: 'Periode Normal sedang berlangsung (4 Oktober - 20 November 2026).'
+      message: 'Periode Normal sedang berlangsung (1 September - 26 Oktober 2026).'
     };
   } else {
     return {
@@ -100,13 +100,13 @@ export function getRegistrationPeriodWithCurrCount(currCount) {
   const EB1_START = new Date('2026-07-15T12:00:00+07:00').getTime();
   const EB1_END = new Date('2026-07-30T21:00:00+07:00').getTime();
 
-  // Early Bird 2: 10 Agustus – 30 September 2026
+  // Early Bird 2: 10 Agustus – 30 Agustus 2026
   const EB2_START = new Date('2026-08-10T00:00:00+07:00').getTime();
-  const EB2_END = new Date('2026-09-30T23:59:59+07:00').getTime();
+  const EB2_END = new Date('2026-08-30T23:59:59+07:00').getTime();
 
-  // Normal: 4 Oktober – 20 November 2026
-  const NORMAL_START = new Date('2026-10-04T00:00:00+07:00').getTime();
-  const NORMAL_END = new Date('2026-11-20T23:59:59+07:00').getTime();
+  // Normal: 1 September – 26 Oktober 2026
+  const NORMAL_START = new Date('2026-09-01T00:00:00+07:00').getTime();
+  const NORMAL_END = new Date('2026-10-26T23:59:59+07:00').getTime();
 
   // Event Date: 5 Desember 2026
   const EVENT_START = new Date('2026-12-05T06:00:00+07:00').getTime();
@@ -153,7 +153,7 @@ export function getRegistrationPeriodWithCurrCount(currCount) {
       price: 175000,
       priceString: 'Rp 175.000',
       periodName: 'Normal',
-      message: 'Terima kasih atas antusiasme Anda! Jumlah pendaftar pada periode Early Bird 2 telah mencapai batas. Nantikan pendaftaran Periode Normal yang akan dibuka pada 4 Oktober 2026.'
+      message: 'Terima kasih atas antusiasme Anda! Jumlah pendaftar pada periode Early Bird 2 telah mencapai batas. Nantikan pendaftaran Periode Normal yang akan dibuka pada 1 September 2026.'
     }
     : {
       status: 'EB2',
@@ -161,7 +161,7 @@ export function getRegistrationPeriodWithCurrCount(currCount) {
       price: 150000,
       priceString: 'Rp 150.000',
       periodName: 'Early Bird 2',
-      message: 'Periode Early Bird 2 sedang berlangsung (10 Agustus - 30 September 2026).'
+      message: 'Periode Early Bird 2 sedang berlangsung (10 - 30 Agustus 2026).'
     };
   } else if (time > EB2_END && time < NORMAL_START) {
     return {
@@ -170,7 +170,7 @@ export function getRegistrationPeriodWithCurrCount(currCount) {
       price: 175000,
       priceString: 'Rp 175.000',
       periodName: 'Normal',
-      message: 'Pendaftaran periode Early Bird 2 telah berakhir. Periode Normal akan dibuka pada 4 Oktober 2026.'
+      message: 'Pendaftaran periode Early Bird 2 telah berakhir. Periode Normal akan dibuka pada 1 September 2026.'
     };
   } else if (time >= NORMAL_START && time <= NORMAL_END) {
     return {
@@ -179,7 +179,7 @@ export function getRegistrationPeriodWithCurrCount(currCount) {
       price: 175000,
       priceString: 'Rp 175.000',
       periodName: 'Normal',
-      message: 'Periode Normal sedang berlangsung (4 Oktober - 20 November 2026).'
+      message: 'Periode Normal sedang berlangsung (1 September - 26 Oktober 2026).'
     };
   } else {
     return {
@@ -203,10 +203,15 @@ export function getCountdownTarget(currCount) {
   // Re-use same constants
   const EB1_START = new Date('2026-07-15T12:00:00+07:00').getTime();
   const EB1_END = new Date('2026-07-30T21:00:59+07:00').getTime();
+
+  // Early Bird 2: 10 – 30 Agustus 2026
   const EB2_START = new Date('2026-08-10T00:00:00+07:00').getTime();
-  const EB2_END = new Date('2026-09-30T23:59:59+07:00').getTime();
-  const NORMAL_START = new Date('2026-10-04T00:00:00+07:00').getTime();
-  const NORMAL_END = new Date('2026-11-20T23:59:59+07:00').getTime();
+  const EB2_END = new Date('2026-08-30T23:59:59+07:00').getTime();
+
+  // Normal: 1 September – 26 Oktober 2026
+  const NORMAL_START = new Date('2026-09-01T00:00:00+07:00').getTime();
+  const NORMAL_END = new Date('2026-10-26T23:59:59+07:00').getTime();
+
   const EVENT_START = new Date('2026-12-05T06:00:00+07:00').getTime();
 
   if (currCount >= EB1_LIMIT && time <= EB1_END) {
