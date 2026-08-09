@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
 import { authenticateAdmin, signToken, COOKIE_NAME } from '@/lib/auth';
+import { rateLimit } from '@/lib/rateLimit';
 
 export async function POST(request) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    if (rateLimit(ip, { windowMs: 60000, max: 10 })) {
+      return NextResponse.json({ success: false, error: 'Too many requests. Please try again later.' }, { status: 429 });
+    }
     const body = await request.json();
     const { username, password } = body;
 

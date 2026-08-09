@@ -44,10 +44,7 @@ export default function DashboardClient({ initialRunners }) {
   const [inactivateConfirmId, setInactivateConfirmId] = useState(null);
   const [inactivateCheckbox, setInactivateCheckbox] = useState(false);
 
-  // Reset page to 1 when filters or search change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [search, statusFilter, categoryFilter, pageSize]);
+  // Removed useEffect for currentPage reset to avoid cascading renders
 
   // Stats calculation
   const totalCount = runners.filter((r) => r.is_active === 1).length;
@@ -305,7 +302,7 @@ export default function DashboardClient({ initialRunners }) {
               type="text"
               placeholder="Cari Nama, Email, WhatsApp, NIK, Kode, UUID..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
               className="flat-input text-sm"
             />
           </div>
@@ -318,7 +315,7 @@ export default function DashboardClient({ initialRunners }) {
               <label className="text-xs font-bold uppercase tracking-wider font-mono text-slate-500">Kategori:</label>
               <select
                 value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
+                onChange={(e) => { setCategoryFilter(e.target.value); setCurrentPage(1); }}
                 className="border border-brand-border bg-brand-white p-2 text-xs rounded-none text-brand-dark outline-none focus:border-brand-blue"
               >
                 <option value="all">Semua Kategori</option>
@@ -332,7 +329,7 @@ export default function DashboardClient({ initialRunners }) {
               <label className="text-xs font-bold uppercase tracking-wider font-mono text-slate-500">Status:</label>
               <select
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
+                onChange={(e) => { setStatusFilter(e.target.value); setCurrentPage(1); }}
                 className="border border-brand-border bg-brand-white p-2 text-xs rounded-none text-brand-dark outline-none focus:border-brand-blue"
               >
                 <option value="all">Semua Status</option>
@@ -347,7 +344,7 @@ export default function DashboardClient({ initialRunners }) {
               <label className="text-xs font-bold uppercase tracking-wider font-mono text-slate-500">Periode:</label>
               <select
                 value={periodFilter}
-                onChange={(e) => setPeriodFilter(e.target.value)}
+                onChange={(e) => { setPeriodFilter(e.target.value); setCurrentPage(1); }}
                 className="border border-brand-border bg-brand-white p-2 text-xs rounded-none text-brand-dark outline-none focus:border-brand-blue"
               >
                 <option value="all">Semua Periode</option>
@@ -522,7 +519,7 @@ export default function DashboardClient({ initialRunners }) {
               <span>Tampilkan</span>
               <select
                 value={pageSize}
-                onChange={(e) => setPageSize(Number(e.target.value))}
+                onChange={(e) => { setPageSize(Number(e.target.value)); setCurrentPage(1); }}
                 className="border border-brand-border bg-brand-white p-1 rounded-none text-brand-dark font-bold outline-none focus:border-brand-blue"
               >
                 <option value={10}>10</option>

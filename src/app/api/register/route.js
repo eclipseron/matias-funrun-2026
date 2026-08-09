@@ -3,9 +3,15 @@ import { query } from '@/lib/db';
 import { sendVerificationPendingEmail } from '@/lib/email';
 import { getRegistrationPeriod } from '@/lib/registrationPeriods';
 import crypto from 'crypto';
+import { rateLimit } from '@/lib/rateLimit';
 
 export async function POST(request) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    if (rateLimit(ip, { windowMs: 60000, max: 30 })) {
+      return NextResponse.json({ success: false, error: 'Too many requests. Please try again later.' }, { status: 429 });
+    }
+
     // Backend validation of registration period
     const period = getRegistrationPeriod(new Date());
     if (!period.formActive) {
@@ -70,10 +76,42 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Format email tidak valid' }, { status: 400 });
     }
     
-    const bloodType = ["A+", "A-", "AB+", "AB-", "B+", "B-", "O+", "O-"]
-    if (!bloodType.includes(blood_type)) {
+    const validBloodTypes = ["A+", "A-", "AB+", "AB-", "B+", "B-", "O+", "O-"];
+    if (!validBloodTypes.includes(blood_type)) {
       return NextResponse.json({ success: false, error: 'Golongan darah tidak valid' }, { status: 400 });
     }
+
+    const validCompetitionTypes = ['4K', '2.5K'];
+    if (!validCompetitionTypes.includes(competition_type.trim())) {
+      return NextResponse.json({ success: false, error: 'Tipe kompetisi tidak valid' }, { status: 400 });
+    }
+
+    const validGenders = ['Laki-laki', 'Perempuan'];
+    if (!validGenders.includes(gender.trim())) {
+      return NextResponse.json({ success: false, error: 'Jenis kelamin tidak valid' }, { status: 400 });
+    }
+
+    const validIdentityTypes = ['KTP', 'SIM', 'Paspor', 'Kartu Pelajar'];
+    if (!validIdentityTypes.includes(identity_type.trim())) {
+      return NextResponse.json({ success: false, error: 'Jenis identitas tidak valid' }, { status: 400 });
+    }
+
+    const validTshirtSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+    if (!validTshirtSizes.includes(tshirt_size.trim().toUpperCase())) {
+      return NextResponse.json({ success: false, error: 'Ukuran kaos tidak valid' }, { status: 400 });
+    }
+
+    // Validasi format Base64 image
+    const base64Regex = /^data:image\/(jpeg|png|jpg);base64,/;
+    if (!base64Regex.test(payment_screenshot)) {
+      return NextResponse.json({ success: false, error: 'Format screenshot harus berupa gambar (JPG/PNG)' }, { status: 400 });
+    }
+    // Cek max size ~5MB (Base64 is ~33% larger than raw binary)
+    // 5MB = 5 * 1024 * 1024 bytes. In base64 string length, it's roughly 5 * 1024 * 1024 * 1.33 = ~6.9 million characters.
+    if (payment_screenshot.length > 7000000) {
+      return NextResponse.json({ success: false, error: 'Ukuran screenshot terlalu besar (max ~5MB)' }, { status: 400 });
+    }
+
     // Generate UUID v4 in JavaScript for MySQL compatibility
     const uuid = crypto.randomUUID();
 

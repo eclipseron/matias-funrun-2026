@@ -1,16 +1,28 @@
 import { NextResponse } from 'next/server';
 
-export function proxy(request) {
-  const { pathname } = request.nextUrl;
+const ALLOWED_HOSTS = [
+  'matias-funrun.my.id',
+  'www.matias-funrun.my.id',
+  'localhost',
+  'localhost:3000',
+  '127.0.0.1',
+  '127.0.0.1:3000'
+];
 
-  // Protect admin routes except login and api endpoints
+export function middleware(request) {
+  // 1. Host Header Validation
+  const host = request.headers.get('host');
+  if (host && !ALLOWED_HOSTS.includes(host)) {
+    return new NextResponse('Forbidden', { status: 403 });
+  }
+
+  // 2. Admin route protection
+  const { pathname } = request.nextUrl;
   if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
     const sessionCookie = request.cookies.get('admin_session');
-
+    
     if (!sessionCookie) {
-      // Redirect to admin login if session cookie is not present
       const loginUrl = new URL('/admin/login', request.url);
-      // Optional: keep the original path as redirect target
       loginUrl.searchParams.set('redirect', pathname);
       return NextResponse.redirect(loginUrl);
     }
@@ -19,7 +31,9 @@ export function proxy(request) {
   return NextResponse.next();
 }
 
+// Fallback for new proxy export convention
+export const proxy = middleware;
+
 export const config = {
-  // Run middleware on all administration pages
-  matcher: ['/admin/:path*'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'],
 };

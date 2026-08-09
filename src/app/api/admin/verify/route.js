@@ -2,14 +2,15 @@ import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
 import { verifyToken, COOKIE_NAME } from '@/lib/auth';
 import { sendConfirmationEmail } from '@/lib/email';
-import QRCode from 'qrcode';
+// import QRCode from 'qrcode';
+import crypto from 'crypto';
 
 // Helper to generate a random 8-character alphanumeric code
 function generateAlphanumericCode(length = 8) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
+    result += chars.charAt(crypto.randomInt(chars.length));
   }
   return result;
 }
@@ -26,8 +27,8 @@ export async function POST(request) {
     const body = await request.json();
     const { id } = body;
 
-    if (!id) {
-      return NextResponse.json({ success: false, error: 'Runner ID is required' }, { status: 400 });
+    if (!id || !Number.isInteger(id) || id <= 0) {
+      return NextResponse.json({ success: false, error: 'Valid Runner ID is required' }, { status: 400 });
     }
 
     // 2. Fetch current status and check if runner exists (MySQL ? placeholder)
@@ -68,19 +69,19 @@ export async function POST(request) {
     // 4. Generate QR Code
     const url = new URL(request.url);
     const checkinUrl = `${url.protocol}//${url.host}/admin/checkin?code=${registrationCode}`;
-    let qrCodeDataUrl = '';
-    try {
-      qrCodeDataUrl = await QRCode.toDataURL(checkinUrl, {
-        margin: 1,
-        width: 300,
-        color: {
-          dark: '#1e293b', // Dark Gray
-          light: '#ffffff' // White
-        }
-      });
-    } catch (qrErr) {
-      console.error('QR code generation failed:', qrErr);
-    }
+    // let qrCodeDataUrl = '';
+    // try {
+    //   qrCodeDataUrl = await QRCode.toDataURL(checkinUrl, {
+    //     margin: 1,
+    //     width: 300,
+    //     color: {
+    //       dark: '#1e293b', // Dark Gray
+    //       light: '#ffffff' // White
+    //     }
+    //   });
+    // } catch (qrErr) {
+    //   console.error('QR code generation failed:', qrErr);
+    // }
 
     // 5. Update database status in MySQL (split into UPDATE then SELECT due to lack of RETURNING clause)
     const updateSql = `
@@ -113,7 +114,6 @@ export async function POST(request) {
         registration_code: updatedRunner.registration_code,
         registered_at: updatedRunner.registered_at,
         bib_name: updatedRunner.bib_name,
-        qrCodeDataUrl
       });
       await query(`UPDATE runners SET email_status = ? WHERE id = ?`, ['success', id])
       isSuccess = true

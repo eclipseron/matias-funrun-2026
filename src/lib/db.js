@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
 
-let pool;
+let pool = global._mysqlPool;
 
 if (!pool) {
   const connectionString = process.env.DATABASE_URL;
@@ -20,6 +20,9 @@ if (!pool) {
       };
 
   pool = mysql.createPool(config);
+  if (process.env.NODE_ENV !== 'production') {
+    global._mysqlPool = pool;
+  }
 }
 
 /**
