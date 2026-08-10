@@ -81,7 +81,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Golongan darah tidak valid' }, { status: 400 });
     }
 
-    const validCompetitionTypes = ['4K', '2.5K'];
+    const validCompetitionTypes = ['Fun Run 4K', 'Fun Walk 2.5K'];
     if (!validCompetitionTypes.includes(competition_type.trim())) {
       return NextResponse.json({ success: false, error: 'Tipe kompetisi tidak valid' }, { status: 400 });
     }
