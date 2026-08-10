@@ -91,7 +91,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'Jenis kelamin tidak valid' }, { status: 400 });
     }
 
-    const validIdentityTypes = ['KTP', 'SIM', 'Paspor', 'Kartu Pelajar'];
+    const validIdentityTypes = ['KTP/NIK', 'Paspor', 'Kitas'];
     if (!validIdentityTypes.includes(identity_type.trim())) {
       return NextResponse.json({ success: false, error: 'Jenis identitas tidak valid' }, { status: 400 });
     }
