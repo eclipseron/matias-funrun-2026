@@ -89,8 +89,12 @@ export const FormSectionAttributes = ({ headerText, wrapperClassname, validation
             <option value="xxl">XXL</option>
             <option value="xxxl">XXXL</option>
           </select>
+          <p className="text-xs text-slate-600 mt-3">
+            Bila ukuran baju yang dinginkan tidak tersedia, bisa menghubungi <b>CP</b> yang terletak pada section <b>Kontak</b>.
+          </p>
         </div>
       </div>
+      
     </div>
   )
 }
