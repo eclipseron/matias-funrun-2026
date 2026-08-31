@@ -19,7 +19,7 @@ export function getRegistrationPeriod(dateInput) {
   const EB2_END = new Date('2026-08-30T23:59:59+07:00').getTime();
   
   // Normal: 1 September – 26 Oktober 2026
-  const NORMAL_START = new Date('2026-09-01T00:00:00+07:00').getTime();
+  const NORMAL_START = new Date('2026-09-01T12:00:00+07:00').getTime();
   const NORMAL_END = new Date('2026-10-26T23:59:59+07:00').getTime();
   
   // Event Date: 5 Desember 2026
@@ -105,7 +105,7 @@ export function getRegistrationPeriodWithCurrCount(currCount) {
   const EB2_END = new Date('2026-08-30T23:59:59+07:00').getTime();
 
   // Normal: 1 September – 26 Oktober 2026
-  const NORMAL_START = new Date('2026-09-01T00:00:00+07:00').getTime();
+  const NORMAL_START = new Date('2026-09-01T12:00:00+07:00').getTime();
   const NORMAL_END = new Date('2026-10-26T23:59:59+07:00').getTime();
 
   // Event Date: 5 Desember 2026
@@ -209,7 +209,7 @@ export function getCountdownTarget(currCount) {
   const EB2_END = new Date('2026-08-30T23:59:59+07:00').getTime();
 
   // Normal: 1 September – 26 Oktober 2026
-  const NORMAL_START = new Date('2026-09-01T00:00:00+07:00').getTime();
+  const NORMAL_START = new Date('2026-09-01T12:00:00+07:00').getTime();
   const NORMAL_END = new Date('2026-10-26T23:59:59+07:00').getTime();
 
   const EVENT_START = new Date('2026-12-05T06:00:00+07:00').getTime();
