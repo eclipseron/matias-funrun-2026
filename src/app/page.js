@@ -19,6 +19,42 @@ import { CountDownHeader } from './CountDownHeader';
 import { query } from '@/lib/db';
 import { ContactInformation } from './ContactInformation';
 
+const SPONSORS = [
+  { name: 'Silirr Sport Wear', src: '/sponsor-silirr.png' },
+  { name: 'Exfits', src: '/sponsor-exfits.webp' },
+  { name: 'Fotoyu', src: '/sponsor-fotoyu.jpeg' },
+  { name: 'GLC Running Club', src: '/sponsor-GLCRunningClub.png' },
+];
+
+function SponsorGrid({ items }) {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {items.map((s) => {
+        const card = (
+          <div className="relative aspect-square overflow-hidden rounded-xl bg-white p-3 transition duration-200 hover:-translate-y-0.5">
+            <div className="relative w-full h-full">
+              <Image
+                src={s.src}
+                alt={s.name}
+                fill
+                sizes="(max-width: 768px) 40vw, 160px"
+                className="object-contain opacity-70"
+              />
+            </div>
+          </div>
+        );
+        return s.href ? (
+          <a key={s.src} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.name} className="block">
+            {card}
+          </a>
+        ) : (
+          <div key={s.src}>{card}</div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default async function Home() {
   let currRegisteredCount = 0;
   try {
@@ -363,8 +399,8 @@ export default async function Home() {
                 Supported by
               </h3>
               <div className="space-y-3 text-sm text-slate-600">
-                <div className='mb-16'>
-                  <Image src="/sponsor-silirr.png" alt='silirr' width={100} height={1} style={{ width: "auto" }} className='opacity-40' />
+                <div className="mb-10">
+                  <SponsorGrid items={SPONSORS} />
                 </div>
                 <p className='text-xs max-w-3/4'>
                   Tertarik untuk bekerja sama dengan kami? Hubungi:
