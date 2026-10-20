@@ -24,6 +24,7 @@ const SPONSORS = [
   { name: 'Exfits', src: '/sponsor-exfits.webp' },
   { name: 'Fotoyu', src: '/sponsor-fotoyu.jpeg' },
   { name: 'GLC Running Club', src: '/sponsor-GLCRunningClub.png' },
+  { name: 'Kontra Series', src: '/sponsor-KontraSeries.webp' },
 ];
 
 function SponsorGrid({ items }) {
