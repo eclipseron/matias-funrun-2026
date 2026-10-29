@@ -25,6 +25,7 @@ const SPONSORS = [
   { name: 'Fotoyu', src: '/sponsor-fotoyu.jpeg' },
   { name: 'GLC Running Club', src: '/sponsor-GLCRunningClub.png' },
   { name: 'Kontra Series', src: '/sponsor-KontraSeries.webp' },
+  { name: 'Crystalin', src: '/sponsor-Crystalin.webp' },
 ];
 
 function SponsorGrid({ items }) {
