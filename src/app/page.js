@@ -20,12 +20,21 @@ import { query } from '@/lib/db';
 import { ContactInformation } from './ContactInformation';
 
 const SPONSORS = [
-  { name: 'Silirr Sport Wear', src: '/sponsor-silirr.png' },
+  { name: 'Rexona', src: '/sponsor-rexona.webp' },
   { name: 'Exfits', src: '/sponsor-exfits.webp' },
-  { name: 'Fotoyu', src: '/sponsor-fotoyu.jpeg' },
-  { name: 'GLC Running Club', src: '/sponsor-GLCRunningClub.png' },
-  { name: 'Kontra Series', src: '/sponsor-KontraSeries.webp' },
+  { name: 'Gabag', src: '/sponsor-gabag.webp' },
+  { name: 'Silirr Sport Wear', src: '/sponsor-silirr.webp' },
+  { name: 'Ichitan', src: '/sponsor-ichitan.webp' },
+  { name: 'Philips', src: '/sponsor-philips.webp' },
   { name: 'Crystalin', src: '/sponsor-Crystalin.webp' },
+  { name: 'Kontra Series', src: '/sponsor-KontraSeries2.webp' },
+];
+const SUPPORTS = [
+  { name: 'Fotoyu', src: '/support-fotoyu.webp' },
+  { name: 'GLC Running Club', src: '/support-GLCRunningClub.webp' },
+  { name: 'Zellution', src: '/support-zellution.webp' },
+  { name: 'Info Event', src: '/support-ie.webp' },
+  { name: 'Komsos', src: '/support-komsos.webp' },
 ];
 
 function SponsorGrid({ items }) {
@@ -33,14 +42,14 @@ function SponsorGrid({ items }) {
     <div className="grid grid-cols-2 gap-3">
       {items.map((s) => {
         const card = (
-          <div className="relative aspect-square overflow-hidden rounded-xl bg-white p-3 transition duration-200 hover:-translate-y-0.5">
+          <div className="relative aspect-square overflow-hidden rounded-xl bg-white p-3">
             <div className="relative w-full h-full">
               <Image
                 src={s.src}
                 alt={s.name}
                 fill
                 sizes="(max-width: 768px) 40vw, 160px"
-                className="object-contain opacity-70"
+                className="object-contain opacity-50"
               />
             </div>
           </div>
@@ -398,13 +407,26 @@ export default async function Home() {
 
             <div className="bg-white/90 backdrop-blur-md shadow-xl shadow-brand-blue/5 border border-white p-6 relative overflow-hidden">
               <h3 className="text-lg font-black text-brand-dark uppercase tracking-tight mb-4 border-b border-slate-200 pb-3 italic">
-                Supported by
+                Sponsored by
               </h3>
               <div className="space-y-3 text-sm text-slate-600">
                 <div className="mb-10">
                   <SponsorGrid items={SPONSORS} />
                 </div>
-                <p className='text-xs max-w-3/4'>
+              </div>
+              <h3 className="text-lg font-black text-brand-dark uppercase tracking-tight mb-4 border-b border-slate-200 pb-3 italic">
+                Supported by
+              </h3>
+              <div className="space-y-3 text-sm text-slate-600">
+                <div className="mb-10">
+                  <SponsorGrid items={SUPPORTS} />
+                </div>
+              </div>
+              <div>
+                {/* <div className="mb-10">
+                  <SponsorGrid items={SPONSORS} />
+                </div> */}
+                <p className='text-xs max-w-3/4 text-slate-600'>
                   Tertarik untuk bekerja sama dengan kami? Hubungi:
                 </p>
                 <div className="space-y-2 text-xs">
