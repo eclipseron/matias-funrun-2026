@@ -34,7 +34,9 @@ export async function GET(request) {
         id, uuid, competition_type, name, email, whatsapp, gender, birth_place, birth_date, 
         identity_type, identity_number, bib_name, emergency_contact_name, 
         emergency_contact_relationship, emergency_contact_number, tshirt_size, status, registration_code,
-        registered_at, verified_at, bag_distributed_at 
+        registered_at, verified_at, bag_distributed_at,
+        payment_period, payment_amount, blood_type, doct_recommendation,
+        info_source, prev_diagnose, prev_alergy
       FROM runners 
       WHERE is_active = 1
       ORDER BY id ASC
@@ -46,6 +48,8 @@ export async function GET(request) {
       'ID Database': row.id,
       'UUID Peserta': row.uuid,
       'Kategori Kompetisi': row.competition_type,
+      'Periode Pembayaran': row.payment_period,
+      'Nominal Pembayaran': row.payment_amount,
       'Nama Lengkap': row.name,
       'Email': row.email,
       'Nomor WhatsApp': row.whatsapp,
@@ -57,9 +61,14 @@ export async function GET(request) {
       'Nomor Identitas': row.identity_number,
       'Nama BIB': row.bib_name,
       'Ukuran Jersey': row.tshirt_size,
+      'Golongan Darah': row.blood_type,
+      'Terdapat anjuran dokter': row.doct_recommendation === 1 ? 'Ya' : 'Tidak',
+      'Riwayat Penyakit': row.prev_diagnose || 'Tidak ada',
+      'Alergi': row.prev_alergy || 'Tidak ada',
       'Nama Kontak Darurat': row.emergency_contact_name,
       'Hubungan Kontak Darurat': row.emergency_contact_relationship,
       'Nomor Kontak Darurat': row.emergency_contact_number,
+      'Sumber Informasi': row.info_source || 'N/A',
       'Status Pendaftaran': row.status.toUpperCase(),
       'Kode Registrasi': row.registration_code || 'N/A',
       'Tanggal Registrasi': row.registered_at ? new Date(row.registered_at).toLocaleString('id-ID') : '',
