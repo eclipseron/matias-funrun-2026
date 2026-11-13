@@ -28,6 +28,7 @@ const SPONSORS = [
   { name: 'Philips', src: '/sponsor-philips.webp' },
   { name: 'Crystalin', src: '/sponsor-Crystalin.webp' },
   { name: 'Kontra Series', src: '/sponsor-KontraSeries2.webp' },
+  { name: 'Santo Leo', src: '/sponsor-santo-leo.webp' },
 ];
 const SUPPORTS = [
   { name: 'Fotoyu', src: '/support-fotoyu.webp' },
